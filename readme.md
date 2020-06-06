@@ -81,6 +81,12 @@ socket.on("connection", socket => {
 npm install
 
 ```
+Then run (for development using nodemon):
+
+```bash
+npm run devstart
+```
+
 
 Then run:
 
