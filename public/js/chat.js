@@ -1,6 +1,12 @@
 var socket = io();
+socket.on('connect', function (data) {
+  // send the username to the server
+  socket.emit("new user", str_obj(document.cookie).userData)
+});
+
 var messages = document.getElementById("messages");
 
+// util function to parse local cookie
 function str_obj(str) {
   str = str.split('; ');
   var result = {};
@@ -11,15 +17,16 @@ function str_obj(str) {
   return result;
 }
 
+// new message entered or received
 (function() {
+  // sending new message
   $("form").submit(function(e) {
-    //console.log('here : ' + JSON.stringify(str_obj(document.cookie)))
     //get UserName from the Cookie
     userName = str_obj(document.cookie).userData
     
     let li = document.createElement("li");
     e.preventDefault(); // prevents page reloading
-    //socket.emit("chat message", $("#message").val());
+    //socket.emit("chat message", $("#message").val()); // Anonymous message (original version)
     socket.emit("chat message2", { message:$("#message").val(), sender: userName});
 
     messages.appendChild(li).append($("#message").val());
@@ -31,7 +38,8 @@ function str_obj(str) {
 
     return false;
   });
-
+  
+  // new message received
   socket.on("received", data => {
     let li = document.createElement("li");
     let span = document.createElement("span");
@@ -67,7 +75,7 @@ let typing = document.getElementById("typing");
 
 //isTyping event
 messageInput.addEventListener("keypress", () => {
-  socket.emit("typing", { user: "Someone", message: "is typing..." });
+  socket.emit("typing", { user: str_obj(document.cookie).userData, message: "is typing..." });
 });
 
 socket.on("notifyTyping", data => {

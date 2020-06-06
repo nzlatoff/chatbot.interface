@@ -5,6 +5,7 @@ const dateTime = require("simple-datetime-formater");
 const bodyParser = require("body-parser");
 const chatRouter = require("./route/chatroute");
 const loginRouter = require("./route/loginRoute");
+const userRouter = require('./route/userRoute')
 
 //require the http module
 const http = require("http").Server(app);
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 //routes
 app.use("/chats", chatRouter);
 app.use("/login", loginRouter);
+app.use("/users", userRouter);
 
 
 //set the express.static middleware
@@ -32,13 +34,33 @@ socket = io(http);
 //database connection
 const Chat = require("./models/Chat");
 const connect = require("./dbconnect");
+app.locals.clientsocketlist = new Array();
 
 //setup event listener
 socket.on("connection", socket => {
-  console.log("user connected");
+  //console.log("user connected");
 
+  socket.on("new user", function(usr) {
+    // adding user to the app.local shared variable
+    var clientInfo = {
+      id: socket.id,
+      user: usr
+    };
+    app.locals.clientsocketlist.push(clientInfo);
+    console.log('New user logged on server:'+clientInfo.user);  
+  });
+  
   socket.on("disconnect", function() {
-    console.log("user disconnected");
+    // removing user from the app.local shared variable
+    for( var i=0, len=app.locals.clientsocketlist.length; i<len; ++i ){
+      var c = app.locals.clientsocketlist[i];
+
+      if(c.id == socket.id){
+        console.log("user "+ c.username +"disconnected");
+        app.locals.clientsocketlist.splice(i,1);
+          break;  
+      } 
+     }
   });
 
   //Someone is typing
@@ -49,12 +71,13 @@ socket.on("connection", socket => {
     });
   });
 
-  //when soemone stops typing
+  //when soemone stops typing)
   socket.on("stopTyping", () => {
     socket.broadcast.emit("notifyStopTyping");
   });
 
-  socket.on("chat message", function(msg) {
+   // Anonymous message (original version)
+ /* socket.on("chat message", function(msg) {
     console.log("message: " + msg);
 
     //broadcast message to everyone in port:5000 except yourself.
@@ -68,8 +91,9 @@ socket.on("connection", socket => {
       chatMessage.save();
     });
   });
-
-  socket.on("chat message2", function(msg) {
+ */
+  
+ socket.on("chat message2", function(msg) {
     console.log("message: " + msg.message + ' by ' + msg.sender );
 
     //broadcast message to everyone in port:5000 except yourself.
