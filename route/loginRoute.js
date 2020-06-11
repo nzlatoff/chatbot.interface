@@ -7,11 +7,11 @@ const router = express.Router();
 
 router.route("/").post((req, res, next) => {
 
-  console.log("url = ", req.url, "  req-body  = ", req.body,   "res-type  = ", res.get('Content-Type'));
+ // console.log("url = ", req.url, "  req-body  = ", req.body,   "res-type  = ", res.get('Content-Type'));
   console.log('detecting user '+req.body.username)
   
       
-  res.cookie("userData", req.body.username); 
+  res.cookie("userData", req.body.username, {sameSite: 'strict'}); 
   res.redirect('/')
 
 });

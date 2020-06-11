@@ -29,12 +29,13 @@ app.use("/users", userRouter);
 app.use(express.static(__dirname + "/public"));
 
 //integrating socketio
-socket = io(http);
+socket = io(http, { cookie: false });;
 
 //database connection
 const Chat = require("./models/Chat");
 const connect = require("./dbconnect");
 app.locals.clientsocketlist = new Array();
+
 
 //setup event listener
 socket.on("connection", socket => {
@@ -56,7 +57,7 @@ socket.on("connection", socket => {
       var c = app.locals.clientsocketlist[i];
 
       if(c.id == socket.id){
-        console.log("user "+ c.username +"disconnected");
+        console.log("user "+ c.user +" disconnected");
         app.locals.clientsocketlist.splice(i,1);
           break;  
       } 

@@ -7,8 +7,9 @@ const router = express.Router();
 router.route("/").get((req, res, next) => {
   res.setHeader("Content-Type", "application/json");
   res.statusCode = 200;
-  console.log(res.app.locals.clientsocketlist);
-  res.json(res.app.locals.clientsocketlist);
+  var json = res.app.locals.clientsocketlist;
+  //console.log(json);
+  res.json(json);
 });
 
 module.exports = router;
