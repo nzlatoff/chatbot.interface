@@ -53,6 +53,7 @@ $("#refreshUserList").submit(function(e){
     var messages = document.getElementById("messages");
     messages.appendChild(li).append(data.message.message);
     messages.appendChild(span).append("by " + data.sender + ": " + "just now");
+    document.getElementById(socket.id).value = '';
     console.log("Hello bingo!"+data.message.message );
   });
 })();
@@ -92,7 +93,9 @@ function refreshUserList() {
       json.map(data => {
         let li = document.createElement("li");
         //let span = document.createElement("span");
-        let text = document.createElement("input")
+        let text = document.createElement("textarea");
+        text.id = data.id; 
+        text.cols = 120;
         users.appendChild(li).append(data.user);
         users.appendChild(text);
         //  .appendChild(span)
@@ -108,12 +111,14 @@ let typing = document.getElementById("typing");
 
 //isTyping event
 messageInput.addEventListener("keypress", () => {
-  socket.emit("typing", { user: str_obj(document.cookie).userData, message: "is typing..."+messageInput.value });
+  socket.emit("typing", { user: str_obj(document.cookie).userData, message: messageInput.value });
 });
 
 socket.on("notifyTyping", data => {
   typing.innerText = data.user + " " + data.message;
-  console.log(data.user + data.message);
+  console.log('trying to get element with id:'+socket.id);
+  document.getElementById(socket.id).value = data.message;
+
 });
 
 //stop typing

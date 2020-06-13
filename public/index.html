@@ -1,29 +1,22 @@
 <!doctype html>
 <html>
   <head>
-    <title>Anonymouse Real-time chat</title>
+    <title>Dialogue</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <!------ Include the above in your HEAD tag ---------->
     <link href="/css/style.css" type="text/css" rel="stylesheet"/>
   </head>
   <body>
-    <div class="row"> 
-      <div class="col-xs-12 col-md-8"><a href="./login.html">Login</a></div> 
-    </div>
     <div class="chat_window">
     <div class="top_menu">
-<!--        <div class="buttons">
-            <div class="button close"></div>
-            <div class="button minimize"></div>
-            <div class="button maximize"></div>
-        </div>
-        <div class="title">Chat</div>-->
-        <!--<form id="refreshUserList">
-          <button >Refresh</button>
-        </form>--> 
+      <div>
+      <button class="login_button" onclick="window.location.href='./login.html'">Login</button>
+      </div>
+      <div>
         <ul id="users" class="users">
 
         </ul>
+      </div>
     </div>
     <ul id ="messages" class="messages">
         
