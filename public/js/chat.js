@@ -41,6 +41,10 @@ $("#refreshUserList").submit(function(e){
 
     messages.appendChild(span).append("by " + userName + ": " + "just now");
 
+    $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
+
+
+
     $("#message").val("");
 
     return false;
@@ -54,7 +58,9 @@ $("#refreshUserList").submit(function(e){
     messages.appendChild(li).append(data.message.message);
     messages.appendChild(span).append("by " + data.sender + ": " + "just now");
     document.getElementById(socket.id).value = '';
-    console.log("Hello bingo!"+data.message.message );
+    $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
+
+    //console.log("Hello bingo!"+data.message.message );
   });
 })();
 
@@ -95,7 +101,8 @@ function refreshUserList() {
         //let span = document.createElement("span");
         let text = document.createElement("textarea");
         text.id = data.id; 
-        text.cols = 120;
+        text.className = 'talkco';
+        text.cols = 123;
         users.appendChild(li).append(data.user);
         users.appendChild(text);
         //  .appendChild(span)
