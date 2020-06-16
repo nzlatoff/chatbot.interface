@@ -10,10 +10,6 @@ You should have a good understanding of how socket.io works at the end of this t
 
 You will also learn how to show that someone is typing in a chat application.
 
-Here is a screenshot of it looks and functionality.
-
-![alt text](https://github.com/rexeze/anonymouse-realtime-chat-app/blob/master/screenshots/chatscreenshot.gif "Chat Screen Shot")
-
 ## Code Samples
 
 > Backend
