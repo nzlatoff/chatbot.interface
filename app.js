@@ -20,10 +20,21 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 //routes
-app.use("/chats", chatRouter);
 app.use("/login", loginRouter);
-app.use("/users", userRouter);
+// cookie check to prevent anonymous users
+app.get("*", (req,res, next) => {
+  // cookie doesn't exist redirect to login
+  //console.log('calling..........................................................................................');
+  //console.log(req.headers.cookie);
+  if(typeof(req.headers.cookie) === 'undefined'){
+    res.sendFile(__dirname + "/public/login.html");    
+  }else{  
+   next(); 
+  }
+ })
 
+ app.use("/chats", chatRouter);
+ app.use("/users", userRouter);
 
 //set the express.static middleware
 app.use(express.static(__dirname + "/public"));
