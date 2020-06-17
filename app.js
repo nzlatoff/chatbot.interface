@@ -1,3 +1,14 @@
+// util function to parse local cookie
+function str_obj(str) {
+  str = str.split('; ');
+  var result = {};
+  for (var i = 0; i < str.length; i++) {
+      var cur = str[i].split('=');
+      result[cur[0]] = cur[1];
+  }
+  return result;
+}
+
 //require the express module
 const express = require("express");
 const app = express();
@@ -24,12 +35,15 @@ app.use("/login", loginRouter);
 // cookie check to prevent anonymous users
 app.get("*", (req,res, next) => {
   // cookie doesn't exist redirect to login
-  //console.log('calling..........................................................................................');
-  //console.log(req.headers.cookie);
-  if(typeof(req.headers.cookie) === 'undefined'){
+  //console.log(str_obj(req.headers.cookie));
+  if(typeof(req.headers.cookie) === 'undefined'){ // no cookies at all
     res.sendFile(__dirname + "/public/login.html");    
-  }else{  
-   next(); 
+  } else if (typeof(str_obj(req.headers.cookie).userData) === 'undefined') { // our cookie is missing
+    res.sendFile(__dirname + "/public/login.html");    
+  } else if (str_obj(req.headers.cookie).userData.length == 0) { // our cookie is too small
+    res.sendFile(__dirname + "/public/login.html");    
+  } else{  
+    next(); 
   }
  })
 
