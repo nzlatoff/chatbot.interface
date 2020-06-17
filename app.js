@@ -1,14 +1,3 @@
-// util function to parse local cookie
-function str_obj(str) {
-  str = str.split('; ');
-  var result = {};
-  for (var i = 0; i < str.length; i++) {
-      var cur = str[i].split('=');
-      result[cur[0]] = cur[1];
-  }
-  return result;
-}
-
 //require the express module
 const express = require("express");
 const app = express();
@@ -17,6 +6,7 @@ const bodyParser = require("body-parser");
 const chatRouter = require("./route/chatroute");
 const loginRouter = require("./route/loginRoute");
 const userRouter = require('./route/userRoute')
+const str_obj = require('./cookie2obj.js');
 
 //require the http module
 const http = require("http").Server(app);
@@ -33,9 +23,11 @@ app.use(bodyParser.json());
 //routes
 app.use("/login", loginRouter);
 // cookie check to prevent anonymous users
+
 app.get("*", (req,res, next) => {
   // cookie doesn't exist redirect to login
   //console.log(str_obj(req.headers.cookie));
+
   if(typeof(req.headers.cookie) === 'undefined'){ // no cookies at all
     res.sendFile(__dirname + "/public/login.html");    
   } else if (typeof(str_obj(req.headers.cookie).userData) === 'undefined') { // our cookie is missing
@@ -45,10 +37,10 @@ app.get("*", (req,res, next) => {
   } else{  
     next(); 
   }
- })
+})
 
- app.use("/chats", chatRouter);
- app.use("/users", userRouter);
+app.use("/chats", chatRouter);
+app.use("/users", userRouter);
 
 //set the express.static middleware
 app.use(express.static(__dirname + "/public"));
