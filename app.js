@@ -22,12 +22,11 @@ app.use(bodyParser.json());
 
 //routes
 app.use("/login", loginRouter);
-// cookie check to prevent anonymous users
 
-app.get("*", (req,res, next) => {
+// cookie check to prevent anonymous users
+app.get("/", (req,res, next) => {
   // cookie doesn't exist redirect to login
   //console.log(str_obj(req.headers.cookie));
-
   if(typeof(req.headers.cookie) === 'undefined'){ // no cookies at all
     res.sendFile(__dirname + "/public/login.html");    
   } else if (typeof(str_obj(req.headers.cookie).userData) === 'undefined') { // our cookie is missing
