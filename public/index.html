@@ -2,42 +2,51 @@
 <html>
   <head>
     <title>Dialogue</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<!------ Include the above in your HEAD tag ---------->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
     <link href="/css/main.css" type="text/css" rel="stylesheet"/>
   </head>
   <body>
-    <div class="chat_window">
-    <div class="top_menu">
-      <div>
-      <button class="login_button" onclick="window.location.href='./login.html'">Login</button>
-      </div>
-      <div>
-        <ol id="users" class="users">
+    <div class="chat-window">
 
-        </ol>
+      <div class="box-wrapper messages-box">
+        <ul id ="messages" class="messages"></ul>
       </div>
-    </div>
-    <ul id ="messages" class="messages">
-        
-    </ul>
-     
-    <div class="bottom_wrapper clearfix">
-   <i id="typing"></i>
-    <form id="send-form">
-        <div class="message_input_wrapper">
-            <input id="message" class="message_input" placeholder="Type your message here..." />
+
+      <div class="box-wrapper console-box">
+
+        <div class="login-wrapper">
+          <button class="login-button" onclick="window.location.href='./login.html'">Login</button>
         </div>
-        <button class="send_message">
-           Send
-        </button>
-      </form>
+
+        <div class="users-wrapper">
+          <ol id="users" class="users"></ol>
+        </div>
+
+      </div>
+
+      <div class="box-wrapper input-box">
+
+        <form id="send-form">
+
+          <div class="input-wrapper char-wrapper">
+            <input id="character" class="character_input" placeholder="LE COMTE." />
+          </div>
+
+          <div class="input-wrapper message-wrapper">
+            <input id="message" class="message_input" placeholder="Vous l'emportez, et la faveur du Roy..." />
+          </div>
+
+          <button class="send-message">></button>
+
+        </form>
+
+      </div>
+
     </div>
-</div>
 
     <script src="/js/socket.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/gh/rexeze/formatTimeStamp/src/index-cdn.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/rexeze/formatTimeStamp/src/index-cdn.js"></script>
     <script src="/js/chat.js"></script>
 
   </body>

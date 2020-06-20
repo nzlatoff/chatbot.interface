@@ -102,7 +102,7 @@ function refreshUserList() {
         let text = document.createElement("textarea");
         text.id = data.id; 
         text.className = 'talkco';
-        text.cols = 123;
+        text.disabled = true;
         users.appendChild(li).append(data.user);
         users.appendChild(text);
         //  .appendChild(span)
