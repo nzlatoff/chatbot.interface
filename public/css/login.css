@@ -52,7 +52,7 @@ html, body {
   width: 100%;
 }
 
-.login.page .form .username {
+.login.page .form .username-input {
   background-color: transparent;
   border: none;
   border-bottom: 2px solid #fff;
@@ -66,12 +66,13 @@ html, body {
   font-size: 200%;
 }
 
-.login.page .username {
+.login.page .username-input {
   font-size: 200%;
   letter-spacing: 3px;
 }
 
-.login.page .title, .login.page .username {
+
+.login.page .title, .login.page .username-input {
   color: #fff;
   font-weight: 100;
 }
@@ -90,4 +91,48 @@ button.enter:hover {
   cursor: crosshair;
   color: red;
   border-color: red;
+}
+
+@media only screen and (max-width: 750px) {
+  .login.page .form .username-input {
+    width: 350px;
+    font-size: 150%;
+  }
+
+  .login.page .title {
+    font-size: 150%;
+  }
+
+  .login.page .username-input {
+    font-size: 150%;
+  }
+
+  button.enter {
+    font-size: 150%;
+    margin-left: 5px;
+    padding: 14px 17px;
+  }
+
+}
+
+@media only screen and (max-width: 650px) {
+  .login.page .form .username-input {
+    width: 60%;
+    font-size: 4vw;
+  }
+
+  .login.page .title {
+    font-size: 4vw;
+  }
+
+  .login.page .username-input {
+    font-size: 4vw;
+  }
+
+  button.enter {
+    font-size: 4vw;
+    margin-left: .1rem;
+    padding: 1rem 1rem;
+  }
+
 }
