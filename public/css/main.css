@@ -13,6 +13,18 @@ body {
   background-color: #fff;
 }
 
+textarea {
+  resize: vertical;
+  border: none;
+  font-size: 16px;
+  min-height: 48px;
+  box-sizing: border-box;
+}
+
+textarea:focus {
+  outline: none;
+}
+
 /* flex-boxing */
 /* https://css-tricks.com/boxes-fill-height-dont-squish/ */
 /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
@@ -23,8 +35,8 @@ body {
   width: 90%;
   max-width: 1200px;
   background-color: #fff;
-  /* box-shadow: 5px 0 20px rgba(0, 0, 0, 0.15); */
   overflow: hidden;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -46,39 +58,71 @@ body {
   margin: 5px;
 }
 
+/* square button */
+
+.square-button {
+  width: 52px;
+  height: 52px;
+  border: 2px solid #000;
+  border-radius: 5px;
+  color: #000;
+  background-color: #fff;
+  font-size: 1.2rem;
+  cursor: crosshair;
+  transition: all 0.2s linear;
+  text-align: center;
+  /* vertical-align: top; */
+}
+
+.square-button:hover {
+  color: red;
+  border-color: red;
+}
+
+.input-wrapper {
+  position: relative;
+  margin: 0 5px;
+}
+
 /* see this method for scrolling inside a flex-box element */
 /* https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336 */
 
 .messages-box {
   flex: 1;
-  overflow: hidden;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  overflow: hidden;
+}
+
+.console-inner {
+  display: flex;
+}
+
+/* login button & username */
+
+.login-wrapper {
+  align-self: flex-end;
+  text-align: right;
+}
+
+.login-button {
+  font-size: 0.8rem;
+  text-align: center;
 }
 
 /* controls: interactive writing & input */
 
-.login-button {
-  background: #ccc;
-  width: 80px;
-  color: white;
-  border: #ddd 1px solid;
-  margin-left: 16px;
-  font-weight: 800;
-  font-size: 0.8em;
-  float: right;
+.users-wrapper {
+  flex: 5;
 }
 
 .users {
-  padding-left: 30px;
-  list-style: none;
-  color: #2b2b64;
-  resize: none;
+  color: #161717;
 }
 
 .users .talkco {
-  background-color: rgb(250, 250, 250);
-  border: none;
+  padding-bottom: 5px;
 }
 
 /* input: message */
@@ -86,82 +130,47 @@ body {
 #send-form {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 
-.input-wrapper {
-  display: inline-block;
-  height: 50px;
-  border-bottom: 1px solid lightgray;
-  position: relative;
-  padding: 0 20px;
+.input-button {
+  align-self: flex-end;
 }
+
+/* character name */
 
 .char-wrapper {
   flex: 1;
-  margin: 2px;
 }
+
+.character-input {
+  height: 100%;
+  width: 100%;
+}
+
+#username {
+  padding: 0px 0px 10px 6px;
+}
+
+/* message content */
 
 .message-wrapper {
   flex: 4;
-  margin: 5px;
 }
 
-.message_input {
-  border: none;
+.message-input {
+  /* border: none; */
   height: 100%;
   width: 100%;
-  box-sizing: border-box;
-  outline-width: 0;
-}
-
-.character_input {
-  border: none;
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* message button */
-
-.send-message {
-  width: 52px;
-  height: 52px;
-  /* display: inline-block; */
-  border: 2px solid #000;
-  color: #000;
-  font-size: 1.2rem;
-  cursor: crosshair;
-  transition: all 0.2s linear;
-  text-align: center;
-  vertical-align: top;
-}
-
-.send-message:hover {
-  color: #45829b;
-  border-color: red;
-  background-color: #fff;
-  /* margin: 20px; */
-  /* padding: 10px; */
-}
-
-.send-message .text {
-  font-size: 18px;
-  font-weight: 300;
-  display: inline-block;
-  line-height: 48px;
-  margin: 20px;
-  padding: 10px;
 }
 
 /* messages */
 
 .messages {
-  width: 100%;
-  list-style: none;
-  padding: 0px 0px 0px 30px;
+  height: 100%;
+  padding: 0 6px;
   margin: 0;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .messages .message {
@@ -172,97 +181,6 @@ body {
   opacity: 0;
 }
 
-.messages .message.left .avatar {
-  background-color: #f5886e;
-  float: left;
-}
-
-.messages .message.left .text_wrapper {
-  background-color: #ffe6cb;
-  margin-left: 20px;
-}
-
-.messages .message.left .text_wrapper: : after,
-.messages .message.left .text_wrapper: : before {
-  right: 100%;
-  border-right-color: #ffe6cb;
-}
-
-.messages .message.left .text {
-  color: #c48843;
-}
-
-.messages .message.right .avatar {
-  background-color: #fdbf68;
-  float: right;
-}
-
-.messages .message.right .text_wrapper {
-  background-color: #c7eafc;
-  margin-right: 20px;
-  float: right;
-}
-
-.messages .message.right .text_wrapper: : after,
-.messages .message.right .text_wrapper: : before {
-  left: 100%;
-  border-left-color: #c7eafc;
-}
-
-.messages .message.right .text {
-  color: #45829b;
-}
-
-.messages .message.appeared {
-  opacity: 1;
-}
-
-.messages .message .text_wrapper {
-  display: inline-block;
-  padding: 20px;
-  border-radius: 6px;
-  width: calc(100% - 85px);
-  min-width: 100px;
-  position: relative;
-}
-
-.messages .message .text_wrapper: : after,
-.messages .message .text_wrapper: before {
-  top: 18px;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-}
-
-.messages .message .text_wrapper: : after {
-  border-width: 13px;
-  margin-top: 0px;
-}
-
-.messages .message .text_wrapper: : before {
-  border-width: 15px;
-  margin-top: -2px;
-}
-
-.messages .message .text_wrapper .text {
-  font-size: 18px;
-  font-weight: 300;
-}
-
-.message_template {
-  display: none;
-}
-
-.messages > li {
-  font-size: 15px;
-  border-radius: 4px;
-  width: fit-content;
-}
-
-.messages > span {
-  font-size: 10px;
-  font-style: italic;
+.messages > div {
+  margin: 10px 5px;
 }

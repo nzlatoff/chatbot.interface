@@ -17,7 +17,7 @@ const io = require("socket.io");
 const port = 5000;
 
 //bodyparser middleware
-app.use(bodyParser.urlencoded({ extended: false })) 
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 //routes
@@ -26,15 +26,15 @@ app.use("/login", loginRouter);
 // cookie check to prevent anonymous users
 app.get("/", (req,res, next) => {
   // cookie doesn't exist redirect to login
-  //console.log(str_obj(req.headers.cookie));
+  // console.log(str_obj(req.headers.cookie));
   if(typeof(req.headers.cookie) === 'undefined'){ // no cookies at all
-    res.sendFile(__dirname + "/public/login.html");    
+    res.sendFile(__dirname + "/public/login.html");
   } else if (typeof(str_obj(req.headers.cookie).userData) === 'undefined') { // our cookie is missing
-    res.sendFile(__dirname + "/public/login.html");    
+    res.sendFile(__dirname + "/public/login.html");
   } else if (str_obj(req.headers.cookie).userData.length == 0) { // our cookie is too small
-    res.sendFile(__dirname + "/public/login.html");    
-  } else{  
-    next(); 
+    res.sendFile(__dirname + "/public/login.html");
+  } else{
+    next();
   }
 })
 
@@ -45,88 +45,73 @@ app.use("/users", userRouter);
 app.use(express.static(__dirname + "/public"));
 
 //integrating socketio
-socket = io(http, { cookie: false });;
+socketio = io(http, { cookie: false });;
 
 //database connection
 const Chat = require("./models/Chat");
 const connect = require("./dbconnect");
-app.locals.clientsocketlist = new Array();
+app.locals.clientsocketlist = {};
 
 
 //setup event listener
-socket.on("connection", socket => {
-  //console.log("user connected");
+socketio.on("connection", socket => {
 
-  socket.on("new user", function(usr) {
-    // adding user to the app.local shared variable
-    var clientInfo = {
-      id: socket.id,
-      user: usr
-    };
-    app.locals.clientsocketlist.push(clientInfo);
-    console.log('New user logged on server:'+clientInfo.user);  
+  socket.on("get list", function() {
+    socket.emit("users list", app.locals.clientsocketlist);
+    socket.broadcast.emit("get typing");
   });
-  
-  socket.on("disconnect", function() {
-    // removing user from the app.local shared variable
-    for( var i=0, len=app.locals.clientsocketlist.length; i<len; ++i ){
-      var c = app.locals.clientsocketlist[i];
 
-      if(c.id == socket.id){
-        console.log("user "+ c.user +" disconnected");
-        app.locals.clientsocketlist.splice(i,1);
-          break;  
-      } 
-     }
+  socket.on("new user", function(user) {
+    // adding user to the app.local shared variable
+    socket.user = user;
+    const clientInfo = {
+      id: socket.id,
+      user: user,
+    };
+    socket.broadcast.emit("new user", clientInfo);
+    // save user in object
+    app.locals.clientsocketlist[socket.id] = clientInfo;
+    // console.log('New user logged on server:', clientInfo.user);
+  });
+
+  socket.on("disconnect", function() {
+
+    // console.log('disconnecting', socket.user, socket.id);
+    delete app.locals.clientsocketlist[socket.id];
+
+    socket.broadcast.emit("user left", {
+      id: socket.id,
+      user: socket.user
+    });
   });
 
   //Someone is typing
   socket.on("typing", data => {
     socket.broadcast.emit("notifyTyping", {
+      id: data.id,
       user: data.user,
-      message: data.message
+      message: data.message,
+      character: data.character
     });
   });
 
-  //when soemone stops typing)
-  socket.on("stopTyping", () => {
-    socket.broadcast.emit("notifyStopTyping");
-  });
-
-   // Anonymous message (original version)
- /* socket.on("chat message", function(msg) {
-    console.log("message: " + msg);
+  socket.on("chat message", function(data) {
+    // console.log("message:", data.message, 'by', data.user);
 
     //broadcast message to everyone in port:5000 except yourself.
-    socket.broadcast.emit("received", { message: msg });
+    socket.broadcast.emit("received", data);
 
     //save chat to the database
     connect.then(db => {
-      console.log("connected correctly to the server");
-      let chatMessage = new Chat({ message: msg, sender: "Anonymous" });
-
+      // console.log("(saving to db)");
+      let chatMessage = new Chat(data);
       chatMessage.save();
     });
   });
- */
-  
- socket.on("chat message2", function(msg) {
-    console.log("message: " + msg.message + ' by ' + msg.sender );
 
-    //broadcast message to everyone in port:5000 except yourself.
-    socket.broadcast.emit("received", { message: msg, sender: msg.sender });
-
-    //save chat to the database
-    connect.then(db => {
-      console.log("connected correctly to the server");
-      let chatMessage = new Chat({ message: msg.message, sender: msg.sender });
-
-      chatMessage.save();
-    });
-  });
 });
 
 http.listen(port, () => {
-  console.log("Running on Port: " + port);
+  console.log("Running on Port: ", port);
 });
 

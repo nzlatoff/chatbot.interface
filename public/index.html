@@ -2,41 +2,50 @@
 <html>
   <head>
     <title>Dialogue</title>
-    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="/css/main.css" type="text/css" rel="stylesheet"/>
   </head>
   <body>
+
     <div class="chat-window">
 
       <div class="box-wrapper messages-box">
-        <ul id ="messages" class="messages"></ul>
+        <div id="messages" class="messages"></div>
       </div>
 
       <div class="box-wrapper console-box">
 
-        <div class="login-wrapper">
-          <button class="login-button" onclick="window.location.href='./login.html'">Login</button>
-        </div>
+        <div class="console-inner">
 
-        <div class="users-wrapper">
-          <ol id="users" class="users"></ol>
+          <div class="input-wrapper users-wrapper">
+            <div id="users" class="users"></div>
+          </div>
+
+          <div class="input-wrapper login-wrapper">
+            <button id="login-button" class="square-button login-button" onclick="window.location.href='./login.html'">login</button>
+          </div>
+
         </div>
 
       </div>
 
       <div class="box-wrapper input-box">
 
-        <form id="send-form">
+        <div id="username"></div>
+
+        <form id="send-form" name="send-form">
 
           <div class="input-wrapper char-wrapper">
-            <input id="character" class="character_input" placeholder="LE COMTE." />
+            <textarea id="character" class="character-input" placeholder="LE COMTE." form="send-form"></textarea>
           </div>
 
           <div class="input-wrapper message-wrapper">
-            <input id="message" class="message_input" placeholder="Vous l'emportez, et la faveur du Roy..." />
+            <textarea id="message" class="message-input" placeholder="Vous l'emportez, et la faveur du Roy..." form="send-form"/></textarea>
           </div>
 
-          <button class="send-message">></button>
+          <div class="input-wrapper input-button">
+            <button class="square-button">></button>
+          </div>
 
         </form>
 
@@ -47,7 +56,7 @@
     <script src="/js/socket.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/rexeze/formatTimeStamp/src/index-cdn.js"></script>
-    <script src="/js/chat.js"></script>
+    <script src="/js/chat.js" charset="utf-8"></script>
 
   </body>
 </html>
