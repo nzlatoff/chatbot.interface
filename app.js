@@ -111,7 +111,7 @@ socketio.on("connection", socket => {
 
 });
 
-http.listen(port, () => {
+http.listen(process.env.PORT || port, () => {
   console.log("Running on Port: ", port);
 });
 
