@@ -83,24 +83,24 @@ socket.on("received", data => {
   appendMessage(data);
 });
 
-// fetching initial chat messages from the database
-(function() {
-  datefrom = new Date().toISOString().substring(0,10); // just print today's message by default
-  fetch("/chats?datefrom="+datefrom)
-    .then(data => {
-      return data.json();
-    })
-    .then(json => {
-      json.map(data => {
-        let div = document.createElement("div");
-        messages.appendChild(div).append(data.message);
-      });
-    })
-    .then(() => {
-      // console.log('loaded db');
-      $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
-    });
-})();
+// // fetching initial chat messages from the database
+// (function() {
+//   datefrom = new Date().toISOString().substring(0,10); // just print today's message by default
+//   fetch("/chats?datefrom="+datefrom)
+//     .then(data => {
+//       return data.json();
+//     })
+//     .then(json => {
+//       json.map(data => {
+//         let div = document.createElement("div");
+//         messages.appendChild(div).append(data.message);
+//       });
+//     })
+//     .then(() => {
+//       // console.log('loaded db');
+//       $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
+//     });
+// })();
 
 // ctrl+enter to submit
 $('textarea').keydown(function(e) {

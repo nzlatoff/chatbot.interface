@@ -49,7 +49,7 @@ socketio = io(http, { cookie: false });;
 
 //database connection
 const Chat = require("./models/Chat");
-const connect = require("./dbconnect");
+// const connect = require("./dbconnect");
 app.locals.clientsocketlist = {};
 
 
@@ -102,11 +102,11 @@ socketio.on("connection", socket => {
     socket.broadcast.emit("received", data);
 
     //save chat to the database
-    connect.then(db => {
-      // console.log("(saving to db)");
-      let chatMessage = new Chat(data);
-      chatMessage.save();
-    });
+    // connect.then(db => {
+    //   // console.log("(saving to db)");
+    //   let chatMessage = new Chat(data);
+    //   chatMessage.save();
+    // });
   });
 
 });
