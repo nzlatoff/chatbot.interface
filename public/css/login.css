@@ -14,6 +14,7 @@ html, input {
     "Lucida Console",
     Monaco,
     monospace;
+  font-size: 16px;
 }
 
 html, body {
