@@ -45,7 +45,7 @@ html, body {
 }
 
 .login.page .form {
-  margin-top: -100px;
+  margin: -100px 0;
   position: absolute;
   text-align: center;
   top: 50%;
@@ -57,21 +57,25 @@ html, body {
   border: none;
   border-bottom: 2px solid #fff;
   outline: none;
-  padding-bottom: 15px;
   text-align: center;
   width: 400px;
 }
 
 .login.page .title {
   font-size: 200%;
+  padding: 0 10px;
+}
+
+.box-submit {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
 }
 
 .login.page .username-input {
   font-size: 16px;
   font-size: 200%;
-  letter-spacing: 3px;
 }
-
 
 .login.page .title, .login.page .username-input {
   color: #fff;
@@ -79,15 +83,14 @@ html, body {
 }
 
 button.enter {
-  width: 73px;
-  height: 73px;
   background-color: #000;
   color: #fff;
   border: 2px solid #fff;
   border-color: #fff;
+  border-radius: 5px;
   font-size: 200%;
   margin-left: 5px;
-  padding: 17px 19px;
+  padding: 12px 19px;
 }
 
 button.enter:hover {
@@ -111,11 +114,8 @@ button.enter:hover {
   }
 
   button.enter {
-    width: 65px;
-    height: 65px;
     font-size: 150%;
     margin-left: 5px;
-    padding: 14px 17px;
   }
 
 }
@@ -123,11 +123,11 @@ button.enter:hover {
 @media only screen and (max-width: 650px) {
   .login.page .form .username-input {
     width: 60%;
-    font-size: 4vw;
+    font-size: 5vw;
   }
 
   .login.page .title {
-    font-size: 4vw;
+    font-size: 5vw;
   }
 
   .login.page .username-input {
@@ -136,8 +136,7 @@ button.enter:hover {
 
   button.enter {
     font-size: 4vw;
-    margin-left: .1rem;
-    padding: 1rem 1rem;
+    margin-left: .5rem;
   }
 
 }
