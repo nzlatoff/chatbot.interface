@@ -67,6 +67,7 @@ html, body {
 }
 
 .login.page .username-input {
+  font-size: 16px;
   font-size: 200%;
   letter-spacing: 3px;
 }
