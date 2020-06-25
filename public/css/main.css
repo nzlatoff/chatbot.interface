@@ -94,6 +94,7 @@ textarea:focus {
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
+  overflow-wrap: break-word;
 }
 
 .console-inner {
