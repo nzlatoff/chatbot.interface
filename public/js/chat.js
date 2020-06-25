@@ -109,6 +109,31 @@ $('textarea').keydown(function(e) {
   }
 });
 
+// scrolling
+
+let autoScroll = true;
+
+// if scroll at bottom of output container, enable autoscroll
+$('#messages').scroll((e) => {
+  // console.log('#messages scrolled: disabling autoscroll');
+  autoScroll = false;
+  let outTop = $('#messages').prop('scrollTop');
+  const outMax = $('#messages').prop('scrollTopMax');
+  if (outTop == outMax) {
+    // console.log('back to the bottom: reenabling autoscroll');
+    autoScroll = true;
+  }
+});
+
+function adjustScroll() {
+  let outTop = $('#messages').prop('scrollTop');
+  const outMax = $('#messages').prop('scrollTopMax');
+  // console.log(`scrollTop: ${outTop}, scrollHeight: ${outMax}`);
+  if (outTop < outMax) {
+    $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
+  }
+}
+
 socket.on("new user", data => {
   // console.log('new user (will create box):', data);
   createInteractiveBox(data);
@@ -175,7 +200,7 @@ function appendMessage(data) {
     div.innerHTML = data.message;
   }
   messages.appendChild(div);
-  $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
+  if (autoScroll) adjustScroll();
 };
 
 // });
