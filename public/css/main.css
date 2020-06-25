@@ -125,6 +125,10 @@ textarea:focus {
 
 .users .talkco {
   padding-bottom: 5px;
+  /* https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 /* input: message */
