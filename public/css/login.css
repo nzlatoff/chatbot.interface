@@ -63,7 +63,7 @@ html, body {
 
 .login.page .title {
   font-size: 200%;
-  padding: 0 10px;
+  padding: 0 15px;
 }
 
 .box-submit {
@@ -73,7 +73,6 @@ html, body {
 }
 
 .login.page .username-input {
-  font-size: 16px;
   font-size: 200%;
 }
 
@@ -89,7 +88,7 @@ button.enter {
   border-color: #fff;
   border-radius: 5px;
   font-size: 200%;
-  margin-left: 5px;
+  margin-left: .5rem;
   padding: 12px 19px;
 }
 
@@ -104,39 +103,31 @@ button.enter:hover {
     width: 350px;
     font-size: 150%;
   }
-
   .login.page .title {
     font-size: 150%;
   }
-
   .login.page .username-input {
     font-size: 150%;
   }
-
   button.enter {
     font-size: 150%;
     margin-left: 5px;
   }
-
 }
 
 @media only screen and (max-width: 650px) {
   .login.page .form .username-input {
     width: 60%;
-    font-size: 5vw;
+    font-size: 130%;
   }
-
   .login.page .title {
-    font-size: 5vw;
+    font-size: 130%;
   }
-
   .login.page .username-input {
-    font-size: 4vw;
+    font-size: 130%;
   }
-
   button.enter {
-    font-size: 4vw;
+    font-size: 130%;
     margin-left: .5rem;
   }
-
 }
