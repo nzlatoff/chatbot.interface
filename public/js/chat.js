@@ -193,10 +193,11 @@ function appendMessage(data, scroll=true) {
   let div = document.createElement("div");
   var messages = document.getElementById("messages");
   // console.log('received', data);
+  const msg = data.message.replace(/\n/g, '<br>');
   if (data.character) {
-    div.innerHTML = `${data.character}<br>${data.message}`;
+    div.innerHTML = `${data.character}<br>${msg}`;
   } else {
-    div.innerHTML = data.message;
+    div.innerHTML = msg;
   }
   messages.appendChild(div);
   if (scroll && autoScroll) adjustScroll();
