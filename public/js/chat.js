@@ -92,13 +92,8 @@ socket.on("received", data => {
     })
     .then(json => {
       json.map(data => {
-        let div = document.createElement("div");
-        messages.appendChild(div).append(data.message);
+        appendMessage(data);
       });
-    })
-    .then(() => {
-      // console.log('loaded db');
-      $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
     });
 })();
 
