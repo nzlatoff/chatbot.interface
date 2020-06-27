@@ -115,10 +115,9 @@ let autoScroll = true;
 // if scroll at bottom of output container, enable autoscroll
 $('#messages').scroll((e) => {
   // console.log('#messages scrolled: disabling autoscroll');
+  // console.log(`scrollTop: ${$('#messages').prop('scrollTop')} | innerHeight ${$('#messages').innerHeight()} | sum ${$('#messages').prop('scrollTop') + $('#messages').innerHeight()} | scrollHeight ${$('#messages').prop('scrollHeight')}`)
   autoScroll = false;
-  let outTop = $('#messages').prop('scrollTop');
-  const outMax = $('#messages').prop('scrollTopMax');
-  if (outTop == outMax) {
+  if($('#messages').prop('scrollTop') + $('#messages').innerHeight() >= $('#messages').prop('scrollHeight')) {
     // console.log('back to the bottom: reenabling autoscroll');
     autoScroll = true;
   }
@@ -126,7 +125,7 @@ $('#messages').scroll((e) => {
 
 function adjustScroll() {
   let outTop = $('#messages').prop('scrollTop');
-  const outMax = $('#messages').prop('scrollTopMax');
+  const outMax = $('#messages').prop('scrollHeight');
   // console.log(`scrollTop: ${outTop}, scrollHeight: ${outMax}`);
   if (outTop < outMax) {
     $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
