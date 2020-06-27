@@ -92,8 +92,12 @@ socket.on("received", data => {
     })
     .then(json => {
       json.map(data => {
-        appendMessage(data);
+        appendMessage(data, scroll=false);
       });
+    })
+    .then(() => {
+      // console.log('loaded db');
+      $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
     });
 })();
 
@@ -185,7 +189,7 @@ socket.on('users list', function(data) {
   removeUnusedBoxes(data);
 });
 
-function appendMessage(data) {
+function appendMessage(data, scroll=true) {
   let div = document.createElement("div");
   var messages = document.getElementById("messages");
   // console.log('received', data);
@@ -195,7 +199,7 @@ function appendMessage(data) {
     div.innerHTML = data.message;
   }
   messages.appendChild(div);
-  if (autoScroll) adjustScroll();
+  if (scroll && autoScroll) adjustScroll();
 };
 
 // });
