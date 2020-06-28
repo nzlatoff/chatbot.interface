@@ -166,7 +166,7 @@ socket.on("get typing", () => {
 
 socket.on("notifyTyping", data => {
   // typing.innerText = data.user + " " + data.message;
-  console.log('received typing', data);
+  // console.log('received typing', data);
   $(`#${data.id}`).html(`<em>${data.user}: ${data.character} ${data.message}</em>`);
 });
 
