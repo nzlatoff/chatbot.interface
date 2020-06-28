@@ -67,6 +67,7 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
 /* round-ish border */
 
 .box-wrapper {
+  color: #fff;
   background-color: #000;
   border: 2px solid #fff;
   border-radius: 10px;
@@ -132,10 +133,6 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
 
 .users-wrapper {
   flex: 5;
-}
-
-.users {
-  color: #161717;
 }
 
 .users .talkco {
