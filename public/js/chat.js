@@ -178,7 +178,7 @@ socket.on('reconnect', () => {
   // console.log('you have been reconnected');
 });
 
-socket.on('users list', function(data) {
+socket.on('users list', (data) => {
   // console.log('users list (before removal/adding boxes)', data);
   for (const client in data) {
     // console.log(' - client:', client);
@@ -186,6 +186,10 @@ socket.on('users list', function(data) {
   }
   // update interactive boxes
   removeUnusedBoxes(data);
+});
+
+socket.on('erase messages', () => {
+  $('#messages').empty();
 });
 
 function appendMessage(data, scroll=true) {

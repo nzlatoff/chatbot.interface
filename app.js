@@ -40,6 +40,10 @@ app.get("/", (req,res, next) => {
   }
 })
 
+app.get("/master", (req,res, next) => {
+  res.sendFile(__dirname + "/public/master.html");
+});
+
 app.use("/chats", chatRouter);
 app.use("/users", userRouter);
 
@@ -145,6 +149,15 @@ socketio.on("connection", socket => {
       let chatMessage = new Chat(data);
       chatMessage.save();
     });
+
+  });
+
+  socket.on("reset session", function() {
+    // console.log("resetting session");
+    // console.log("current session:", currentSession);
+    currentSession = new Date().toISOString();
+    // console.log("new session:", currentSession);
+    socket.broadcast.emit("erase messages");
   });
 
 });
