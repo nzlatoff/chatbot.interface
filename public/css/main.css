@@ -88,7 +88,6 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
   cursor: crosshair;
   transition: all 0.2s linear;
   text-align: center;
-  /* vertical-align: top; */
 }
 
 .square-button:hover {
