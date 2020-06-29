@@ -11,6 +11,9 @@ const chatSchema = new Schema(
     },
     user: {
       type: String
+    },
+    session: {
+      type: String
     }
   },
   {

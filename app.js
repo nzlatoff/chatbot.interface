@@ -16,6 +16,8 @@ const io = require("socket.io");
 
 const port = 5100;
 
+let currentSession;
+
 //bodyparser middleware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
@@ -49,9 +51,9 @@ socketio = io(http, { cookie: false });;
 
 //database connection
 const Chat = require("./models/Chat");
-// const connect = require("./dbconnect");
+const connect = require("./dbconnect");
 app.locals.clientsocketlist = {};
-
+app.locals.clientsocketnumber = 0;
 
 //setup event listener
 socketio.on("connection", socket => {
@@ -72,12 +74,44 @@ socketio.on("connection", socket => {
     // save user in object
     app.locals.clientsocketlist[socket.id] = clientInfo;
     // console.log('New user logged on server:', clientInfo.user);
+    app.locals.clientsocketnumber++;
+    // console.log('now', app.locals.clientsocketnumber, 'clients');
+
+    if (app.locals.clientsocketnumber == 1) {
+      // creating a new session
+      currentSession = new Date().toISOString();
+      console.log('one user, creating new session:', currentSession);
+    } else if (app.locals.clientsocketnumber > 1) {
+      // finding all messages in session & broadcasting them before the rest
+      Chat.find({ session:  currentSession }, (err, results) => {
+        if (err) console.log('nothing found');
+        if (results) {
+          // console.log('found:');
+          // console.log(JSON.stringify(results, null, 2));
+          for (msg of results) {
+            // console.log(JSON.stringify(msg, null, 2));
+            socket.emit('received',
+              {
+                character: msg.character,
+                message: msg.message,
+                user: msg.user
+              });
+          }
+        }else {
+          // console.log('nothing found');
+        }
+      });
+    }
+
   });
 
   socket.on("disconnect", function() {
 
     // console.log('disconnecting', socket.user, socket.id);
     delete app.locals.clientsocketlist[socket.id];
+    // console.log('User left server:', clientInfo.user);
+    app.locals.clientsocketnumber--;
+    // console.log('now', app.locals.clientsocketnumber, 'clients');
 
     socket.broadcast.emit("user left", {
       id: socket.id,
@@ -101,12 +135,16 @@ socketio.on("connection", socket => {
     //broadcast message to everyone in port:5000 except yourself.
     socket.broadcast.emit("received", data);
 
-    //save chat to the database
-    // connect.then(db => {
-    //   // console.log("(saving to db)");
-    //   let chatMessage = new Chat(data);
-    //   chatMessage.save();
-    // });
+    data = { ...data, session: currentSession };
+    // console.log('about to save message:');
+    // console.log(data);
+
+    // save chat to the database
+    connect.then(db => {
+      // console.log("(saving to db)");
+      let chatMessage = new Chat(data);
+      chatMessage.save();
+    });
   });
 
 });
