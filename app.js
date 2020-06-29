@@ -156,7 +156,7 @@ socketio.on("connection", socket => {
     // console.log("resetting session");
     // console.log("current session:", currentSession);
     currentSession = new Date().toISOString();
-    // console.log("new session:", currentSession);
+    console.log("new session:", currentSession);
     socket.broadcast.emit("erase messages");
   });
 
