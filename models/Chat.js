@@ -9,7 +9,7 @@ const chatSchema = new Schema(
     message: {
       type: String
     },
-    sender: {
+    user: {
       type: String
     }
   },
