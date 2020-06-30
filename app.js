@@ -94,13 +94,14 @@ socketio.on("connection", socket => {
           // console.log(JSON.stringify(results, null, 2));
           for (msg of results) {
             // console.log(JSON.stringify(msg, null, 2));
-            socket.emit('received',
+            socket.emit('current session message',
               {
                 character: msg.character,
                 message: msg.message,
                 user: msg.user
               });
           }
+          socket.emit('scroll down');
         }else {
           // console.log('nothing found');
         }
@@ -158,6 +159,9 @@ socketio.on("connection", socket => {
     currentSession = new Date().toISOString();
     console.log("new session:", currentSession);
     socket.broadcast.emit("erase messages");
+    for (cl in app.locals.clientsocketlist) {
+      socket.broadcast.emit("new user", app.locals.clientsocketlist[cl]);
+    }
   });
 
 });

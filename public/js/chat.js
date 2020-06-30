@@ -83,6 +83,16 @@ socket.on("received", data => {
   appendMessage(data);
 });
 
+// new message received, only for web clients
+socket.on("current session message", data => {
+  appendMessage(data, scroll=false);
+});
+
+// finish session load
+socket.on("scroll down", ()  => {
+  adjustScroll();
+});
+
 // // fetching initial chat messages from the database
 // (function() {
 //   datefrom = new Date().toISOString().substring(0,10); // just print today's message by default
