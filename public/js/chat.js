@@ -163,7 +163,7 @@ function emitTyping() {
 }
 
 // isTyping events
-$("#message, #character").on("keyup", () => {
+$("#message, #character").on("input", () => {
   // console.log('keyup, sending id', socket.id);
   emitTyping();
 });
