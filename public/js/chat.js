@@ -200,6 +200,7 @@ socket.on('users list', (data) => {
 
 socket.on('erase messages', () => {
   $('#messages').empty();
+  $('#users').empty();
 });
 
 function appendMessage(data, scroll=true) {
