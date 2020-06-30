@@ -115,6 +115,7 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
 
 .console-inner {
   display: flex;
+  max-height: 20vh;
 }
 
 /* login button & username */
@@ -133,6 +134,7 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
 
 .users-wrapper {
   flex: 5;
+  overflow: scroll;
 }
 
 .users .talkco {
