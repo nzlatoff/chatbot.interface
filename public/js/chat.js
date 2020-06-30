@@ -209,7 +209,8 @@ function appendMessage(data, scroll=true) {
   // console.log('received', data);
   const msg = data.message.replace(/\n/g, '<br>');
   if (data.character) {
-    div.innerHTML = `${data.character}<br>${msg}`;
+    const char = data.character.replace(/\n/g, '<br>');
+    div.innerHTML = `${char}<br>${msg}`;
   } else {
     div.innerHTML = msg;
   }
