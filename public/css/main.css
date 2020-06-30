@@ -105,6 +105,7 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
 
 .messages-box {
   flex: 1;
+  flex-basis:
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -137,6 +138,7 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
 .users .talkco {
   padding-bottom: 5px;
   /* https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
+  overflow: auto;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
