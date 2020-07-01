@@ -77,9 +77,8 @@ socketio.on("connection", socket => {
     socket.broadcast.emit("new user", clientInfo);
     // save user in object
     app.locals.clientsocketlist[socket.id] = clientInfo;
-    console.log('new user logged on server:', clientInfo.user);
     app.locals.clientsocketnumber++;
-    console.log('now', app.locals.clientsocketnumber, 'client(s)');
+    console.log('new user logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s)');
 
     if (app.locals.clientsocketnumber == 1) {
       // creating a new session
