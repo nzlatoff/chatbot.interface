@@ -161,7 +161,7 @@ socket.on("get typing", () => {
 
 socket.on("notifyTyping", data => {
   console.log('received typing', data, 'autoScroll:', autoScroll);
-  $(`#${data.id}`).html(`<em>${data.user}: ${data.character} ${data.message}</em>`);
+  $(`#${data.id}`).html(`<em>${data.user}:</em> ${data.character} ${data.message}`);
   // if (data.scroll && autoScroll['users-wrapper']) adjustScroll('#users-wrapper');
 });
 
