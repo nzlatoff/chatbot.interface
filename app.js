@@ -101,11 +101,11 @@ socketio.on("connection", socket => {
                 user: msg.user
               });
           }
-          socket.emit('scroll down');
         }else {
           // console.log('nothing found');
         }
       });
+      socket.emit('scroll down');
     }
 
   });
