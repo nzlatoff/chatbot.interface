@@ -103,8 +103,9 @@ socketio.on("connection", socket => {
         }else {
           // console.log('nothing found');
         }
+      }).then(() => {
+        socket.emit('scroll down');
       });
-      socket.emit('scroll down');
     }
 
   });
