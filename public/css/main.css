@@ -114,7 +114,7 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
 
 .console-box {
   flex: 1;
-  min-height: 0px;
+  min-height: 52px;
 }
 
 .console-inner {
