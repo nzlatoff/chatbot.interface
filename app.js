@@ -130,7 +130,8 @@ socketio.on("connection", socket => {
       id: data.id,
       user: data.user,
       message: data.message,
-      character: data.character
+      character: data.character,
+      scroll: data.scroll
     });
   });
 

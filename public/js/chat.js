@@ -6,7 +6,7 @@ socket.on('connect', function() {
   // console.log('connecting');
   socket.emit('get list');
   socket.emit("new user", cookie2obj(document.cookie).userData);
-  emitTyping();
+  emitTyping(scroll=false);
   $('#username').html(`<em>${cookie2obj(document.cookie).userData}:</em>`);
 });
 
@@ -90,26 +90,10 @@ socket.on("current session message", data => {
 
 // finish session load
 socket.on("scroll down", ()  => {
-  adjustScroll();
+  console.log("scrolling down");
+  adjustScroll('#messages');
+  adjustScroll('#users-wrapper');
 });
-
-// // fetching initial chat messages from the database
-// (function() {
-//   datefrom = new Date().toISOString().substring(0,10); // just print today's message by default
-//   fetch("/chats?datefrom="+datefrom)
-//     .then(data => {
-//       return data.json();
-//     })
-//     .then(json => {
-//       json.map(data => {
-//         appendMessage(data, scroll=false);
-//       });
-//     })
-//     .then(() => {
-//       // console.log('loaded db');
-//       $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
-//     });
-// })();
 
 // ctrl+enter to submit
 $('textarea').keydown(function(e) {
@@ -120,25 +104,25 @@ $('textarea').keydown(function(e) {
 
 // scrolling
 
-let autoScroll = true;
+let autoScroll = { 'messages': true, 'users-wrapper': true };
 
 // if scroll at bottom of output container, enable autoscroll
-$('#messages').scroll((e) => {
-  // console.log('#messages scrolled: disabling autoscroll');
-  // console.log(`scrollTop: ${$('#messages').prop('scrollTop')} | innerHeight ${$('#messages').innerHeight()} | sum ${$('#messages').prop('scrollTop') + $('#messages').innerHeight()} | scrollHeight ${$('#messages').prop('scrollHeight')}`)
-  autoScroll = false;
-  if($('#messages').prop('scrollTop') + $('#messages').innerHeight() >= $('#messages').prop('scrollHeight')) {
+$('#messages, #users-wrapper').scroll((e) => {
+  console.log(`disabling autoscroll for: ${e.currentTarget.id} | scrollTop: ${$(e.currentTarget).prop('scrollTop')} | innerHeight ${$(e.currentTarget).innerHeight()} | sum ${$(e.currentTarget).prop('scrollTop') + $(e.currentTarget).innerHeight()} | scrollHeight ${$(e.currentTarget).prop('scrollHeight')}`)
+  autoScroll[e.currentTarget.id] = false;
+  console.log(autoScroll);
+  if($(e.currentTarget).prop('scrollTop') + $(e.currentTarget).innerHeight() >= $(e.currentTarget).prop('scrollHeight')) {
     // console.log('back to the bottom: reenabling autoscroll');
-    autoScroll = true;
+    autoScroll[e.currentTarget.id] = true;
   }
 });
 
-function adjustScroll() {
-  let outTop = $('#messages').prop('scrollTop');
-  const outMax = $('#messages').prop('scrollHeight');
-  // console.log(`scrollTop: ${outTop}, scrollHeight: ${outMax}`);
+function adjustScroll(el) {
+  let outTop = $(el).prop('scrollTop');
+  const outMax = $(el).prop('scrollHeight');
+  // console.log(`adjusting scroll: ${el} | scrollTop: ${outTop}, scrollHeight: ${outMax}`);
   if (outTop < outMax) {
-    $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
+    $(el).animate({ scrollTop: $(el).prop("scrollHeight")}, 1000);
   }
 }
 
@@ -153,12 +137,13 @@ socket.on('user left', function(data) {
   $(`#${data.id}`).remove();
 });
 
-function emitTyping() {
+function emitTyping(scroll=true) {
   socket.emit("typing", {
     id: socket.id,
     user: cookie2obj(document.cookie).userData,
     message: $("#message").val(),
-    character: $("#character").val()
+    character: $("#character").val(),
+    scroll: scroll
   });
 }
 
@@ -171,13 +156,14 @@ $("#message, #character").on("input", () => {
 // get current state of input boxes at the server's request
 // (used after a new client connects or one refreshes)
 socket.on("get typing", () => {
-  emitTyping();
+  emitTyping(scroll=false);
 });
 
 socket.on("notifyTyping", data => {
   // typing.innerText = data.user + " " + data.message;
-  // console.log('received typing', data);
+  console.log('received typing', data);
   $(`#${data.id}`).html(`<em>${data.user}: ${data.character} ${data.message}</em>`);
+  if (data.scroll && autoScroll['users-wrapper']) adjustScroll('#users-wrapper');
 });
 
 socket.on('disconnect', () => {
@@ -204,8 +190,8 @@ socket.on('erase messages', () => {
 });
 
 function appendMessage(data, scroll=true) {
-  let div = document.createElement("div");
-  var messages = document.getElementById("messages");
+  let div = document.createElement('div');
+  var messages = document.getElementById('messages');
   // console.log('received', data);
   const msg = data.message.replace(/\n/g, '<br>');
   if (data.character) {
@@ -215,7 +201,10 @@ function appendMessage(data, scroll=true) {
     div.innerHTML = msg;
   }
   messages.appendChild(div);
-  if (scroll && autoScroll) adjustScroll();
+  if (scroll && autoScroll['messages']) adjustScroll('#messages');
 };
 
+function appendBox(data, scroll=true) {
+
+};
 // });
