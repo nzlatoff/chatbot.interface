@@ -104,7 +104,7 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
 /* https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336 */
 
 .messages-box {
-  flex: 3;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
