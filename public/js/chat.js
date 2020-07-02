@@ -90,7 +90,7 @@ socket.on("current session message", data => {
 
 // finish session load
 socket.on("scroll down", ()  => {
-  console.log("scrolling down");
+  // console.log("scrolling down");
   adjustScroll('#messages');
   adjustScroll('#users-wrapper');
 });
@@ -108,9 +108,9 @@ let autoScroll = { 'messages': true, 'users-wrapper': true };
 
 // if scroll at bottom of output container, enable autoscroll
 $('#messages, #users-wrapper').scroll((e) => {
-  console.log(`disabling autoscroll for: ${e.currentTarget.id} | scrollTop: ${$(e.currentTarget).prop('scrollTop')} | innerHeight ${$(e.currentTarget).innerHeight()} | sum ${$(e.currentTarget).prop('scrollTop') + $(e.currentTarget).innerHeight()} | scrollHeight ${$(e.currentTarget).prop('scrollHeight')}`)
+  // console.log(`disabling autoscroll for: ${e.currentTarget.id} | scrollTop: ${$(e.currentTarget).prop('scrollTop')} | innerHeight ${$(e.currentTarget).innerHeight()} | sum ${$(e.currentTarget).prop('scrollTop') + $(e.currentTarget).innerHeight()} | scrollHeight ${$(e.currentTarget).prop('scrollHeight')}`)
   autoScroll[e.currentTarget.id] = false;
-  console.log(autoScroll);
+  // console.log(autoScroll);
   if($(e.currentTarget).prop('scrollTop') + $(e.currentTarget).innerHeight() >= $(e.currentTarget).prop('scrollHeight')) {
     // console.log('back to the bottom: reenabling autoscroll');
     autoScroll[e.currentTarget.id] = true;
@@ -160,7 +160,7 @@ socket.on("get typing", () => {
 });
 
 socket.on("notifyTyping", data => {
-  console.log('received typing', data, 'autoScroll:', autoScroll);
+  // console.log('received typing', data, 'autoScroll:', autoScroll);
   $(`#${data.id}`).html(`<em>${data.user}:</em> ${data.character} ${data.message}`);
   // if (data.scroll && autoScroll['users-wrapper']) adjustScroll('#users-wrapper');
 });
