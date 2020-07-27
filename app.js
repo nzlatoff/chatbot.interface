@@ -84,6 +84,7 @@ socketio.on("connection", socket => {
       // creating a new session
       currentSession = new Date().toISOString();
       console.log('one user, creating new session:', currentSession);
+      socket.broadcast.emit("erase messages"); // make sure we clean things up
     } else if (app.locals.clientsocketnumber > 1) {
       // finding all messages in session & broadcasting them before the rest
       Chat.find({ session:  currentSession }, (err, results) => {
