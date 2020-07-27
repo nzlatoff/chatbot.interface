@@ -58,13 +58,29 @@ const Chat = require("./models/Chat");
 const connect = require("./dbconnect");
 app.locals.clientsocketlist = {};
 app.locals.clientsocketnumber = 0;
+app.locals.botsocketlist = {};
+app.locals.botsocketnumber = 0;
 
 //setup event listener
 socketio.on("connection", socket => {
 
   socket.on("get list", function() {
-    socket.emit("users list", app.locals.clientsocketlist);
+    socket.emit("users list", {...app.locals.clientsocketlist, ...app.locals.botsocketlist});
     socket.broadcast.emit("get typing");
+  });
+
+  socket.on("new bot", function(user) {
+    // adding user to the app.local shared variable
+    socket.user = user;
+    const clientInfo = {
+      id: socket.id,
+      user: user,
+    };
+    socket.broadcast.emit("new user", clientInfo);
+    // save user in object
+    app.locals.botsocketlist[socket.id] = clientInfo;
+    app.locals.botsocketnumber++;
+    console.log('new bot logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
   });
 
   socket.on("new user", function(user) {
@@ -78,12 +94,14 @@ socketio.on("connection", socket => {
     // save user in object
     app.locals.clientsocketlist[socket.id] = clientInfo;
     app.locals.clientsocketnumber++;
-    console.log('new user logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s)');
+    console.log('new user logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
 
     if (app.locals.clientsocketnumber == 1) {
       // creating a new session
       currentSession = new Date().toISOString();
-      console.log('one user, creating new session:', currentSession);
+      console.log('=====================================');
+      console.log('first user, creating new session:', currentSession);
+      console.log('=====================================');
       socket.broadcast.emit("erase messages"); // make sure we clean things up
     } else if (app.locals.clientsocketnumber > 1) {
       // finding all messages in session & broadcasting them before the rest
@@ -114,10 +132,15 @@ socketio.on("connection", socket => {
   socket.on("disconnect", function() {
 
     // console.log('disconnecting', socket.user, socket.id);
-    delete app.locals.clientsocketlist[socket.id];
-    // console.log('User left server:', clientInfo.user);
-    app.locals.clientsocketnumber--;
-    // console.log('now', app.locals.clientsocketnumber, 'clients');
+    if (socket.id in app.locals.botsocketlist) {
+      delete app.locals.botsocketlist[socket.id];
+      app.locals.botsocketnumber--;
+      // console.log('now', app.locals.botsocketnumber, 'bots');
+    } else {
+      delete app.locals.clientsocketlist[socket.id];
+      app.locals.clientsocketnumber--;
+      // console.log('now', app.locals.clientsocketnumber, 'clients');
+    }
 
     socket.broadcast.emit("user left", {
       id: socket.id,
@@ -161,7 +184,7 @@ socketio.on("connection", socket => {
     currentSession = new Date().toISOString();
     console.log("new session:", currentSession);
     socket.broadcast.emit("erase messages");
-    for (cl in app.locals.clientsocketlist) {
+    for (cl in {...app.locals.clientsocketlist, ...app.locals.botsocketlist}) {
       socket.broadcast.emit("new user", app.locals.clientsocketlist[cl]);
     }
   });
