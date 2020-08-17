@@ -8,6 +8,7 @@ html, body, input {
     Monaco,
     monospace;
   font-size: 16px;
+  color: #fff;
 }
 
 body {
@@ -20,7 +21,6 @@ textarea {
   font-size: 16px;
   min-height: 48px;
   box-sizing: border-box;
-  color: #fff;
   background-color: #000;
 }
 
@@ -41,31 +41,44 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
   color: #f7f7f7;
 }
 
-/* square button */
-
-.square-button {
-  width: 52px;
-  height: 52px;
-  border: 2px solid #fff;
-  border-radius: 5px;
-  color: #fff;
-  background-color: #000;
-  font-size: 1.2rem;
-  cursor: crosshair;
-  transition: all 0.2s linear;
-  text-align: center;
+input {
+  background: #000;
+  border-top-style: hidden;
+  border-left-style: hidden;
+  border-right-style: hidden;
+  border-width: 1px;
 }
 
-.square-button:hover {
-  color: red;
-  border-color: red;
+/* https://css-tricks.com/almanac/selectors/p/placeholder/ */
+ 
+input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: white;
+  opacity: .7;
+  font-style: italic;
+  text-align: right;
 }
-
+input::-moz-placeholder { /* Firefox 19+ */
+  color: white;
+  opacity: .7;
+  font-style: italic;
+  text-align: right;
+}
+input:-ms-input-placeholder { /* IE 10+ */
+  color: white;
+  opacity: .7;
+  font-style: italic;
+  text-align: right;
+}
+input:-moz-placeholder { /* Firefox 18- */
+  color: white;
+  opacity: .7;
+  font-style: italic;
+  text-align: right;
+}
 
 /* round-ish border */
 
 .box-wrapper {
-  color: #fff;
   background-color: #000;
   border: 2px solid #fff;
   border-radius: 10px;
@@ -80,12 +93,18 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
   height: 52px;
   border: 2px solid #fff;
   border-radius: 5px;
-  color: #fff;
   background-color: #000;
   font-size: 1.2rem;
   cursor: crosshair;
   transition: all 0.2s linear;
   text-align: center;
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.square-button:hover {
+  color: red;
+  border-color: red;
 }
 
 /* reset button */
@@ -95,8 +114,25 @@ textarea::-ms-input-placeholder { /* Microsoft Edge */
   text-align: right;
 }
 
-.reset-button {
-  font-size: 0.8rem;
-  text-align: center;
+/* bot controls */
+
+.bot-name {
+  margin-bottom: 10px;
+}
+
+.bot-controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.bot-form {
+  text-align: right;
+  margin: 0 5px;
+  flex-grow: 1;
+}
+/* set buttons */
+
+.set-button {
+  align-self: flex-end;
 }
 

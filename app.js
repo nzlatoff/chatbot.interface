@@ -69,6 +69,14 @@ socketio.on("connection", socket => {
     socket.broadcast.emit("get typing");
   });
 
+  socket.on("client wants bot list", function() {
+    socket.emit("bots list", app.locals.botsocketlist);
+  });
+
+  socket.on("client wants bot config", function() {
+    socket.broadcast.emit("get bot config");
+  });
+
   socket.on("new bot", function(user) {
     // adding user to the app.local shared variable
     socket.user = user;
@@ -81,6 +89,17 @@ socketio.on("connection", socket => {
     app.locals.botsocketlist[socket.id] = clientInfo;
     app.locals.botsocketnumber++;
     console.log('new bot logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
+  });
+
+  socket.on("config from bot", function(data) {
+    console.log("---------------------------");
+    console.log(data.user);
+    console.log("-----------");
+    for (el in data) {
+      console.log(`${el}: ${data[el]}`);
+    }
+    console.log("---------------------------");
+    socket.broadcast.emit("bot config from server", data);
   });
 
   socket.on("new user", function(user) {
@@ -135,6 +154,10 @@ socketio.on("connection", socket => {
     if (socket.id in app.locals.botsocketlist) {
       delete app.locals.botsocketlist[socket.id];
       app.locals.botsocketnumber--;
+      socket.broadcast.emit("bot left", {
+        id: socket.id,
+        user: socket.user
+      });
       // console.log('now', app.locals.botsocketnumber, 'bots');
     } else {
       delete app.locals.clientsocketlist[socket.id];
