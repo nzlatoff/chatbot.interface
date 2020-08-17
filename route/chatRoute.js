@@ -11,12 +11,6 @@ router.route('/').get((req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 200;
 
-  // connectdb.then(db => {
-  //   let data = Chats.find({ message: 'Anonymous' });
-  //   Chats.find({createdAt: { $gte: datefrom.toISOString()} }).then(chat => {
-  //     res.json(chat);
-  //   });
-  // });
 });
 
 module.exports = router;
