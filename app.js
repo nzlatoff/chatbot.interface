@@ -69,11 +69,11 @@ socketio.on("connection", socket => {
     socket.broadcast.emit("get typing");
   });
 
-  socket.on("client wants bot list", function() {
+  socket.on("master wants bot list", function() {
     socket.emit("bots list", app.locals.botsocketlist);
   });
 
-  socket.on("client wants bot config", function() {
+  socket.on("master wants bot config", function() {
     socket.broadcast.emit("get bot config");
   });
 
@@ -85,9 +85,11 @@ socketio.on("connection", socket => {
       user: user,
     };
     socket.broadcast.emit("new user", clientInfo);
+    socket.broadcast.emit("new bot", clientInfo);
     // save user in object
     app.locals.botsocketlist[socket.id] = clientInfo;
     app.locals.botsocketnumber++;
+    console.log("---------------------------");
     console.log('new bot logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
   });
 
@@ -98,7 +100,6 @@ socketio.on("connection", socket => {
     for (el in data) {
       console.log(`${el}: ${data[el]}`);
     }
-    console.log("---------------------------");
     socket.broadcast.emit("bot config from server", data);
   });
 
@@ -148,9 +149,16 @@ socketio.on("connection", socket => {
 
   });
 
+  socket.on("master sets bot config", function(data) {
+    console.log("---------------------------");
+    console.log("master sets bot config:", data);
+    socket.broadcast.emit("server sets bot config", data);
+  });
+
   socket.on("disconnect", function() {
 
     // console.log('disconnecting', socket.user, socket.id);
+
     if (socket.id in app.locals.botsocketlist) {
       delete app.locals.botsocketlist[socket.id];
       app.locals.botsocketnumber--;
@@ -158,17 +166,21 @@ socketio.on("connection", socket => {
         id: socket.id,
         user: socket.user
       });
-      // console.log('now', app.locals.botsocketnumber, 'bots');
-    } else {
-      delete app.locals.clientsocketlist[socket.id];
-      app.locals.clientsocketnumber--;
-      // console.log('now', app.locals.clientsocketnumber, 'clients');
+        console.log("---------------------------");
+        console.log('bot left server:', socket.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
     }
 
-    socket.broadcast.emit("user left", {
-      id: socket.id,
-      user: socket.user
-    });
+    if (socket.id in app.locals.clientsocketlist) {
+      delete app.locals.clientsocketlist[socket.id];
+      app.locals.clientsocketnumber--;
+      socket.broadcast.emit("user left", {
+        id: socket.id,
+        user: socket.user
+      });
+      console.log("---------------------------");
+      console.log('user left server:', socket.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
+    }
+
   });
 
   //Someone is typing
