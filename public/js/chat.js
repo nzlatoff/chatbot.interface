@@ -45,7 +45,7 @@ function createInteractiveBox(client) {
     div.id = client.id;
     div.className = 'talkco';
     div.innerHTML = `<em>${client.user}: </em>`;
-    users.appendChild(div);
+    document.querySelector('#users').appendChild(div);
   } else {
     // console.log('found element', $(`#${client.id}`));
   }
