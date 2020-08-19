@@ -137,6 +137,12 @@ socket.on('user left', function(data) {
   $(`#${data.id}`).remove();
 });
 
+socket.on('bot left', function(data) {
+  // send the username to the server
+  // console.log('user left', data);
+  $(`#${data.id}`).remove();
+});
+
 function emitTyping(scroll=true) {
   socket.emit("typing", {
     id: socket.id,
