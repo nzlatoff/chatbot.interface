@@ -37,7 +37,11 @@ async function deleteUnusedBoxes(data) {
 function submitConfig(form, data) {
   let formData = new FormData(form);
   for (const pair of formData.entries()) {
-    if (!pair[1]) {
+    if (["character", "hidden_end_of_line", "start_of_line"].includes(pair[0]) && !pair[1]) {
+      document.querySelector(`#${pair[0]}-${data.id}`).placeholder = "";
+      document.querySelector(`#${pair[0]}-${data.id}`).value = "";
+      formData.set(pair[0], "");
+    } else if (!pair[1]) {
       const pl = document.querySelector(`#${pair[0]}-${data.id}`).placeholder;
       document.querySelector(`#${pair[0]}-${data.id}`).value = pl;
       formData.set(pair[0], pl);
@@ -63,6 +67,19 @@ socket.on("bot config from server", data => {
 
   // console.log("bot config from server:", data);
 
+  const numbersFields = [
+    "id",
+    "run",
+    "model",
+    "temperature",
+    "top_k",
+    "top_p",
+    "print_speed",
+    "length_desired",
+    "random_threshold",
+    "rank_threshold"
+  ];
+
   let box = document.getElementById(data.id);
 
   if (box.getElementsByClassName("bot-controls").length != 0) {
@@ -78,18 +95,28 @@ socket.on("bot config from server", data => {
 
   box.appendChild(botControls);
 
+  let numbersBox = document.createElement("div");
+  numbersBox.className = "numbers-inputs-wrapper";
+  let textsBox = document.createElement("div");
+  textsBox.className = "texts-inputs-wrapper";
+
   for (const el in data) {
 
     if (el === "user") {
       continue;
     }
 
-    let div = document.createElement("div");
-    div.className = `input-wrapper ${el}-wrapper`;
+    let wrapper = document.createElement("wrapper");
+    wrapper.className = `input-wrapper ${el}-wrapper`;
 
-    let input = document.createElement("input");
-    input.type = "text";
-    input.className = el;
+    let input;
+    if (numbersFields.includes(el)) {
+      input = document.createElement("input");
+    } else {
+      input = document.createElement("textarea");
+      if (el === "character") input.rows = 1;
+    }
+
     input.id = `${el}-${data.id}`;
     input.name = el;
 
@@ -109,13 +136,25 @@ socket.on("bot config from server", data => {
 
     let inputLabel = document.createElement("label");
     inputLabel.htmlFor = input.id;
-    inputLabel.innerHTML = `${el.replace("_", " ")}:`;
+    inputLabel.innerHTML = `${el.replace(/_/g, " ")}:`;
 
-    div.appendChild(inputLabel);
-    div.appendChild(input);
-    form.appendChild(div);
+    let labelDiv =  document.createElement("div");
+
+    labelDiv.appendChild(inputLabel);
+    wrapper.appendChild(labelDiv);
+    wrapper.appendChild(input);
+
+    if (numbersFields.includes(el)) {
+      labelDiv.className = "numbers-label-wrapper";
+      numbersBox.appendChild(wrapper);
+    } else {
+      labelDiv.className = "texts-label-wrapper";
+      textsBox.appendChild(wrapper);
+    }
 
   }
+  form.appendChild(numbersBox);
+  form.appendChild(textsBox);
 
   setButton = document.createElement("button");
   setButton.className = "square-button set-button";

@@ -2,7 +2,7 @@ html, body {
   height: 98%;
 }
 
-html, body, input {
+html, body, input, textarea {
   font-family:
     "Lucida Console",
     Monaco,
@@ -20,39 +20,50 @@ input {
   border-top-style: hidden;
   border-left-style: hidden;
   border-right-style: hidden;
-  border-width: 1px;
+  border-width: 0px;
 }
 
-input:focus  {
+textarea {
+  resize: vertical;
+  margin-bottom: 5px;
+  background: #000;
+  border-width: 1px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border-width: 2px;
+}
+
+input:focus, textarea:focus  {
   outline: none;
 }
 
-input::-moz-focus-inner {
+input::-moz-focus-inner, textarea::-moz-focus-inner {
   border: 0;
 }
 
 
 /* https://css-tricks.com/almanac/selectors/p/placeholder/ */
 
-input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { /* Chrome/Opera/Safari */
   color: white;
   opacity: .7;
   font-style: italic;
   text-align: left;
 }
-input::-moz-placeholder { /* Firefox 19+ */
+input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 19+ */
   color: white;
   opacity: .7;
   font-style: italic;
   text-align: left;
 }
-input:-ms-input-placeholder { /* IE 10+ */
+input:-ms-input-placeholder, textarea:-ms-input-placeholder { /* IE 10+ */
   color: white;
   opacity: .7;
   font-style: italic;
   text-align: left;
 }
-input:-moz-placeholder { /* Firefox 18- */
+input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
   color: white;
   opacity: .7;
   font-style: italic;
@@ -111,6 +122,9 @@ input:-moz-placeholder { /* Firefox 18- */
 .bot-form {
   flex-grow: 1;
   margin: 0 10px 0 0;
+  display: flex;
+  justify-content: stretch;
+  flex-wrap: wrap;
 }
 
 .input-wrapper {
@@ -119,11 +133,31 @@ input:-moz-placeholder { /* Firefox 18- */
 }
 
 .input-wrapper input {
-  width: 65%;
+  width: 210px;
+}
+
+.input-wrapper textarea {
+  width: 75%;
+}
+
+.numbers-inputs-wrapper {
+  margin-right: 5px;
+}
+
+.texts-inputs-wrapper {
+  flex-grow: 1;
 }
 
 input.id, input.model, input.run {
   border: none;
+}
+
+.numbers-label-wrapper {
+  width: 45%;
+}
+
+.texts-label-wrapper {
+  width: 30%;
 }
 
 /* set buttons */
