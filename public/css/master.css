@@ -1,5 +1,10 @@
 html, body {
   height: 98%;
+  font-size: 16px;
+}
+
+body {
+  background-color: #000;
 }
 
 html, body, input, textarea {
@@ -7,12 +12,11 @@ html, body, input, textarea {
     "Lucida Console",
     Monaco,
     monospace;
-  font-size: 16px;
   color: #fff;
 }
 
-body {
-  background-color: #000;
+input, textarea {
+  font-size: 14px;
 }
 
 input {
@@ -25,13 +29,11 @@ input {
 
 textarea {
   resize: vertical;
-  margin-bottom: 5px;
   background: #000;
-  border-width: 1px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  border-radius: 5px;
-  border-width: 2px;
+  border-radius: 3px;
+  border-width: 1px;
 }
 
 input:focus, textarea:focus  {
@@ -88,7 +90,6 @@ input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
   border: 2px solid #fff;
   border-radius: 5px;
   background-color: #000;
-  font-size: 1.2rem;
   cursor: crosshair;
   transition: all 0.2s linear;
   text-align: center;
@@ -125,6 +126,13 @@ input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
   display: flex;
   justify-content: stretch;
   flex-wrap: wrap;
+  font-size: 14px
+}
+
+@media only screen and (max-width: 650px) {
+  .bot-form, input, textarea {
+    font-size: 0.9rem;
+  }
 }
 
 .input-wrapper {
@@ -133,7 +141,7 @@ input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
 }
 
 .input-wrapper input {
-  width: 210px;
+  width: 50%;
 }
 
 .input-wrapper textarea {
@@ -141,11 +149,11 @@ input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
 }
 
 .numbers-inputs-wrapper {
-  margin-right: 5px;
+  flex-grow: 1;
 }
 
 .texts-inputs-wrapper {
-  flex-grow: 1;
+  flex-grow: 3;
 }
 
 input.id, input.model, input.run {
