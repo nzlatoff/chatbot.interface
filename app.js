@@ -213,6 +213,15 @@ socketio.on("connection", socket => {
 
   });
 
+
+  socket.on("chat batch", function(data) {
+    // console.log("message:", data.message, 'by', data.user);
+
+    //broadcast message to everyone in port:5000 except yourself.
+    socket.broadcast.emit("received batch", data);
+
+  });
+
   socket.on("reset session", function() {
     // console.log("resetting session");
     // console.log("current session:", currentSession);

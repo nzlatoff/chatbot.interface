@@ -19,7 +19,8 @@ async function createBotBoxes(data) {
     box.id = botId;
     box.className = "box-wrapper bot-wrapper";
     let title = document.createElement("div");
-    title.className = "bot-name";
+    title.className = "bot-title";
+    title.id = `title-${botId}`;
     title.innerHTML = `<b>${data[botId].user}</b>`;
     box.appendChild(title);
     document.body.appendChild(box);
@@ -68,9 +69,6 @@ socket.on("bot config from server", data => {
   // console.log("bot config from server:", data);
 
   const numbersFields = [
-    "id",
-    "run",
-    "model",
     "temperature",
     "top_k",
     "top_p",
@@ -78,6 +76,12 @@ socket.on("bot config from server", data => {
     "length_desired",
     "random_threshold",
     "rank_threshold"
+  ];
+
+  const textareaFields = [
+    "character",
+    "hidden_before_char",
+    "hidden_after_char"
   ];
 
   let box = document.getElementById(data.id);
@@ -100,11 +104,18 @@ socket.on("bot config from server", data => {
   let textsBox = document.createElement("div");
   textsBox.className = "texts-inputs-wrapper";
 
-  for (const el in data) {
+  let subT = document.createElement("div");
+  subT.className = "bot-subtitle";
+  subT.id = `subtitle-${data.id}`;
 
-    if (el === "user") {
-      continue;
-    }
+  // https://stackoverflow.com/a/39333479
+  // https://stackoverflow.com/a/51401453
+  const subData = Object.entries(
+    (({id, model, run}) => ({id, model, run}))(data)
+  ).join(" | ").replace(/,/g, ": ");
+  subT.innerHTML = `${subData}`;
+
+  for (const el in data) {
 
     let wrapper = document.createElement("wrapper");
     wrapper.className = `input-wrapper ${el}-wrapper`;
@@ -112,9 +123,11 @@ socket.on("bot config from server", data => {
     let input;
     if (numbersFields.includes(el)) {
       input = document.createElement("input");
-    } else {
+    } else if (textareaFields.includes(el)) {
       input = document.createElement("textarea");
       if (el === "character") input.rows = 1;
+    } else {
+      continue;
     }
 
     input.id = `${el}-${data.id}`;
@@ -153,6 +166,10 @@ socket.on("bot config from server", data => {
     }
 
   }
+
+  const title = document.querySelector(`#title-${data.id}`);
+  title.parentNode.insertBefore(subT, title.nextSibling);
+
   form.appendChild(numbersBox);
   form.appendChild(textsBox);
 
@@ -179,6 +196,50 @@ socket.on("bot left", data => {
       el.remove();
     }
   });
+});
+
+socket.on("received batch", data => {
+  console.log("received batch");
+  let batch_messages_form = document.createElement("form");
+  batch_messages_form.className = "bot-batch-messages-form";
+  const { id, chars, messages, perplexities } = data;
+  const minPerp = Math.min(...perplexities);
+  console.log(minPerp);
+  for (const i in chars) {
+
+    let inputDiv = document.createElement("div");
+    inputDiv.className = "batch-message-container";
+
+    let inp = document.createElement("input");
+    inp.className = "batch-message";
+    inp.setAttribute("type", "radio");
+    inp.id = `batch-input-${i}`;
+    inp.name = `batch-input-${i}`;
+    inp.setAttribute("value", i);
+    if (perplexities[i][0] === minPerp) {
+      inp.checked = true;
+    }
+
+    let labDiv = document.createElement("div");
+    labDiv.className = `batch-label-container`;
+
+    let lab = document.createElement("label");
+    lab.id = `batch-label-${i}`;
+    lab.htmlFor = `batch-message-${i}`;
+    lab.innerHTML = `<i>${perplexities[i][0].toFixed(3)}</i><br>`;
+    lab.innerHTML += `${chars[i].trim()}<br>`;
+    lab.innerHTML += `${messages[i].trim().replace('\n', '<br>')}`;
+
+    labDiv.appendChild(lab);
+    inputDiv.appendChild(inp);
+    inputDiv.appendChild(labDiv);
+    batch_messages_form.appendChild(inputDiv);
+
+  }
+
+  let box = document.getElementById(id);
+  box.appendChild(batch_messages_form);
+
 });
 
 document.querySelector("#reset-button").addEventListener("click", () => {

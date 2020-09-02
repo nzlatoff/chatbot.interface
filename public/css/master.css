@@ -111,8 +111,13 @@ input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
 
 /* bot controls */
 
-.bot-name {
-  margin-bottom: 10px;
+.bot-title {
+  margin-bottom: 3px;
+}
+
+.bot-subtitle {
+  font-size: 14px;
+  margin-bottom: 5px;
 }
 
 .bot-controls {
@@ -126,7 +131,7 @@ input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
   display: flex;
   justify-content: stretch;
   flex-wrap: wrap;
-  font-size: 14px
+  font-size: 14px;
 }
 
 @media only screen and (max-width: 650px) {
@@ -150,10 +155,12 @@ input:-moz-placeholder, textarea:-moz-placeholder { /* Firefox 18- */
 
 .numbers-inputs-wrapper {
   flex-grow: 1;
+  margin: 3px;
 }
 
 .texts-inputs-wrapper {
   flex-grow: 3;
+  margin: 3px;
 }
 
 input.id, input.model, input.run {
@@ -174,3 +181,17 @@ input.id, input.model, input.run {
   align-self: flex-end;
 }
 
+.bot-batch-messages-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+.batch-message-container {
+  display: flex;
+  align-items: flex-start;
+  flex-basis: 30%;
+  margin: 3px;
+}
+
+.batch-label-container {
+  /* margin-right: 3px; */
+}
