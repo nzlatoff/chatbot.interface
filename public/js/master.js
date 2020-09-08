@@ -2,6 +2,7 @@ const socket = io();
 
 socket.on("connect", function() {
   console.log("connecting!");
+  socket.emit("new master");
   socket.emit("master wants bot list");
 });
 
@@ -199,12 +200,24 @@ socket.on("bot left", data => {
 });
 
 socket.on("received batch", data => {
-  console.log("received batch");
+
+  // console.log("received batch");
+
+  const { id, chars, messages, perplexities } = data;
+
+  let batch_controls = document.getElementById(id).querySelector('.batch-controls');
+  if (!batch_controls) {
+    batch_controls = document.createElement("div");
+    batch_controls.className =  "batch-controls";
+  } else {
+    batch_controls.innerHTML = "";
+  }
+
   let batch_messages_form = document.createElement("form");
   batch_messages_form.className = "bot-batch-messages-form";
-  const { id, chars, messages, perplexities } = data;
+
   const minPerp = Math.min(...perplexities);
-  console.log(minPerp);
+
   for (const i in chars) {
 
     let inputDiv = document.createElement("div");
@@ -214,14 +227,14 @@ socket.on("received batch", data => {
     inp.className = "batch-message";
     inp.setAttribute("type", "radio");
     inp.id = `batch-input-${i}`;
-    inp.name = `batch-input-${i}`;
+    inp.name = `batch-input`;
     inp.setAttribute("value", i);
     if (perplexities[i][0] === minPerp) {
       inp.checked = true;
     }
 
     let labDiv = document.createElement("div");
-    labDiv.className = `batch-label-container`;
+    labDiv.className = "batch-label-container";
 
     let lab = document.createElement("label");
     lab.id = `batch-label-${i}`;
@@ -237,8 +250,34 @@ socket.on("received batch", data => {
 
   }
 
+  let counterDiv = document.createElement("div");
+  counterDiv.className = "counter-seconds";
+  let seconds = 0;
+  counterDiv.innerText = `${seconds}`;
+
+  batch_controls.appendChild(batch_messages_form);
+  batch_controls.appendChild(counterDiv);
+
   let box = document.getElementById(id);
-  box.appendChild(batch_messages_form);
+  box.appendChild(batch_controls);
+
+  const countdown = setInterval(() => {
+    seconds--;
+    counterDiv.innerText = seconds;
+    if (seconds <= 0) {
+      clearInterval(countdown);
+      let i;
+      for (i = 0; i < batch_messages_form.length; i++) {
+        if (batch_messages_form[i].checked) break;
+      }
+      console.log(`The selected message is number: ${i+1}`);
+      socket.emit("master sends choice", { id: id, choice: i});
+      ic = document.createElement("i");
+      ic.className = "fas fa-check";
+      counterDiv.innerHTML = "";
+      counterDiv.appendChild(ic);
+    }
+  }, 1000);
 
 });
 

@@ -51,6 +51,7 @@ textarea {
 .bot-controls {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 5px;
 }
 
 .bot-form {
@@ -109,9 +110,17 @@ input.id, input.model, input.run {
   align-self: flex-end;
 }
 
+
+/* batch controls */
+
+.batch-controls {
+  display: flex;
+}
+
 .bot-batch-messages-form {
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 0px;
 }
 
 .batch-message-container {
@@ -123,4 +132,11 @@ input.id, input.model, input.run {
 
 .batch-label-container {
   /* margin-right: 3px; */
+}
+
+.counter-seconds {
+  text-align: center;
+  align-self: flex-end;
+  font-size: 2rem;
+  color: red;
 }

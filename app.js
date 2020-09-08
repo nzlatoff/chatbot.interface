@@ -60,6 +60,8 @@ app.locals.clientsocketlist = {};
 app.locals.clientsocketnumber = 0;
 app.locals.botsocketlist = {};
 app.locals.botsocketnumber = 0;
+app.locals.mastersocketlist = [];
+app.locals.mastersocketnumber = 0;
 
 //setup event listener
 socketio.on("connection", socket => {
@@ -67,6 +69,12 @@ socketio.on("connection", socket => {
   socket.on("get list", function() {
     socket.emit("users list", {...app.locals.clientsocketlist, ...app.locals.botsocketlist});
     socket.broadcast.emit("get typing");
+  });
+
+  socket.on("new master", function() {
+    app.locals.mastersocketnumber++;
+    app.locals.mastersocketlist.push(socket.id);
+    console.log('new master logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
   });
 
   socket.on("master wants bot list", function() {
@@ -155,6 +163,12 @@ socketio.on("connection", socket => {
     socket.broadcast.emit("server sets bot config", data);
   });
 
+  socket.on("master sends choice", function(data) {
+    console.log("---------------------------");
+    console.log("master sends message choice:", data);
+    socket.broadcast.emit("server sends choice", data);
+  });
+
   socket.on("disconnect", function() {
 
     // console.log('disconnecting', socket.user, socket.id);
@@ -179,6 +193,13 @@ socketio.on("connection", socket => {
       });
       console.log("---------------------------");
       console.log('user left server:', socket.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
+    }
+
+    if (app.locals.mastersocketlist.includes(socket.id)) {
+      console.log("---------------------------");
+      app.locals.mastersocketnumber--;
+      app.locals.mastersocketlist.splice(app.locals.mastersocketlist.indexOf(socket.id), 1);
+      console.log('master left server:', socket.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
     }
 
   });
@@ -218,7 +239,23 @@ socketio.on("connection", socket => {
     // console.log("message:", data.message, 'by', data.user);
 
     //broadcast message to everyone in port:5000 except yourself.
-    socket.broadcast.emit("received batch", data);
+    if (!app.locals.mastersocketnumber) {
+      const { id, chars, messages, perplexities } = data;
+      const minPerp = Math.min(...perplexities);
+      let i;
+      for (i = 0; i < perplexities.length; i++) {
+        if (perplexities[i][0] === minPerp) {
+          break;
+        }
+      }
+      console.log("type of choice:", typeof(choice));
+      const answer = { id: data.id, choice: i };
+      console.log("---------------------------");
+      console.log("no master connected, sending automatic reply:", answer);
+      socket.emit("server sends choice", answer);
+    } else {
+      socket.broadcast.emit("received batch", data);
+    }
 
   });
 
