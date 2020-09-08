@@ -74,7 +74,7 @@ socketio.on("connection", socket => {
   socket.on("new master", function() {
     app.locals.mastersocketnumber++;
     app.locals.mastersocketlist.push(socket.id);
-    console.log('new master logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
+    console.log('new master logged on server.');
   });
 
   socket.on("master wants bot list", function() {
@@ -199,7 +199,7 @@ socketio.on("connection", socket => {
       console.log("---------------------------");
       app.locals.mastersocketnumber--;
       app.locals.mastersocketlist.splice(app.locals.mastersocketlist.indexOf(socket.id), 1);
-      console.log('master left server:', socket.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
+      console.log('master left server.');
     }
 
   });
