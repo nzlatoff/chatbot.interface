@@ -215,8 +215,3 @@ function appendMessage(data, scroll=true) {
   messages.appendChild(div);
   if (scroll && autoScroll['messages']) adjustScroll('#messages');
 };
-
-function appendBox(data, scroll=true) {
-
-};
-// });
