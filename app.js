@@ -18,6 +18,13 @@ const port = 5100;
 
 let currentSession;
 
+app.locals.clientsocketlist = {};
+app.locals.clientsocketnumber = 0;
+app.locals.botsocketlist = {};
+app.locals.botsocketnumber = 0;
+app.locals.mastersocketlist = [];
+app.locals.mastersocketnumber = 0;
+
 //bodyparser middleware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
@@ -41,7 +48,19 @@ app.get("/", (req,res, next) => {
 })
 
 app.get("/master", (req,res, next) => {
-  res.sendFile(__dirname + "/public/master.html");
+  if (app.locals.mastersocketnumber > 0) {
+    res.sendFile(__dirname + "/public/audience.html");
+  } else {
+    res.sendFile(__dirname + "/public/master.html");
+  }
+});
+
+app.get("/bots", (req,res, next) => {
+  res.sendFile(__dirname + "/public/bots.html");
+});
+
+app.get("/audience", (req,res, next) => {
+  res.sendFile(__dirname + "/public/audience.html");
 });
 
 app.use("/chats", chatRouter);
@@ -56,12 +75,6 @@ socketio = io(http, { cookie: false });;
 //database connection
 const Chat = require("./models/Chat");
 const connect = require("./dbconnect");
-app.locals.clientsocketlist = {};
-app.locals.clientsocketnumber = 0;
-app.locals.botsocketlist = {};
-app.locals.botsocketnumber = 0;
-app.locals.mastersocketlist = [];
-app.locals.mastersocketnumber = 0;
 
 //setup event listener
 socketio.on("connection", socket => {
@@ -71,14 +84,14 @@ socketio.on("connection", socket => {
     socket.broadcast.emit("get typing");
   });
 
+  socket.on("get bot list", function() {
+    socket.emit("bots list", app.locals.botsocketlist);
+  });
+
   socket.on("new master", function() {
     app.locals.mastersocketnumber++;
     app.locals.mastersocketlist.push(socket.id);
     console.log('new master logged on server.');
-  });
-
-  socket.on("master wants bot list", function() {
-    socket.emit("bots list", app.locals.botsocketlist);
   });
 
   socket.on("master wants bot config", function() {

@@ -3,7 +3,7 @@ const socket = io();
 socket.on("connect", function() {
   console.log("connecting!");
   socket.emit("new master");
-  socket.emit("master wants bot list");
+  socket.emit("get bot list");
 });
 
 async function createBotBoxes(data) {
@@ -185,7 +185,7 @@ socket.on("bot config from server", data => {
 });
 
 socket.on("new bot", data => {
-  socket.emit("master wants bot list");
+  socket.emit("get bot list");
 });
 
 socket.on("bot left", data => {
