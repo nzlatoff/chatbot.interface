@@ -76,6 +76,8 @@ input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 18- */
 .square-button {
   width: 52px;
   height: 52px;
+  min-width: 52px;
+  min-height: 52px;
   border: 2px solid #fff;
   border-radius: 5px;
   color: #fff;
