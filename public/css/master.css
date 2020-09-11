@@ -24,17 +24,47 @@ textarea {
   border-width: 1px;
 }
 
-/* square button */
+
+/* session & reset */
+
+#masthead-box {
+  display: flex;
+  justify-content: space-between;
+}
+
+#sess-wrapper {
+  flex-grow: 1;
+  display: flex;
+}
+
+#sess-wrapper > div:first-child {
+  margin-right: 5px;
+}
+
+.reset-wrapper {
+  align-self: flex-end;
+}
+
+/* buttons */
 
 .square-button {
   font-size: 0.8rem;
 }
 
-/* reset button */
-
-.reset-wrapper {
+.seconds-button {
   align-self: flex-end;
-  text-align: right;
+  font-size: 1.5rem;
+  color: red;
+}
+
+.square-button-no-hover {
+  color: white;
+  cursor: default;
+}
+
+.square-button-no-hover:hover {
+  color: white;
+  border-color: white;
 }
 
 /* bot controls */
@@ -119,7 +149,8 @@ input.id, input.model, input.run {
 
 .bot-batch-messages-form {
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: column wrap;
+  flex-grow: 1;
   margin-bottom: 0px;
 }
 
@@ -130,13 +161,7 @@ input.id, input.model, input.run {
   margin: 3px;
 }
 
-.batch-label-container {
-  /* margin-right: 3px; */
-}
-
-.counter-seconds {
-  text-align: center;
-  align-self: flex-end;
-  font-size: 2rem;
-  color: red;
+.batch-label {
+  display: flex;
+  align-content: space-between;
 }

@@ -144,30 +144,18 @@ socketio.on("connection", socket => {
       console.log('first user, creating new session:', currentSession);
       console.log('=====================================');
       socket.broadcast.emit("erase messages"); // make sure we clean things up
+      socket.broadcast.emit("current session", currentSession);
     } else if (app.locals.clientsocketnumber > 1) {
-      // finding all messages in session & broadcasting them before the rest
-      Chat.find({ session:  currentSession }, (err, results) => {
-        if (err) console.log('nothing found');
-        if (results) {
-          // console.log('found:');
-          // console.log(JSON.stringify(results, null, 2));
-          for (msg of results) {
-            // console.log(JSON.stringify(msg, null, 2));
-            socket.emit('current session message',
-              {
-                character: msg.character,
-                message: msg.message,
-                user: msg.user
-              });
-          }
-        }else {
-          // console.log('nothing found');
-        }
-      }).then(() => {
-        socket.emit('scroll down');
-      });
+        broadcastCurrentSession(socket);
     }
 
+  });
+
+  socket.on("new audience user", function() {
+    console.log(`new audience member on server... currently with ${app.locals.clientsocketnumber} client(s) and ${app.locals.botsocketnumber} bot(s).`);
+    if (app.locals.clientsocketnumber > 1) {
+      broadcastCurrentSession(socket);
+    }
   });
 
   socket.on("master sets bot config", function(data) {
@@ -177,8 +165,10 @@ socketio.on("connection", socket => {
   });
 
   socket.on("master sends choice", function(data) {
-    console.log("---------------------------");
-    console.log("master sends message choice:", data);
+    if (data.choice != -1) {
+      console.log("---------------------------");
+      console.log("master sends message choice:", data);
+    }
     socket.broadcast.emit("server sends choice", data);
   });
 
@@ -249,27 +239,17 @@ socketio.on("connection", socket => {
 
 
   socket.on("chat batch", function(data) {
-    // console.log("message:", data.message, 'by', data.user);
-
-    //broadcast message to everyone in port:5000 except yourself.
     if (!app.locals.mastersocketnumber) {
-      const { id, chars, messages, perplexities } = data;
-      const minPerp = Math.min(...perplexities);
-      let i;
-      for (i = 0; i < perplexities.length; i++) {
-        if (perplexities[i][0] === minPerp) {
-          break;
-        }
-      }
-      console.log("type of choice:", typeof(choice));
-      const answer = { id: data.id, choice: i };
       console.log("---------------------------");
-      console.log("no master connected, sending automatic reply:", answer);
-      socket.emit("server sends choice", answer);
+      console.log("no master connected, returning control to bot.");
+      socket.emit("server sends choice", { id: data.id, choice: -1 });
     } else {
       socket.broadcast.emit("received batch", data);
     }
+  });
 
+  socket.on("get session", function() {
+    socket.emit("current session", currentSession);
   });
 
   socket.on("reset session", function() {
@@ -281,9 +261,35 @@ socketio.on("connection", socket => {
     for (cl in {...app.locals.clientsocketlist, ...app.locals.botsocketlist}) {
       socket.broadcast.emit("new user", app.locals.clientsocketlist[cl]);
     }
+    socket.broadcast.emit("current session", currentSession);
   });
 
 });
+
+function broadcastCurrentSession(socket) {
+
+  // finding all messages in session & broadcasting them before the rest
+  Chat.find({ session:  currentSession }, (err, results) => {
+    if (err) console.log('nothing found');
+    if (results) {
+      // console.log('found:');
+      // console.log(JSON.stringify(results, null, 2));
+      for (msg of results) {
+        // console.log(JSON.stringify(msg, null, 2));
+        socket.emit('current session message',
+          {
+            character: msg.character,
+            message: msg.message,
+            user: msg.user
+          });
+      }
+    }else {
+      // console.log('nothing found');
+    }
+  }).then(() => {
+    socket.emit('scroll down');
+  });
+}
 
 http.listen(process.env.PORT || port, () => {
   console.log("Running on Port: ", port);

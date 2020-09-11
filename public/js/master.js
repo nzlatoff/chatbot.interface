@@ -39,7 +39,7 @@ async function deleteUnusedBoxes(data) {
 function submitConfig(form, data) {
   let formData = new FormData(form);
   for (const pair of formData.entries()) {
-    if (["character", "hidden_end_of_line", "start_of_line"].includes(pair[0]) && !pair[1]) {
+    if (["character", "hidden_before_char", "hidden_after_char"].includes(pair[0]) && !pair[1]) {
       document.querySelector(`#${pair[0]}-${data.id}`).placeholder = "";
       document.querySelector(`#${pair[0]}-${data.id}`).value = "";
       formData.set(pair[0], "");
@@ -62,7 +62,30 @@ function submitConfig(form, data) {
 socket.on("bots list", data => {
   createBotBoxes(data)
    .then(deleteUnusedBoxes(data))
+    .then(socket.emit("get session"))
     .then(socket.emit("master wants bot config"));
+});
+
+socket.on("current session", sess => {
+  let masthead = document.getElementById("masthead-box");
+  const currentSess = masthead.querySelector("#sess-id");
+  // console.log("current sess:", currentSess);
+  if (!currentSess) {
+    let sessWrapper = document.createElement("div");
+    sessWrapper.id = "sess-wrapper";
+    let sessTitle = document.createElement("div");
+    sessTitle.innerHTML = `Current Session:`;
+    let sessDiv = document.createElement("div");
+    sessDiv.id = "sess-id";
+    sessDiv.innerHTML = sess;
+    sessWrapper.prepend(sessDiv);
+    sessWrapper.prepend(sessTitle);
+    masthead.prepend(sessWrapper);
+  } else if (sess != currentSess.innerText) {
+    if (sess != currentSess) {
+      currentSess.innerText = sess;
+    }
+  }
 });
 
 socket.on("bot config from server", data => {
@@ -76,7 +99,8 @@ socket.on("bot config from server", data => {
     "print_speed",
     "length_desired",
     "random_threshold",
-    "rank_threshold"
+    "rank_threshold",
+    "wait_for_master"
   ];
 
   const textareaFields = [
@@ -215,8 +239,7 @@ socket.on("received batch", data => {
 
   let batch_messages_form = document.createElement("form");
   batch_messages_form.className = "bot-batch-messages-form";
-
-  const minPerp = Math.min(...perplexities);
+  batch_messages_form.id = `batch-${id}`;
 
   for (const i in chars) {
 
@@ -226,63 +249,114 @@ socket.on("received batch", data => {
     let inp = document.createElement("input");
     inp.className = "batch-message";
     inp.setAttribute("type", "radio");
-    inp.id = `batch-input-${i}`;
+    inp.id = `batch-input-${id}-${i}`;
     inp.name = `batch-input`;
     inp.setAttribute("value", i);
-    if (perplexities[i][0] === minPerp) {
-      inp.checked = true;
-    }
 
     let labDiv = document.createElement("div");
-    labDiv.className = "batch-label-container";
 
-    let lab = document.createElement("label");
-    lab.id = `batch-label-${i}`;
-    lab.htmlFor = `batch-message-${i}`;
-    lab.innerHTML = `<i>${perplexities[i][0].toFixed(3)}</i><br>`;
-    lab.innerHTML += `${chars[i].trim()}<br>`;
-    lab.innerHTML += `${messages[i].trim().replace('\n', '<br>')}`;
+    let label = document.createElement("label");
+    label.className = "batch-label";
+    label.id = `batch-label-${id}-${i}`;
+    label.htmlFor = `batch-input-${id}-${i}`;
+    let l = document.createElement("div");
+    // https://stackoverflow.com/a/29833199
+    l.innerHTML = `<i>${("   " + perplexities[i][0].toFixed(2)).slice(-6)}</i> | `;
+    let m = document.createElement("div");
+    m.innerHTML += `${chars[i].trim()}<br>`;
+    m.innerHTML += `${messages[i].trim().replace('\n', ' ')}`;
+    label.appendChild(l);
+    label.appendChild(m);
 
-    labDiv.appendChild(lab);
+    labDiv.appendChild(label);
+
     inputDiv.appendChild(inp);
     inputDiv.appendChild(labDiv);
     batch_messages_form.appendChild(inputDiv);
 
   }
 
-  let counterDiv = document.createElement("div");
-  counterDiv.className = "counter-seconds";
-  let seconds = 0;
-  counterDiv.innerText = `${seconds}`;
-
   batch_controls.appendChild(batch_messages_form);
-  batch_controls.appendChild(counterDiv);
+
+  let seconds = data["seconds"];
+  secondsButton = document.createElement("button");
+  secondsButton.className = "square-button seconds-button";
+  secondsButton.id = `seconds-${id}`;
+  secondsButton.innerHTML = `${seconds}`;
+
+  batch_controls.appendChild(secondsButton);
 
   let box = document.getElementById(id);
   box.appendChild(batch_controls);
 
-  const countdown = setInterval(() => {
-    seconds--;
-    counterDiv.innerText = seconds;
-    if (seconds <= 0) {
-      clearInterval(countdown);
-      let i;
-      for (i = 0; i < batch_messages_form.length; i++) {
-        if (batch_messages_form[i].checked) break;
-      }
-      console.log(`The selected message is number: ${i+1}`);
-      socket.emit("master sends choice", { id: id, choice: i});
-      ic = document.createElement("i");
-      ic.className = "fas fa-check";
-      counterDiv.innerHTML = "";
-      counterDiv.appendChild(ic);
-    }
-  }, 1000);
+  const countdown = addCountdown(id, seconds);
+
+  secondsButton.addEventListener("click", (e) => {
+    // console.log("inside event listener", e);
+    submitMessage(id, countdown);
+  }, {once: true} );
 
 });
+
+function addCountdown(id, seconds) {
+  // console.log("about to create new countdown for bot:", id);
+  const countdown = setInterval(() => {
+    if (seconds <= 1) {
+      // console.log("clearing interval:", countdown);
+      submitMessage(id, countdown);
+    } else {
+      // console.log("interval:", countdown, "at second:", seconds);
+      seconds--;
+      document.querySelector(`#seconds-${id}`).innerText = seconds;
+    }
+  }, 1000);
+  return countdown;
+
+}
+
+async function checkRadio(form) {
+  let choice;
+  for (let i = 0; i < form.length; i++) {
+    if (form[i].checked) {
+      choice = i;
+      break;
+    }
+  }
+  return choice;
+}
+
+function submitMessage(id, countdown) {
+
+  console.log("about to enter chain");
+  let secondsButton = document.querySelector(`#seconds-${id}`);
+  new Promise((res, rej) => {
+    clearInterval(countdown);
+    res();
+  }).then(() => {
+    console.log("id is now", id);
+    secondsButton.classList.add("square-button-no-hover");
+  }).then(() => {
+    console.log("id is now", id);
+    return checkRadio(document.querySelector(`#batch-${id}`));
+  }) .then((choice) => {
+    if (choice === undefined) {
+      choice = -1;
+      console.log(`no message selected, returning control to bot.`);
+    } else {
+      console.log(`selecting message: ${choice}`);
+    }
+    socket.emit("master sends choice", { id: id, choice: choice});
+    ic = document.createElement("i");
+    ic.className = "fas fa-check";
+    secondsButton.innerHTML = "";
+    secondsButton.appendChild(ic);
+  });
+
+}
 
 document.querySelector("#reset-button").addEventListener("click", () => {
   console.log("resetting!");
   socket.emit("reset session");
+  socket.emit("get session");
 });
 
