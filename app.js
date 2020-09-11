@@ -49,7 +49,7 @@ app.get("/", (req,res, next) => {
 
 app.get("/master", (req,res, next) => {
   if (app.locals.mastersocketnumber > 0) {
-    res.sendFile(__dirname + "/public/audience.html");
+    res.redirect("/audience");
   } else {
     res.sendFile(__dirname + "/public/master.html");
   }

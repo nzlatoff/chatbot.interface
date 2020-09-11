@@ -112,3 +112,10 @@ socket.on('users list', (data) => {
     // update interactive boxes
     removeUnusedBoxes(data);
 });
+
+document.body.onkeyup = (e) => {
+  console.log(e);
+  if (e.keyCode === 32 || e.key === ' ') {
+    document.getElementById('la-box').classList.toggle('box-no-border');
+  }
+};
