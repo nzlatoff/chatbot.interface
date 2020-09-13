@@ -51,8 +51,11 @@ textarea {
   font-size: 0.8rem;
 }
 
-.seconds-button {
+.batch-button {
   align-self: flex-end;
+}
+
+.seconds-button {
   font-size: 1.5rem;
   color: red;
 }

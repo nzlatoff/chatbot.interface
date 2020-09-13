@@ -1,5 +1,7 @@
 const socket = io();
 
+let countdowns = {};
+
 socket.on("connect", function() {
   console.log("connecting!");
   socket.emit("new master");
@@ -239,7 +241,7 @@ socket.on("received batch", data => {
 
   let batch_messages_form = document.createElement("form");
   batch_messages_form.className = "bot-batch-messages-form";
-  batch_messages_form.id = `batch-${id}`;
+  batch_messages_form.id = `batch-form-${id}`;
 
   for (const i in chars) {
 
@@ -278,43 +280,45 @@ socket.on("received batch", data => {
 
   batch_controls.appendChild(batch_messages_form);
 
-  let seconds = data["seconds"];
-  secondsButton = document.createElement("button");
-  secondsButton.className = "square-button seconds-button";
-  secondsButton.id = `seconds-${id}`;
-  secondsButton.innerHTML = `${seconds}`;
+  batchButton = document.createElement("button");
+  batchButton.className = "square-button batch-button";
+  batchButton.id = `batch-btn-${id}`;
 
-  batch_controls.appendChild(secondsButton);
+  if (data.countdown) {
+    batchButton.classList.add("seconds-button");
+    batchButton.innerHTML = `${data.seconds}`;
+    addCountdown(id, data.seconds);
+  } else {
+    batchButton.innerHTML = "send";
+  }
 
+  batch_controls.appendChild(batchButton);
   let box = document.getElementById(id);
   box.appendChild(batch_controls);
 
-  const countdown = addCountdown(id, seconds);
-
-  secondsButton.addEventListener("click", (e) => {
+  batchButton.addEventListener("click", (e) => {
     // console.log("inside event listener", e);
-    submitMessage(id, countdown);
+    submitMessage(id);
   }, {once: true} );
 
 });
 
 function addCountdown(id, seconds) {
   // console.log("about to create new countdown for bot:", id);
-  const countdown = setInterval(() => {
+ countdowns[id] = setInterval(() => {
     if (seconds <= 1) {
-      // console.log("clearing interval:", countdown);
-      submitMessage(id, countdown);
+      // console.log("clearing interval:", countdowns[id]);
+      submitMessage(id);
     } else {
-      // console.log("interval:", countdown, "at second:", seconds);
+      // console.log("interval:", countdowns[id], "at second:", seconds);
       seconds--;
-      document.querySelector(`#seconds-${id}`).innerText = seconds;
+      document.querySelector(`#batch-btn-${id}`).innerText = seconds;
     }
   }, 1000);
-  return countdown;
-
 }
 
-async function checkRadio(form) {
+async function checkRadio(id) {
+  const form = document.querySelector(`#batch-form-${id}`);
   let choice;
   for (let i = 0; i < form.length; i++) {
     if (form[i].checked) {
@@ -325,19 +329,20 @@ async function checkRadio(form) {
   return choice;
 }
 
-function submitMessage(id, countdown) {
+function submitMessage(id) {
 
   console.log("about to enter chain");
-  let secondsButton = document.querySelector(`#seconds-${id}`);
+  let batchButton = document.querySelector(`#batch-btn-${id}`);
   new Promise((res, rej) => {
-    clearInterval(countdown);
+    clearInterval(countdowns[id]);
+    delete countdowns[id];
     res();
   }).then(() => {
     console.log("id is now", id);
-    secondsButton.classList.add("square-button-no-hover");
+    batchButton.classList.add("square-button-no-hover");
   }).then(() => {
     console.log("id is now", id);
-    return checkRadio(document.querySelector(`#batch-${id}`));
+    return checkRadio(id);
   }) .then((choice) => {
     if (choice === undefined) {
       choice = -1;
@@ -348,14 +353,18 @@ function submitMessage(id, countdown) {
     socket.emit("master sends choice", { id: id, choice: choice});
     ic = document.createElement("i");
     ic.className = "fas fa-check";
-    secondsButton.innerHTML = "";
-    secondsButton.appendChild(ic);
+    batchButton.innerHTML = "";
+    batchButton.appendChild(ic);
   });
 
 }
 
 document.querySelector("#reset-button").addEventListener("click", () => {
   console.log("resetting!");
+  Array.from(document.getElementsByClassName("batch-controls")).forEach((e) => e.remove());
+  for (const id in countdowns) {
+    clearInterval(countdowns[id]);
+  }
   socket.emit("reset session");
   socket.emit("get session");
 });
