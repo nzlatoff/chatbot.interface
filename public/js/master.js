@@ -103,7 +103,8 @@ socket.on("bot config from server", data => {
     "random_threshold",
     "rank_threshold",
     "wait_for_master",
-    "sleepy_time"
+    "sleepy_time",
+    "patience"
   ];
 
   const textareaFields = [
@@ -244,6 +245,8 @@ socket.on("received batch", data => {
   batch_messages_form.className = "bot-batch-messages-form";
   batch_messages_form.id = `batch-form-${id}`;
 
+  // console.log("perplexities", perplexities);
+
   for (const i in chars) {
 
     let inputDiv = document.createElement("div");
@@ -332,17 +335,15 @@ async function checkRadio(id) {
 
 function submitMessage(id) {
 
-  console.log("about to enter chain");
+  // console.log("about to enter chain");
   let batchButton = document.querySelector(`#batch-btn-${id}`);
   new Promise((res, rej) => {
     clearInterval(countdowns[id]);
     delete countdowns[id];
     res();
   }).then(() => {
-    console.log("id is now", id);
     batchButton.classList.add("square-button-no-hover");
   }).then(() => {
-    console.log("id is now", id);
     return checkRadio(id);
   }) .then((choice) => {
     if (choice === undefined) {
