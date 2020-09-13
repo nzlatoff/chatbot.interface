@@ -141,7 +141,7 @@ socket.on("bot config from server", data => {
   const subData = Object.entries(
     (({id, model, run}) => ({id, model, run}))(data)
   ).join(" | ").replace(/,/g, ": ");
-  subT.innerHTML = `${subData}`;
+  subT.innerHTML = `${subData} | (<small>ctrl+enter pour envoyer</small>)`;
 
   for (const el in data) {
 
