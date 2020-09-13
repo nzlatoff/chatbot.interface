@@ -102,7 +102,8 @@ socket.on("bot config from server", data => {
     "length_desired",
     "random_threshold",
     "rank_threshold",
-    "wait_for_master"
+    "wait_for_master",
+    "sleepy_time"
   ];
 
   const textareaFields = [
