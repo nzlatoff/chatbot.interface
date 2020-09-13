@@ -1,0 +1,66 @@
+@import "base.css";
+
+textarea {
+  resize: vertical;
+  border: none;
+  min-height: 48px;
+  box-sizing: border-box;
+}
+
+/* flex-boxing */
+/* https://css-tricks.com/boxes-fill-height-dont-squish/ */
+/* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
+
+.chat-window {
+  margin: 0 auto;
+  height: 100%;
+  width: 90%;
+  max-width: 1200px;
+  background-color: #000;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 1000px) {
+  .chat-window {
+    width: 100%;
+  }
+}
+
+/* square button */
+
+.input-wrapper {
+  position: relative;
+  margin: 0 5px;
+}
+
+.console-box {
+  flex: 1;
+  min-height: 52px;
+}
+
+.console-inner {
+  display: flex;
+  height: 100%;
+}
+
+/* controls: interactive writing & input */
+
+.users-wrapper {
+  flex: 5;
+  overflow-y: auto;
+}
+
+.users .talkco {
+  padding-bottom: 5px;
+  /* https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
+  overflow: auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  /* font-size: 3rem; */
+  margin-bottom: 5px;
+}

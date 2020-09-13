@@ -63,6 +63,10 @@ app.get("/audience", (req,res, next) => {
   res.sendFile(__dirname + "/public/audience.html");
 });
 
+app.get("/mechanism", (req,res, next) => {
+  res.sendFile(__dirname + "/public/entrails.html");
+});
+
 app.use("/chats", chatRouter);
 app.use("/users", userRouter);
 
@@ -215,6 +219,15 @@ socketio.on("connection", socket => {
       message: data.message,
       character: data.character,
       scroll: data.scroll
+    });
+  });
+
+  //Someone is sending raw data
+  socket.on("entrails", data => {
+    socket.broadcast.emit("entrails typing", {
+      id: data.id,
+      entrails: data.entrails,
+      user: data.user,
     });
   });
 
