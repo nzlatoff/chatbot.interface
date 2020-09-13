@@ -1,0 +1,90 @@
+@import "base.css";
+
+html, body {
+  height: 98%;
+  font-size: 16px;
+}
+
+body {
+  background-color: #000;
+}
+
+html, body, input, textarea {
+  color: #fff;
+}
+
+input, textarea {
+  font-size: 14px;
+}
+
+textarea {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 3px;
+  border-width: 1px;
+}
+
+
+/* session & reset */
+
+#masthead-box {
+  display: flex;
+  justify-content: space-between;
+}
+
+#sess-wrapper {
+  flex-grow: 1;
+  display: flex;
+}
+
+#sess-wrapper > div:first-child {
+  margin-right: 5px;
+}
+
+.reset-wrapper {
+  align-self: flex-end;
+}
+
+/* buttons */
+
+.batch-btns-container {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-end;
+}
+
+/* bot controls */
+
+.bot-title {
+  margin-bottom: 3px;
+}
+
+.bot-subtitle {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+/* batch controls */
+
+.batch-controls {
+  display: flex;
+}
+
+.bot-batch-messages {
+  display: flex;
+  flex-flow: column wrap;
+  flex-grow: 1;
+  margin-bottom: 0px;
+}
+
+.batch-message-container {
+  display: flex;
+  align-items: flex-start;
+  flex-basis: 30%;
+  margin: 3px;
+}
+
+.batch-seq {
+  display: flex;
+  align-content: space-between;
+}

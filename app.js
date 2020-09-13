@@ -67,6 +67,10 @@ app.get("/mechanism", (req,res, next) => {
   res.sendFile(__dirname + "/public/entrails.html");
 });
 
+app.get("/optimizer", (req,res, next) => {
+  res.sendFile(__dirname + "/public/optimizer.html");
+});
+
 app.use("/chats", chatRouter);
 app.use("/users", userRouter);
 
