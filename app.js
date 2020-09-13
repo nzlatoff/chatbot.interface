@@ -271,8 +271,13 @@ socketio.on("connection", socket => {
     currentSession = new Date().toISOString();
     console.log("new session:", currentSession);
     socket.broadcast.emit("erase messages");
-    for (cl in {...app.locals.clientsocketlist, ...app.locals.botsocketlist}) {
+    // console.log("users:", app.locals.clientsocketlist);
+    for (cl in app.locals.clientsocketlist) {
       socket.broadcast.emit("new user", app.locals.clientsocketlist[cl]);
+    }
+    // console.log("bots:", app.locals.botsocketlist);
+    for (cl in app.locals.botsocketlist) {
+      socket.broadcast.emit("new user", app.locals.botsocketlist[cl]);
     }
     socket.broadcast.emit("current session", currentSession);
   });

@@ -128,7 +128,9 @@ function adjustScroll(el) {
 
 socket.on("new user", data => {
   // console.log('new user (will create box):', data);
-  createInteractiveBox(data);
+  if (data.id != socket.id) {
+    createInteractiveBox(data);
+  }
 });
 
 socket.on('user left', function(data) {
