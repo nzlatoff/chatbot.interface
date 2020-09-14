@@ -21,7 +21,7 @@ function createInteractiveBox(client) {
     let div = document.createElement("div");
     div.id = client.id;
     div.className = 'talkco';
-    div.innerHTML = `<em>${client.user}: </em>`;
+    // div.innerHTML = `<em>${client.user}: </em>`;
     document.querySelector('#users').appendChild(div);
   } else {
     // console.log('found element', $(`#${client.id}`));
@@ -89,9 +89,10 @@ socket.on("notifyTyping", data => {
     $(`#${data.id}`).append(ic);
   } else {
     // $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
-    $(`#${data.id}`).html(`${data.character}<br>${data.message}`);
+    $(`#${data.id}`).html(`${data.character}<br>${data.message}<br>`);
   }
   // if (data.scroll && autoScroll['users-wrapper']) adjustScroll('#users-wrapper');
+  adjustScroll('#users-wrapper');
 });
 
 socket.on('disconnect', () => {
@@ -120,3 +121,12 @@ document.body.onkeyup = (e) => {
     document.getElementById('la-box').classList.toggle('box-no-border');
   }
 };
+
+function adjustScroll(el) {
+  let outTop = $(el).prop('scrollTop');
+  const outMax = $(el).prop('scrollHeight');
+  // console.log(`adjusting scroll: ${el} | scrollTop: ${outTop}, scrollHeight: ${outMax}`);
+  if (outTop < outMax) {
+    $(el).animate({ scrollTop: $(el).prop("scrollHeight")}, 1000);
+  }
+}
