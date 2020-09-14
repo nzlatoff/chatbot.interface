@@ -83,12 +83,13 @@ socket.on('bot left', function(data) {
 socket.on("notifyTyping", data => {
   // console.log('received typing', data, 'autoScroll:', autoScroll);
   if (!data.character && !data.message) {
-    $(`#${data.id}`).html(`<em>${data.user}:</em> `);
+    // $(`#${data.id}`).html(`<em>${data.user}:</em> `);
     ic = document.createElement("i");
     ic.className = "fas fa-spinner fa-spin";
     $(`#${data.id}`).append(ic);
   } else {
-    $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
+    // $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
+    $(`#${data.id}`).html(`${data.character}<br>${data.message}`);
   }
   // if (data.scroll && autoScroll['users-wrapper']) adjustScroll('#users-wrapper');
 });
