@@ -64,6 +64,10 @@ function adjustScroll(el) {
   }
 }
 
+socket.on("erase messages", data => {
+  $('#users').empty();
+});
+
 socket.on("new bot", data => {
   console.log("new bot", data);
   createInteractiveBox(data);
