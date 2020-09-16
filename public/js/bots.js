@@ -10,9 +10,6 @@ socket.on('connect', function() {
   socket.emit("get list");
 });
 
-var messages = document.getElementById("messages");
-
-
 function createInteractiveBox(client) {
   // console.log('creating box, client:', client);
   // check if there isn't a div already
@@ -39,19 +36,17 @@ function removeUnusedBoxes(data) {
   });
 };
 
-
 function adjustScroll(el) {
-  // let outTop = $(`#${el}`).prop('scrollTop');
-  // const outMax = $(`#${el}`).prop('scrollHeight');
-  // console.log(`adjusting scroll for: #${el} | scrollTop: ${outTop}, scrollHeight: ${outMax}`);
   // console.log(`adjusting scroll for: #${el}`);
-  // if (outTop < outMax) {
   $(`#${el}`).animate({ scrollTop: $(`#${el}`).prop("scrollHeight")}, 10);
-  // }
 }
 
 socket.on("erase messages", data => {
-  $('#users').empty();
+  // console.log("resetting");
+  $('.talkco').each((index, el) => {
+    // console.log('emptying box', el.id);
+    $(el).empty();
+  });
 });
 
 socket.on("new bot", data => {
@@ -63,7 +58,7 @@ socket.on("new bot", data => {
 });
 
 socket.on("bots list", data => {
-  console.log('received bots', data);
+  // console.log('received bots', data);
   lesBots = data;
 });
 
