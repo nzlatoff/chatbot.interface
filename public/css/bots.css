@@ -13,12 +13,10 @@ textarea {
 
 .chat-window {
   margin: 0 auto;
-  height: 100%;
+  height: 30%;
   width: 90%;
   max-width: 1200px;
   background-color: #000;
-  overflow: hidden;
-  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -51,12 +49,13 @@ textarea {
 
 .users-wrapper {
   flex: 5;
-  overflow-y: auto;
 }
 
 .users {
   display: flex;
   justify-content: space-between;
+  overflow: hidden;
+  height: 100%;
 }
 
 .users .talkco {
@@ -65,9 +64,15 @@ textarea {
   padding-bottom: 5px;
   /* https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
   overflow: auto;
+  position: relative;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
   font-size: 1.5rem;
   margin-bottom: 5px;
 }
+
+.users .talkco:not(:last-child) {
+  margin-right: 5px;
+}
+
