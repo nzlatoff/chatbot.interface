@@ -36,6 +36,8 @@ function removeUnusedBoxes(data) {
   });
 };
 
+// leaner scrolling
+// https://stackoverflow.com/a/11551414
 function adjustScroll(el) {
   // console.log(`adjusting scroll for: #${el}`);
   $(`#${el}`).scrollTop($(`#${el}`).prop("scrollHeight"));
