@@ -38,7 +38,7 @@ function removeUnusedBoxes(data) {
 
 function adjustScroll(el) {
   // console.log(`adjusting scroll for: #${el}`);
-  $(`#${el}`).animate({ scrollTop: $(`#${el}`).prop("scrollHeight")}, 10);
+  $(`#${el}`).scrollTop($(`#${el}`).prop("scrollHeight"));
 }
 
 socket.on("erase messages", data => {
@@ -75,7 +75,12 @@ socket.on("notifyTyping", data => {
       // $(`#${data.id}`).html(`<em>${data.user}:</em> `);
       ic = document.createElement("i");
       ic.className = "fas fa-spinner fa-spin";
-      $(`#${data.id}`).append(ic);
+      leDiv = $(`#${data.id}`);
+      if (leDiv.text() === "(...)") {
+        $(`#${data.id}`).html(ic);
+      } else {
+        $(`#${data.id}`).append(ic);
+      }
     } else {
       // $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
       $(`#${data.id}`).html(`${data.character}<br>${data.message}<br>`);
