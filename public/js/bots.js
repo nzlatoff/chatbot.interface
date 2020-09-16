@@ -40,28 +40,14 @@ function removeUnusedBoxes(data) {
 };
 
 
-// scrolling
-
-let autoScroll = { 'messages': true, 'users-wrapper': true };
-
-// if scroll at bottom of output container, enable autoscroll
-$('#users-wrapper').scroll((e) => {
-  // console.log(`disabling autoscroll for: ${e.currentTarget.id} | scrollTop: ${$(e.currentTarget).prop('scrollTop')} | innerHeight ${$(e.currentTarget).innerHeight()} | sum ${$(e.currentTarget).prop('scrollTop') + $(e.currentTarget).innerHeight()} | scrollHeight ${$(e.currentTarget).prop('scrollHeight')}`)
-  autoScroll[e.currentTarget.id] = false;
-  // console.log(autoScroll);
-  if($(e.currentTarget).prop('scrollTop') + $(e.currentTarget).innerHeight() >= $(e.currentTarget).prop('scrollHeight')) {
-    // console.log('back to the bottom: reenabling autoscroll');
-    autoScroll[e.currentTarget.id] = true;
-  }
-});
-
 function adjustScroll(el) {
-  let outTop = $(el).prop('scrollTop');
-  const outMax = $(el).prop('scrollHeight');
-  // console.log(`adjusting scroll: ${el} | scrollTop: ${outTop}, scrollHeight: ${outMax}`);
-  if (outTop < outMax) {
-    $(el).animate({ scrollTop: $(el).prop("scrollHeight")}, 1000);
-  }
+  // let outTop = $(`#${el}`).prop('scrollTop');
+  // const outMax = $(`#${el}`).prop('scrollHeight');
+  // console.log(`adjusting scroll for: #${el} | scrollTop: ${outTop}, scrollHeight: ${outMax}`);
+  // console.log(`adjusting scroll for: #${el}`);
+  // if (outTop < outMax) {
+  $(`#${el}`).animate({ scrollTop: $(`#${el}`).prop("scrollHeight")}, 10);
+  // }
 }
 
 socket.on("erase messages", data => {
@@ -70,7 +56,10 @@ socket.on("erase messages", data => {
 
 socket.on("new bot", data => {
   console.log("new bot", data);
-  createInteractiveBox(data);
+  new Promise((res, rej) => {
+    createInteractiveBox(data);
+    res();
+  })
 });
 
 socket.on("bots list", data => {
@@ -86,17 +75,21 @@ socket.on('bot left', function(data) {
 
 socket.on("notifyTyping", data => {
   // console.log('received typing', data, 'autoScroll:', autoScroll);
-  if (!data.character && !data.message) {
-    // $(`#${data.id}`).html(`<em>${data.user}:</em> `);
-    ic = document.createElement("i");
-    ic.className = "fas fa-spinner fa-spin";
-    $(`#${data.id}`).append(ic);
-  } else {
-    // $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
-    $(`#${data.id}`).html(`${data.character}<br>${data.message}<br>`);
-  }
-  // if (data.scroll && autoScroll['users-wrapper']) adjustScroll('#users-wrapper');
-  adjustScroll('#users-wrapper');
+  new Promise((res, rej) => {
+    if (!data.character && !data.message) {
+      // $(`#${data.id}`).html(`<em>${data.user}:</em> `);
+      ic = document.createElement("i");
+      ic.className = "fas fa-spinner fa-spin";
+      $(`#${data.id}`).append(ic);
+    } else {
+      // $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
+      $(`#${data.id}`).html(`${data.character}<br>${data.message}<br>`);
+    }
+    res();
+  }).then(() => {
+    // if (autoScroll[]) adjustScroll('#users-wrapper');
+    adjustScroll(data.id);
+  });
 });
 
 socket.on('disconnect', () => {
@@ -125,12 +118,3 @@ document.body.onkeyup = (e) => {
     document.getElementById('la-box').classList.toggle('box-no-border');
   }
 };
-
-function adjustScroll(el) {
-  let outTop = $(el).prop('scrollTop');
-  const outMax = $(el).prop('scrollHeight');
-  // console.log(`adjusting scroll: ${el} | scrollTop: ${outTop}, scrollHeight: ${outMax}`);
-  if (outTop < outMax) {
-    $(el).animate({ scrollTop: $(el).prop("scrollHeight")}, 1000);
-  }
-}
