@@ -40,7 +40,7 @@ function removeUnusedBoxes(data) {
 // https://stackoverflow.com/a/11551414
 function adjustScroll(el) {
   // console.log(`adjusting scroll for: #${el}`);
-  $(`#${el}`).scrollTop($(`#${el}`).prop("scrollHeight"));
+  $(el).scrollTop($(el).prop("scrollHeight"));
 }
 
 socket.on("erase messages", data => {
@@ -90,7 +90,7 @@ socket.on("notifyTyping", data => {
     res();
   }).then(() => {
     // if (autoScroll[]) adjustScroll('#users-wrapper');
-    adjustScroll(data.id);
+    adjustScroll(`#${data.id}`);
   });
 });
 

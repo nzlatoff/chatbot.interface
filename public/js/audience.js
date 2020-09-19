@@ -71,12 +71,7 @@ $('#messages, #users-wrapper').scroll((e) => {
 });
 
 function adjustScroll(el) {
-  let outTop = $(el).prop('scrollTop');
-  const outMax = $(el).prop('scrollHeight');
-  // console.log(`adjusting scroll: ${el} | scrollTop: ${outTop}, scrollHeight: ${outMax}`);
-  if (outTop < outMax) {
-    $(el).animate({ scrollTop: $(el).prop("scrollHeight")}, 1000);
-  }
+  $(el).animate({ scrollTop: $(el).prop("scrollHeight")}, 500);
 }
 
 socket.on("new user", data => {
@@ -133,16 +128,20 @@ socket.on('erase messages', () => {
 });
 
 function appendMessage(data, scroll=true) {
-  let div = document.createElement('div');
-  var messages = document.getElementById('messages');
-  // console.log('received', data);
-  const msg = data.message.replace(/\n/g, '<br>');
-  if (data.character) {
-    const char = data.character.replace(/\n/g, '<br>');
-    div.innerHTML = `${char}<br>${msg}`;
-  } else {
-    div.innerHTML = msg;
-  }
-  messages.appendChild(div);
-  if (scroll && autoScroll['messages']) adjustScroll('#messages');
+  new Promise((res, rej) => {
+    let div = document.createElement('div');
+    var messages = document.getElementById('messages');
+    // console.log('received', data);
+    const msg = data.message.replace(/\n/g, '<br>');
+    if (data.character) {
+      const char = data.character.replace(/\n/g, '<br>');
+      div.innerHTML = `${char}<br>${msg}`;
+    } else {
+      div.innerHTML = msg;
+    }
+    messages.appendChild(div);
+    res();
+  }).then(() => {
+    if (scroll && autoScroll['messages']) adjustScroll('#messages');
+  });
 };

@@ -301,6 +301,13 @@ function broadcastCurrentSession(socket) {
     if (results) {
       // console.log('found:');
       // console.log(JSON.stringify(results, null, 2));
+      return results;
+    } else {
+      // console.log('nothing found');
+    }
+  }).then((results) => {
+    // console.log(results);
+    if (results) {
       for (msg of results) {
         // console.log(JSON.stringify(msg, null, 2));
         socket.emit('current session message',
@@ -310,8 +317,6 @@ function broadcastCurrentSession(socket) {
             user: msg.user
           });
       }
-    }else {
-      // console.log('nothing found');
     }
   }).then(() => {
     socket.emit('scroll down');
