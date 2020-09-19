@@ -52,15 +52,12 @@ textarea {
 }
 
 .users {
-  display: flex;
-  justify-content: space-between;
   overflow: hidden;
   height: 100%;
 }
 
 .users .talkco {
-  width: 50%;
-  max-width: 50%;
+  height: 100%;
   padding-bottom: 5px;
   /* https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
   overflow: auto;
@@ -71,8 +68,3 @@ textarea {
   font-size: 1.5rem;
   margin-bottom: 5px;
 }
-
-.users .talkco:not(:last-child) {
-  margin-right: 5px;
-}
-
