@@ -207,6 +207,7 @@ socketio.on("connection", socket => {
     }
 
     if (app.locals.mastersocketlist.includes(socket.id)) {
+      console.log("master left");
       console.log("---------------------------");
       app.locals.mastersocketnumber--;
       app.locals.mastersocketlist.splice(app.locals.mastersocketlist.indexOf(socket.id), 1);
