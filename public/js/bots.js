@@ -85,7 +85,7 @@ socket.on("notifyTyping", data => {
       }
     } else {
       // $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
-      $(`#${data.id}`).html(`${data.character}<br>${data.message}<br>`);
+      $(`#${data.id}`).html(`${data.character}<br>${data.message.replace("\n", "<br>")}<br>`);
     }
     res();
   }).then(() => {
