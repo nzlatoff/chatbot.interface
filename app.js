@@ -215,6 +215,10 @@ socketio.on("connection", socket => {
 
   });
 
+  socket.on("bot confirms choice", data => {
+    socket.broadcast.emit("server confirms bot choice", data);
+  });
+
   //Someone is typing
   socket.on("typing", data => {
     socket.broadcast.emit("notifyTyping", {

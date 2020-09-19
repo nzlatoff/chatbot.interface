@@ -39,12 +39,9 @@ async function deleteUnusedBoxes(data) {
 }
 
 function submitConfig(form, data) {
-  new Promise((res, rej) => {
-  console.log("class list before", setButton.classList);
+  // console.log("class list before", setButton.classList);
   document.getElementById(data.id).querySelector('button').classList.add('flash');
-  console.log("class list after", setButton.classList);
-  res();
-  }).then(() => {
+  // console.log("class list after", setButton.classList);
   let formData = new FormData(form);
   for (const pair of formData.entries()) {
     if (["character", "hidden_before_char", "hidden_after_char"].includes(pair[0]) && !pair[1]) {
@@ -65,11 +62,9 @@ function submitConfig(form, data) {
   console.log("submitting config!");
   // console.log(formData);
   socket.emit("master sets bot config", formData);
-  }).then(() => {
-    setTimeout(() => {
-      document.getElementById(data.id).querySelector('button').classList.remove('flash');
-    }, 1000);
-  });
+  setTimeout(() => {
+    document.getElementById(data.id).querySelector('button').classList.remove('flash');
+  }, 1000);
 }
 
 socket.on("bots list", data => {
@@ -315,7 +310,15 @@ socket.on("received batch", data => {
     // console.log("inside event listener", e);
     submitMessage(id);
   }, {once: true} );
+});
 
+socket.on("server confirms bot choice", data => {
+  console.log("received choice data", data);
+  let chosen = document.querySelector(`#batch-input-${data.id}-${data.choice}`).parentNode;
+  chosen.classList.add('flash');
+  setTimeout(() => {
+    chosen.classList.remove('flash');
+  }, 1000);
 });
 
 function addCountdown(id, seconds) {

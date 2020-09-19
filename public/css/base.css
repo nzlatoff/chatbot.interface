@@ -93,3 +93,39 @@ input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 18- */
   color: red;
   border-color: red;
 }
+
+/* https://stackoverflow.com/a/11915453 */
+.flash {
+  -moz-animation: flash 600ms ease-out;
+  -moz-animation-iteration-count: 1;
+
+  -webkit-animation: flash 600ms ease-out;
+  -webkit-animation-iteration-count: 1;
+
+  -ms-animation: flash 600ms ease-out;
+  -ms-animation-iteration-count: 1;
+}
+
+@keyframes flash {
+    0% { background-color: transparent; }
+    50% { background-color: #ffff; }
+    100% { background-color: transparent; }
+}
+
+@-webkit-keyframes flash {
+    0% { background-color: transparent; }
+    50% { background-color: #ffff; }
+    100% { background-color: transparent; }
+}
+
+@-moz-keyframes flash {
+    0% { background-color: transparent; }
+    50% { background-color: #ffff; }
+    100% { background-color: transparent; }
+}
+
+@-ms-keyframes flash {
+    0% { background-color: transparent; }
+    50% { background-color: #ffff; }
+    100% { background-color: transparent; }
+}

@@ -177,16 +177,12 @@ socket.on("received batch", data => {
 
 });
 
-// function addCountdown(id, seconds) {
-//   // console.log("about to create new countdown for bot:", id);
-//  countdowns[id] = setInterval(() => {
-//     if (seconds <= 1) {
-//       // console.log("clearing interval:", countdowns[id]);
-//       submitMessage(id);
-//     } else {
-//       // console.log("interval:", countdowns[id], "at second:", seconds);
-//       seconds--;
-//       document.querySelector(`#batch-btn-${id}`).innerText = seconds;
-//     }
-//   }, 1000);
-// }
+socket.on("server confirms bot choice", data => {
+  console.log("received choice data", data);
+  let chosen = document.querySelector(`#batch-seq-${data.id}-${data.choice}`).parentNode;
+  chosen.classList.add('flash');
+  setTimeout(() => {
+    chosen.classList.remove('flash');
+  }, 1000);
+});
+
