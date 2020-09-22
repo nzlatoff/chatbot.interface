@@ -241,7 +241,7 @@ socketio.on("connection", socket => {
   });
 
   socket.on("direct chat message", function(data) {
-    console.log("direct message", data);
+    // console.log("direct message", data);
     socket.broadcast.emit("received direct", data);
   });
 
