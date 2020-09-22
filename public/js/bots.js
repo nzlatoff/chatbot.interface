@@ -2,6 +2,7 @@
 const socket = io();
 
 let lesBots;
+let direct = false;
 
 socket.on('connect', function() {
   // send the username to the server
@@ -43,6 +44,30 @@ function adjustScroll(el) {
   $(el).scrollTop($(el).prop("scrollHeight"));
 }
 
+function createMessage(data) {
+  // console.log("creating message", data);
+  new Promise((res, rej) => {
+    if (!data.character && !data.message) {
+      // $(`#${data.id}`).html(`<em>${data.user}:</em> `);
+      ic = document.createElement("i");
+      ic.className = "fas fa-spinner fa-spin";
+      leDiv = $(`#${data.id}`);
+      if (leDiv.text() === "(...)") {
+        $(`#${data.id}`).html(ic);
+      } else {
+        $(`#${data.id}`).append(ic);
+      }
+    } else {
+      // $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
+      $(`#${data.id}`).html(`${data.character}<br>${data.message.replace("\n", "<br>")}<br>`);
+    }
+    res();
+  }).then(() => {
+    // if (autoScroll[]) adjustScroll('#users-wrapper');
+    adjustScroll(`#${data.id}`);
+  });
+}
+
 socket.on("erase messages", data => {
   // console.log("resetting");
   $('.talkco').each((index, el) => {
@@ -70,28 +95,18 @@ socket.on('bot left', function(data) {
   $(`#${data.id}`).remove();
 });
 
+socket.on("received direct", data => {
+  // console.log("received direct", data);
+  if (direct) {
+    createMessage(data);
+  }
+});
+
 socket.on("notifyTyping", data => {
   // console.log('received typing', data, 'autoScroll:', autoScroll);
-  new Promise((res, rej) => {
-    if (!data.character && !data.message) {
-      // $(`#${data.id}`).html(`<em>${data.user}:</em> `);
-      ic = document.createElement("i");
-      ic.className = "fas fa-spinner fa-spin";
-      leDiv = $(`#${data.id}`);
-      if (leDiv.text() === "(...)") {
-        $(`#${data.id}`).html(ic);
-      } else {
-        $(`#${data.id}`).append(ic);
-      }
-    } else {
-      // $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
-      $(`#${data.id}`).html(`${data.character}<br>${data.message.replace("\n", "<br>")}<br>`);
-    }
-    res();
-  }).then(() => {
-    // if (autoScroll[]) adjustScroll('#users-wrapper');
-    adjustScroll(`#${data.id}`);
-  });
+  if (!direct) {
+    createMessage(data);
+  }
 });
 
 socket.on('disconnect', () => {
@@ -116,7 +131,13 @@ socket.on('users list', (data) => {
 
 document.body.onkeyup = (e) => {
   // console.log(e);
+  if (e.key === 'd') {
+    direct = !direct;
+    console.log('direct:', direct);
+  }
+  // console.log(e);
   if (e.keyCode === 32 || e.key === ' ') {
     document.getElementById('la-box').classList.toggle('box-no-border');
   }
 };
+

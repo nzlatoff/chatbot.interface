@@ -240,6 +240,11 @@ socketio.on("connection", socket => {
     });
   });
 
+  socket.on("direct chat message", function(data) {
+    console.log("direct message", data);
+    socket.broadcast.emit("received direct", ...data);
+  });
+
   socket.on("chat message", function(data) {
     // console.log("message:", data.message, 'by', data.user);
 
