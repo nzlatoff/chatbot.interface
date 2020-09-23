@@ -68,12 +68,15 @@ textarea {
   margin-bottom: 5px;
 }
 
-#info-mode {
-  align-self: flex-end;
-  display: hidden;
-}
 
-#info-bot {
-  align-self: flex-end;
-  display: hidden;
+#info-mode, #info-bot {
+  position: absolute;
+  display: none;
+  top: 0;
+  right: 0;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  background: #000;
+  margin: 20px;
+  padding: 3px 5px;
 }

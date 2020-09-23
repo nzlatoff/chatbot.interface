@@ -38,14 +38,11 @@ function removeUnusedBoxes(data) {
   });
 };
 
-function emptyUnusedBots() {
+function emptyBoxes() {
   // console.log('removing boxes', data);
   $('.talkco').each((index, el) => {
-    // console.log('while removing, el:', el.id);
-    if (!(el.id != Object.keys(lesBots)[currentBot])) {
-      // console.log('removing box', el.id);
-      $(el).empty();
-    }
+    // console.log('emptying box', el.id);
+    $(el).empty();
   });
 };
 
@@ -83,11 +80,11 @@ function createMessage(data) {
 
 function filterBot(data) {
   if (currentBot === -1) {
-    console.log('no bot filtering');
+    // console.log('no bot filtering');
     createMessage(data);
   } else {
     id = Object.keys(lesBots)[currentBot];
-    console.log('only bot:', lesBots[id]);
+    // console.log('only bot:', lesBots[id]);
     if (data.id === id) {
       createMessage(data);
     }
@@ -163,11 +160,11 @@ document.body.onkeyup = (e) => {
     direct = !direct;
     console.log('direct:', direct);
     if (direct) {
-      $('#info-mode').text('direct display').hide();
+      $('#info-mode').text('direct display');
       $('#info-mode').fadeIn('slow');
       $('#info-mode').fadeOut('slow');
     } else {
-      $('#info-mode').text('gradual display').hide();
+      $('#info-mode').text('gradual display');
       $('#info-mode').fadeIn('slow');
       $('#info-mode').fadeOut('slow');
     }
@@ -183,14 +180,14 @@ document.body.onkeyup = (e) => {
     currentBot = (currentBot + 2) % (Object.keys(lesBots).length + 1) - 1;
     if (currentBot === -1) {
       console.log('bot index:', currentBot, '| using all bots');
-      $('#info-bot').text('using all bots').hide();
+      $('#info-bot').text('using all bots');
       $('#info-bot').fadeIn('slow');
       $('#info-bot').fadeOut('slow');
     } else {
-      setTimeout(emptyUnusedBots, 100);
+      emptyBoxes();
       let leB = lesBots[Object.keys(lesBots)[currentBot]];
       console.log('bot index:', currentBot, '| current bot:', leB.user, leB.id);
-      $('#info-bot').html(`bot: ${leB.user}<br>${leB.id}`).hide();
+      $('#info-bot').html(`bot: ${leB.user}<br>${leB.id}`);
       $('#info-bot').fadeIn('slow');
       $('#info-bot').fadeOut('slow');
     }
