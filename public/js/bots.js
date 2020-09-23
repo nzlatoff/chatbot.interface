@@ -2,6 +2,7 @@
 const socket = io();
 
 let lesBots;
+let currentBot = -1;
 let direct = false;
 
 socket.on('connect', function() {
@@ -37,6 +38,17 @@ function removeUnusedBoxes(data) {
   });
 };
 
+function emptyUnusedBots() {
+  // console.log('removing boxes', data);
+  $('.talkco').each((index, el) => {
+    // console.log('while removing, el:', el.id);
+    if (!(el.id != Object.keys(lesBots)[currentBot])) {
+      // console.log('removing box', el.id);
+      $(el).empty();
+    }
+  });
+};
+
 // leaner scrolling
 // https://stackoverflow.com/a/11551414
 function adjustScroll(el) {
@@ -53,6 +65,7 @@ function createMessage(data) {
       ic.className = "fas fa-spinner fa-spin";
       leDiv = $(`#${data.id}`);
       if (leDiv.text() === "(...)") {
+        console.log('icon', data);
         $(`#${data.id}`).html(ic);
       } else {
         $(`#${data.id}`).append(ic);
@@ -64,8 +77,21 @@ function createMessage(data) {
     res();
   }).then(() => {
     // if (autoScroll[]) adjustScroll('#users-wrapper');
-    adjustScroll(`#${data.id}`);
+    adjustScroll(`#users`);
   });
+}
+
+function filterBot(data) {
+  if (currentBot === -1) {
+    console.log('no bot filtering');
+    createMessage(data);
+  } else {
+    id = Object.keys(lesBots)[currentBot];
+    console.log('only bot:', lesBots[id]);
+    if (data.id === id) {
+      createMessage(data);
+    }
+  }
 }
 
 socket.on("erase messages", data => {
@@ -98,14 +124,14 @@ socket.on('bot left', function(data) {
 socket.on("received direct", data => {
   // console.log("received direct", data);
   if (direct) {
-    createMessage(data);
+    filterBot(data);
   }
 });
 
 socket.on("notifyTyping", data => {
-  // console.log('received typing', data, 'autoScroll:', autoScroll);
+  // console.log('received typing', data);
   if (!direct) {
-    createMessage(data);
+    filterBot(data);
   }
 });
 
@@ -130,14 +156,44 @@ socket.on('users list', (data) => {
 });
 
 document.body.onkeyup = (e) => {
+
   // console.log(e);
+
   if (e.key === 'd') {
     direct = !direct;
     console.log('direct:', direct);
+    if (direct) {
+      $('#info-mode').text('direct display').hide();
+      $('#info-mode').fadeIn('slow');
+      $('#info-mode').fadeOut('slow');
+    } else {
+      $('#info-mode').text('gradual display').hide();
+      $('#info-mode').fadeIn('slow');
+      $('#info-mode').fadeOut('slow');
+    }
   }
+
   // console.log(e);
   if (e.keyCode === 32 || e.key === ' ') {
     document.getElementById('la-box').classList.toggle('box-no-border');
+  }
+
+  if (e.key === 'b') {
+    // modulo cycle shifted left by 1
+    currentBot = (currentBot + 2) % (Object.keys(lesBots).length + 1) - 1;
+    if (currentBot === -1) {
+      console.log('bot index:', currentBot, '| using all bots');
+      $('#info-bot').text('using all bots').hide();
+      $('#info-bot').fadeIn('slow');
+      $('#info-bot').fadeOut('slow');
+    } else {
+      setTimeout(emptyUnusedBots, 100);
+      let leB = lesBots[Object.keys(lesBots)[currentBot]];
+      console.log('bot index:', currentBot, '| current bot:', leB.user, leB.id);
+      $('#info-bot').html(`bot: ${leB.user}<br>${leB.id}`).hide();
+      $('#info-bot').fadeIn('slow');
+      $('#info-bot').fadeOut('slow');
+    }
   }
 };
 
