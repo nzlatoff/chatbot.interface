@@ -74,7 +74,7 @@ function createMessage(data) {
         let char;
         console.log('char:', data.character, '| current:', currentChar);
         if (data.character != currentChar) {
-          char = data.character + '<br>';
+          char = data.character.toLowerCase() + '<br>';
           currentChar = data.character;
         } else {
           char = "";
@@ -83,6 +83,7 @@ function createMessage(data) {
           .replace("\n", "<br>")
           .replace(/\(/g, " parenthèse ouverte ")
           .replace(/\)/g, " parenthèse fermée ")
+          .toLowerCase();
         $(`#${data.id}`).html(`${char}${msg}<br>`);
       } else {
         $(`#${data.id}`).html(`${data.character}<br>${data.message.replace("\n", "<br>")}<br>`);
