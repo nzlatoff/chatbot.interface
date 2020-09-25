@@ -80,7 +80,7 @@ function createMessage(data) {
           char = "";
         }
         const msg = data.message
-          .replace("\n", "<br>")
+          .replace(/\n/g, " ")
           .replace(/\(/g, " parenthèse ouverte ")
           .replace(/\)/g, " parenthèse fermée ")
           .toLowerCase();
