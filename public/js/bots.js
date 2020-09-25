@@ -4,6 +4,7 @@ const socket = io();
 let lesBots;
 let currentBot = -1;
 let direct = false;
+let currentChar = "";
 
 socket.on('connect', function() {
   // send the username to the server
@@ -69,7 +70,23 @@ function createMessage(data) {
       }
     } else {
       // $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
-      $(`#${data.id}`).html(`${data.character}<br>${data.message.replace("\n", "<br>")}<br>`);
+      if (direct) {
+        let char;
+        console.log('char:', data.character, '| current:', currentChar);
+        if (data.character != currentChar) {
+          char = data.character + '<br>';
+          currentChar = data.character;
+        } else {
+          char = "";
+        }
+        const msg = data.message
+          .replace("\n", "<br>")
+          .replace(/\(/g, " parenthèse ouverte ")
+          .replace(/\)/g, " parenthèse fermée ")
+        $(`#${data.id}`).html(`${char}${msg}<br>`);
+      } else {
+        $(`#${data.id}`).html(`${data.character}<br>${data.message.replace("\n", "<br>")}<br>`);
+      }
     }
     res();
   }).then(() => {
@@ -142,14 +159,14 @@ socket.on('reconnect', () => {
 
 socket.on('users list', (data) => {
   // console.log('users list (before removal/adding boxes)', data);
-    for (const client in data) {
-      // console.log(' - client:', client);
-      if (client in lesBots) {
-        createInteractiveBox(data[client]);
-      }
+  for (const client in data) {
+    // console.log(' - client:', client);
+    if (client in lesBots) {
+      createInteractiveBox(data[client]);
     }
-    // update interactive boxes
-    removeUnusedBoxes(data);
+  }
+  // update interactive boxes
+  removeUnusedBoxes(data);
 });
 
 document.body.onkeyup = (e) => {
