@@ -25,6 +25,7 @@ async function fillSessions(data) {
       document.getElementById(sess._id).addEventListener("click", () => {
         currentSession = sess._id;
         // console.log("getting session messages for", sess._id);
+        $('#current-session').empty();
         socket.emit("get session messages", sess._id);
       });
     });
@@ -53,21 +54,26 @@ socket.on("session messages", (data) => {
     res();
   }).then(() => {
     let sess = document.querySelector('#current-session');
-    sessWr = document.createElement('div');
-    sessWr.id = "current-session-title-wrapper";
-    let sessTitle = document.createElement("a");
+    sessTitle = document.createElement('div');
     sessTitle.id = "current-session-title";
     sessDate = new Date(data.session).toGMTString();
-    sessTitle.innerHTML = `<b>Session: ${sessDate}</b>`;
-    sessWr.appendChild(sessTitle);
-    sess.appendChild(sessWr);
+    sessTitle.innerHTML = `<i>${sessDate}</i>`;
+    sess.appendChild(sessTitle);
     for (const msg of data.messages) {
       let msgDiv = document.createElement('div');
       msgDiv.className = "message";
+      const h = (new Date(msg.createdAt)).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+      let info = document.createElement('small');
+      info.className = "message-info";
+      info.innerHTML = `<i> (${msg.user}, ${h})</i>`;
       if (msg.character) {
-        msgDiv.innerHTML = `${msg.character}<br>`;
+        msgDiv.innerHTML = `${msg.character}`;
+        msgDiv.appendChild(info);
+        msgDiv.innerHTML += `<br>${msg.message}`;
+      } else {
+        msgDiv.innerHTML = msg.message;
+        msgDiv.appendChild(info);
       }
-      msgDiv.innerHTML += msg.message;
       sess.appendChild(msgDiv);
     }
   });
@@ -99,4 +105,8 @@ document.querySelector("#dl-button").addEventListener("click", () => {
   } else {
     console.log("no current messages");
   }
+});
+
+document.querySelector("#info-button").addEventListener("click", () => {
+  $('.message-info').fadeToggle("slow");
 });

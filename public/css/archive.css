@@ -11,7 +11,7 @@ input, textarea {
 /* sessions */
 
 .session-list {
-  margin-bottom: 2px;
+  margin-bottom: 5px;
   cursor: crosshair;
 }
 
@@ -36,18 +36,9 @@ input, textarea {
   height: 100%;
 }
 
-.session-list {
-  margin-bottom: 2px;
-  cursor: crosshair;
-}
-
-#current-session-title-wrapper {
-  margin-bottom: 5px;
-}
-
 #current-session-title {
-  border-bottom: 1px solid white;
-  padding-bottom: 2px;
+  margin-right: 5px;
+  text-align: right;
 }
 
 #current-session {
@@ -68,12 +59,20 @@ input, textarea {
   font-size: 0.8rem;
 }
 
-#dl-button {
+#dl-button, #info-button {
   margin-bottom: 5px;
 }
 
 /* messages */
 
 .message {
-  margin: 10px 5px;
+  margin: 0 0 5px 0;
+}
+
+.message small {
+  font-size: .8rem;
+}
+
+.message-info {
+  display: none;
 }
