@@ -1,44 +1,25 @@
 @import "base.css";
 
-/* square button */
-
-.input-wrapper {
-  position: relative;
-  margin: 0 5px;
-}
-
-.console-box {
-  flex: 1;
-  min-height: 52px;
-  margin-top: 5px;
-}
-
-.console-inner {
-  display: flex;
-  height: 100%;
-}
-
 /* controls: interactive writing & input */
 
-.users-wrapper {
-  flex: 5;
-}
-
-.users {
+#users {
+  margin-top: 5px;
   overflow: hidden;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
+  position: relative;
+  display: flex;
 }
 
-.users .talkco {
-  padding-bottom: 5px;
+#users .talkco {
+  flex: 1;
+  overflow: auto;
+  margin-right: 5px;
   /* https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
-  position: relative;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
   font-size: 1.5rem;
-  margin-bottom: 5px;
 }
 
 

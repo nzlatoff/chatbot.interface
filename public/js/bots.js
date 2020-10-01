@@ -10,11 +10,10 @@ socket.on('connect', function() {
   // send the username to the server
   // console.log('connecting');
   socket.emit("get bot list");
-  socket.emit("get list");
 });
 
 function createInteractiveBox(client) {
-  // console.log('creating box, client:', client);
+  console.log('creating box, client:', client);
   // check if there isn't a div already
   if (!$(`#${client.id}`).length) {
     // console.log('creating element', client.id, 'for user', client.user);
@@ -22,6 +21,7 @@ function createInteractiveBox(client) {
     div.id = client.id;
     div.className = 'talkco';
     // div.innerHTML = `<em>${client.user}: </em>`;
+    div.innerHTML = `(...)`;
     document.querySelector('#users').appendChild(div);
   } else {
     // console.log('found element', $(`#${client.id}`));
@@ -43,7 +43,14 @@ function emptyBoxes() {
   // console.log('removing boxes', data);
   $('.talkco').each((index, el) => {
     // console.log('emptying box', el.id);
-    $(el).empty();
+    $(el).html('(...)');
+    if (currentBot != -1) {
+      if (el.id != Object.keys(lesBots)[currentBot]) {
+        $(el).hide();
+      } else {
+        $(el).show();
+      }
+    }
   });
 };
 
@@ -63,7 +70,7 @@ function createMessage(data) {
       ic.className = "fas fa-spinner fa-spin";
       leDiv = $(`#${data.id}`);
       if (leDiv.text() === "(...)") {
-        console.log('icon', data);
+        // console.log('icon', data);
         $(`#${data.id}`).html(ic);
       } else {
         $(`#${data.id}`).append(ic);
@@ -72,7 +79,7 @@ function createMessage(data) {
       // $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.character}<br>${data.message}`);
       if (direct) {
         let char;
-        console.log('char:', data.character, '| current:', currentChar);
+        // console.log('char:', data.character, '| current:', currentChar);
         if (data.character != currentChar) {
           char = data.character.toLowerCase() + '<br>';
           currentChar = data.character;
@@ -95,8 +102,7 @@ function createMessage(data) {
     }
     res();
   }).then(() => {
-    // if (autoScroll[]) adjustScroll('#users-wrapper');
-    adjustScroll(`#users`);
+    adjustScroll(`#${data.id}`);
   });
 }
 
@@ -130,9 +136,21 @@ socket.on("new bot", data => {
 });
 
 socket.on("bots list", data => {
-  // console.log('received bots', data);
+  console.log('received bots', data);
   lesBots = data;
+  // console.log('users list (before removal/adding boxes)', data);
+  for (const client in data) {
+    // console.log(' - client:', client);
+    if (client in lesBots) {
+      createInteractiveBox(data[client]);
+    }
+  }
+  // update interactive boxes
+  removeUnusedBoxes(data);
 });
+
+// socket.on('users list', (data) => {
+// });
 
 socket.on('bot left', function(data) {
   // send the username to the server
@@ -162,18 +180,6 @@ socket.on('reconnect', () => {
   // console.log('you have been reconnected');
 });
 
-socket.on('users list', (data) => {
-  // console.log('users list (before removal/adding boxes)', data);
-  for (const client in data) {
-    // console.log(' - client:', client);
-    if (client in lesBots) {
-      createInteractiveBox(data[client]);
-    }
-  }
-  // update interactive boxes
-  removeUnusedBoxes(data);
-});
-
 document.body.onkeyup = (e) => {
 
   // console.log(e);
@@ -194,7 +200,7 @@ document.body.onkeyup = (e) => {
 
   // console.log(e);
   if (e.keyCode === 32 || e.key === ' ') {
-    document.getElementById('la-box').classList.toggle('box-no-border');
+    document.getElementById('users').classList.toggle('box-no-border');
   }
 
   if (e.key === 'b') {
@@ -205,6 +211,7 @@ document.body.onkeyup = (e) => {
       $('#info-bot').text('using all bots');
       $('#info-bot').fadeIn('slow');
       $('#info-bot').fadeOut('slow');
+      $('#users .talkco').show();
     } else {
       emptyBoxes();
       let leB = lesBots[Object.keys(lesBots)[currentBot]];
