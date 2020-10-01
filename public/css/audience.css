@@ -1,50 +1,15 @@
 @import "base.css";
 
-.chat-window {
-  margin: 0 auto;
-  height: 100%;
-  width: 90%;
-  max-width: 1200px;
-  background-color: #000;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-@media only screen and (max-width: 1000px) {
-  .chat-window {
-    width: 100%;
-  }
-}
-
-/* round-ish border */
-
-.box-wrapper {
-  color: #fff;
-  background-color: #000;
-  border: 2px solid #fff;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 5px;
-}
-
 /* see this method for scrolling inside a flex-box element */
 /* https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336 */
 
-.messages-box {
+.box-wrapper {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-  overflow-wrap: break-word;
+  min-height: 52px;
 }
 
 .console-box {
-  flex: 1;
-  min-height: 52px;
+  margin-top: 5px;
 }
 
 .console-inner {

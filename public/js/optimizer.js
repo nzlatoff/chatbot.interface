@@ -25,7 +25,7 @@ async function createBotBoxes(data) {
     title.id = `title-${botId}`;
     title.innerHTML = `<b>${data[botId].user}</b>`;
     box.appendChild(title);
-    document.body.appendChild(box);
+    document.querySelector('.main-wrapper').appendChild(box);
   }
 }
 

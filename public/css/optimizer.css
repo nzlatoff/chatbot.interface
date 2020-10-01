@@ -1,18 +1,5 @@
 @import "base.css";
 
-html, body {
-  height: 98%;
-  font-size: 16px;
-}
-
-body {
-  background-color: #000;
-}
-
-html, body, input, textarea {
-  color: #fff;
-}
-
 input, textarea {
   font-size: 14px;
 }
@@ -25,12 +12,7 @@ textarea {
 }
 
 
-/* session & reset */
-
-#masthead-box {
-  display: flex;
-  justify-content: space-between;
-}
+/* session */
 
 #sess-wrapper {
   flex-grow: 1;

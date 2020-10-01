@@ -1,5 +1,7 @@
 html, body {
-  height: 97%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 html, body, input, textarea {
@@ -58,19 +60,46 @@ input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 18- */
   font-style: italic;
 }
 
-/* box with round-ish border */
+/* common main wrappers */
+
+/* flex-boxing */
+/* https://css-tricks.com/boxes-fill-height-dont-squish/ */
+/* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
+
+.main-wrapper {
+  margin: 0 auto;
+  height: 100%;
+  width: 90%;
+  max-width: 1000px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+@media only screen and (max-width: 1000px) {
+  .main-wrapper {
+    width: 100%;
+  }
+}
 
 .box-wrapper {
-  color: #fff;
-  background-color: #000;
+  align-self: stretch;
   border: 2px solid #fff;
   border-radius: 10px;
   padding: 10px;
-  margin: 5px;
+  margin: 0 5px 5px 5px;
 }
 
 .box-no-border {
   border: none;
+}
+
+#masthead-box {
+  margin-top: 5px;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
 }
 
 /* square button */
@@ -87,6 +116,7 @@ input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 18- */
   cursor: crosshair;
   transition: all 0.2s linear;
   text-align: center;
+  padding: 1px;
 }
 
 .square-button:hover {

@@ -1,18 +1,5 @@
 @import "base.css";
 
-html, body {
-  height: 98%;
-  font-size: 16px;
-}
-
-body {
-  background-color: #000;
-}
-
-html, body, input, textarea {
-  color: #fff;
-}
-
 input, textarea {
   font-size: 14px;
 }
@@ -23,7 +10,6 @@ textarea {
   border-radius: 3px;
   border-width: 1px;
 }
-
 
 /* session & reset */
 
@@ -39,10 +25,6 @@ textarea {
 
 #sess-wrapper > div:first-child {
   margin-right: 5px;
-}
-
-.reset-wrapper {
-  align-self: flex-end;
 }
 
 /* buttons */
@@ -84,7 +66,6 @@ textarea {
 .bot-controls {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5px;
 }
 
 .bot-form {
@@ -147,6 +128,7 @@ input.id, input.model, input.run {
 /* batch controls */
 
 .batch-controls {
+  margin-top: 5px;
   display: flex;
 }
 

@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Dialogue</title>
+    <title>Chat</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/css/main.css" type="text/css" rel="stylesheet"/>
@@ -9,61 +9,38 @@
     <link href="/vendor/fa/css/fa-solid.min.css" type="text/css" rel="stylesheet"/>
   </head>
   <body>
-
-    <div class="chat-window">
-
+    <div class="main-wrapper">
       <div class="box-wrapper console-box">
-
         <div class="console-inner">
-
           <div id="users-wrapper" class="input-wrapper users-wrapper">
             <div id="users" class="users"></div>
           </div>
-
-          <div class="input-wrapper login-wrapper">
+          <div class="login-wrapper">
             <button id="login-button" class="square-button login-button" onclick="window.location.href='./login.html'">login</button>
           </div>
-
         </div>
-
       </div>
-
       <div class="box-wrapper messages-box">
         <div id="messages" class="messages"></div>
       </div>
-
       <div class="box-wrapper input-box">
-
         <div id="username"></div>
-
         <form id="send-form" name="send-form">
-
           <div class="input-wrapper char-wrapper">
             <textarea id="character" class="character-input" placeholder="LE COMTE." form="send-form"></textarea>
           </div>
-
           <div class="input-wrapper message-wrapper">
             <textarea id="message" class="message-input" placeholder="Vous l'emportez, et la faveur du Roy..." form="send-form"/></textarea>
           </div>
-
-          <div class="input-wrapper input-button">
+          <div class="input-button">
             <button class="square-button">></button>
           </div>
-
         </form>
-
       </div>
-
     </div>
-
     <script src="vendor/jquery/jquery-1.11.1.min.js"></script>
     <script src="vendor/socketio/socket.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/rexeze/formatTimeStamp/src/index-cdn.js"></script>
     <script src="/js/chat.js" charset="utf-8"></script>
-
   </body>
 </html>
-
-
-
-

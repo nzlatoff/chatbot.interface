@@ -1,18 +1,21 @@
+<!doctype html>
 <html>
   <head>
+    <title>Master</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="./css/master.css" type="text/css" rel="stylesheet"/>
+    <link href="/css/master.css" type="text/css" rel="stylesheet"/>
     <link href="/vendor/fa/css/fontawesome.min.css" type="text/css" rel="stylesheet"/>
     <link href="/vendor/fa/css/fa-solid.min.css" type="text/css" rel="stylesheet"/>
   </head>
-  <body class="master-window">
-      <div class="box-wrapper reset-wrapper" id="masthead-box">
-            <button id="reset-button" class="square-button reset-button">reset</button>
+  <body>
+    <div class="main-wrapper">
+      <div class="box-wrapper" id="masthead-box">
+        <button id="reset-button" class="square-button reset-button">reset</button>
       </div>
+    </div>
+    <script src="vendor/jquery/jquery-1.11.1.min.js"></script>
+    <script src="vendor/socketio/socket.js"></script>
+    <script src="/js/master.js" charset="utf-8"></script>
   </body>
-  <script src="vendor/jquery/jquery-1.11.1.min.js"></script>
-  <script src="vendor/socketio/socket.js"></script>
-  <script src="/js/master.js" charset="utf-8"></script>
 </html>
-

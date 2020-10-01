@@ -1,33 +1,5 @@
 @import "base.css";
 
-textarea {
-  resize: vertical;
-  border: none;
-  min-height: 48px;
-  box-sizing: border-box;
-}
-
-/* flex-boxing */
-/* https://css-tricks.com/boxes-fill-height-dont-squish/ */
-/* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
-
-.chat-window {
-  margin: 0 auto;
-  height: 100%;
-  width: 90%;
-  max-width: 1200px;
-  background-color: #000;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-@media only screen and (max-width: 1000px) {
-  .chat-window {
-    width: 100%;
-  }
-}
-
 /* square button */
 
 .input-wrapper {
@@ -38,6 +10,7 @@ textarea {
 .console-box {
   flex: 1;
   min-height: 52px;
+  margin-top: 5px;
 }
 
 .console-inner {
