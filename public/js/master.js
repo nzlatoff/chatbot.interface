@@ -121,7 +121,7 @@ socket.on("bot config from server", data => {
 
   let box = document.getElementById(data.id);
 
-  if (box.getElementsByClassName("bot-controls").length != 0) {
+  if (!box || box.getElementsByClassName("bot-controls").length != 0) {
     return;
   }
 
