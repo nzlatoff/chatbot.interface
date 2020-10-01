@@ -1,0 +1,79 @@
+@import "base.css";
+
+input, textarea {
+  font-size: 14px;
+}
+
+#archive-title {
+  margin-bottom: 5px;
+}
+
+/* sessions */
+
+.session-list {
+  margin-bottom: 2px;
+  cursor: crosshair;
+}
+
+#current-session {
+  flex: 1;
+}
+
+#sessions-box {
+  height: 100%;
+  overflow: hidden;
+}
+
+#sessions-wrapper {
+  height: 100%;
+  overflow: auto;
+}
+
+#current-session-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: none;
+  height: 100%;
+}
+
+.session-list {
+  margin-bottom: 2px;
+  cursor: crosshair;
+}
+
+#current-session-title-wrapper {
+  margin-bottom: 5px;
+}
+
+#current-session-title {
+  border-bottom: 1px solid white;
+  padding-bottom: 2px;
+}
+
+#current-session {
+  margin-right: 5px;
+  overflow: auto;
+  flex: 1;
+}
+
+#current-session-controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* buttons */
+
+.square-button {
+  font-size: 0.8rem;
+}
+
+#dl-button {
+  margin-bottom: 5px;
+}
+
+/* messages */
+
+.message {
+  margin: 10px 5px;
+}

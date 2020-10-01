@@ -47,7 +47,8 @@ socket.on("bots list", data => {
 socket.on("current session", sess => {
   let masthead = document.getElementById("masthead-box");
   const currentSess = masthead.querySelector("#sess-id");
-  // console.log("current sess:", currentSess);
+  sessDate = (new Date(sess)).toGMTString();
+  console.log("current sess:", sessDate);
   if (!currentSess) {
     let sessWrapper = document.createElement("div");
     sessWrapper.id = "sess-wrapper";
@@ -55,14 +56,12 @@ socket.on("current session", sess => {
     sessTitle.innerHTML = `Current Session:`;
     let sessDiv = document.createElement("div");
     sessDiv.id = "sess-id";
-    sessDiv.innerHTML = sess;
+    sessDiv.innerHTML = sessDate;
     sessWrapper.prepend(sessDiv);
     sessWrapper.prepend(sessTitle);
     masthead.prepend(sessWrapper);
-  } else if (sess != currentSess.innerText) {
-    if (sess != currentSess) {
-      currentSess.innerText = sess;
-    }
+  } else if (sessDate != currentSess.innerText) {
+      currentSess.innerText = sessDate;
   }
 });
 

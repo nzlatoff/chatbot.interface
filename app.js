@@ -5,7 +5,8 @@ const dateTime = require("simple-datetime-formater");
 const bodyParser = require("body-parser");
 const chatRouter = require("./route/chatRoute");
 const loginRouter = require("./route/loginRoute");
-const userRouter = require('./route/userRoute')
+const userRouter = require('./route/userRoute');
+const archiveRouter = require('./route/archiveRoute');
 const str_obj = require('./cookie2obj.js');
 
 //require the http module
@@ -16,8 +17,7 @@ const io = require("socket.io");
 
 const port = 5100;
 
-let currentSession;
-
+app.locals.currentSession = "";
 app.locals.clientsocketlist = {};
 app.locals.clientsocketnumber = 0;
 app.locals.botsocketlist = {};
@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 app.use("/login", loginRouter);
 
 // cookie check to prevent anonymous users
-app.get("/", (req,res, next) => {
+app.get("/", (req, res, next) => {
   // cookie doesn't exist redirect to login
   // console.log(str_obj(req.headers.cookie));
   if(typeof(req.headers.cookie) === 'undefined'){ // no cookies at all
@@ -47,7 +47,7 @@ app.get("/", (req,res, next) => {
   }
 })
 
-app.get("/master", (req,res, next) => {
+app.get("/master", (req, res, next) => {
   if (app.locals.mastersocketnumber > 0) {
     res.redirect("/audience");
   } else {
@@ -55,24 +55,29 @@ app.get("/master", (req,res, next) => {
   }
 });
 
-app.get("/bots", (req,res, next) => {
+app.get("/bots", (req, res, next) => {
   res.sendFile(__dirname + "/public/bots.html");
 });
 
-app.get("/audience", (req,res, next) => {
+app.get("/audience", (req, res, next) => {
   res.sendFile(__dirname + "/public/audience.html");
 });
 
-app.get("/mechanism", (req,res, next) => {
+app.get("/mechanism", (req, res, next) => {
   res.sendFile(__dirname + "/public/entrails.html");
 });
 
-app.get("/optimizer", (req,res, next) => {
+app.get("/optimizer", (req, res, next) => {
   res.sendFile(__dirname + "/public/optimizer.html");
+});
+
+app.get("/archive", (req, res, next) => {
+  res.sendFile(__dirname + "/public/archive.html");
 });
 
 app.use("/chats", chatRouter);
 app.use("/users", userRouter);
+app.use("/archives", archiveRouter);
 
 //set the express.static middleware
 app.use(express.static(__dirname + "/public"));
@@ -147,12 +152,12 @@ socketio.on("connection", socket => {
 
     if (app.locals.clientsocketnumber == 1) {
       // creating a new session
-      currentSession = new Date().toISOString();
+      app.locals.currentSession = new Date().toISOString();
       console.log('=====================================');
-      console.log('first user, creating new session:', currentSession);
+      console.log('first user, creating new session:', app.locals.currentSession);
       console.log('=====================================');
       socket.broadcast.emit("erase messages"); // make sure we clean things up
-      socket.broadcast.emit("current session", currentSession);
+      socket.broadcast.emit("current session", app.locals.currentSession);
     } else if (app.locals.clientsocketnumber > 1) {
         broadcastCurrentSession(socket);
     }
@@ -251,7 +256,7 @@ socketio.on("connection", socket => {
     //broadcast message to everyone in port:5000 except yourself.
     socket.broadcast.emit("received", data);
 
-    data = { ...data, session: currentSession };
+    data = { ...data, session: app.locals.currentSession };
     // console.log('about to save message:');
     // console.log(data);
 
@@ -276,14 +281,14 @@ socketio.on("connection", socket => {
   });
 
   socket.on("get session", function() {
-    socket.emit("current session", currentSession);
+    socket.emit("current session", app.locals.currentSession);
   });
 
   socket.on("reset session", function() {
     // console.log("resetting session");
-    // console.log("current session:", currentSession);
-    currentSession = new Date().toISOString();
-    console.log("new session:", currentSession);
+    // console.log("current session:", app.locals.currentSession);
+    app.locals.currentSession = new Date().toISOString();
+    console.log("new session:", app.locals.currentSession);
     socket.broadcast.emit("erase messages");
     // console.log("users:", app.locals.clientsocketlist);
     for (cl in app.locals.clientsocketlist) {
@@ -293,7 +298,32 @@ socketio.on("connection", socket => {
     for (cl in app.locals.botsocketlist) {
       socket.broadcast.emit("new user", app.locals.botsocketlist[cl]);
     }
-    socket.broadcast.emit("current session", currentSession);
+    socket.broadcast.emit("current session", app.locals.currentSession);
+  });
+
+  socket.on("get archives sessions", function() {
+    console.log("archives requested");
+    Chat.aggregate([{ $group: { _id : "$session", count: { $sum: 1}}}, { $sort: { _id: -1} }], (err, res) => {
+      if (err) {
+        console.log("error when trying to retrieve sessions", err);
+      }
+      console.log(`found ${res.length} sessions...`);
+      socket.emit("archives sessions", res);
+    });
+  });
+
+  socket.on("get session messages", function(data) {
+    console.log("getting messages for session", data);
+    Chat.find({ session: data }).sort({ createdAt: 1 }).exec((err, res) => {
+      if (err) {
+        console.log("error when trying to retrieve sessions", err);
+      }
+      console.log(`retrieving ${res.length} messages for session ${data}...`);
+      socket.emit("session messages", {
+        "session": data,
+        "messages": res
+      });
+    });
   });
 
 });
@@ -301,7 +331,7 @@ socketio.on("connection", socket => {
 function broadcastCurrentSession(socket) {
 
   // finding all messages in session & broadcasting them before the rest
-  Chat.find({ session:  currentSession }, (err, results) => {
+  Chat.find({ session:  app.locals.currentSession }, (err, results) => {
     if (err) console.log('nothing found');
     if (results) {
       // console.log('found:');

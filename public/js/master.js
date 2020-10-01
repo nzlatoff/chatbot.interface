@@ -385,3 +385,6 @@ document.querySelector("#reset-button").addEventListener("click", () => {
   socket.emit("get session");
 });
 
+document.querySelector("#archives-button").addEventListener("click", () => {
+  window.open('/archive', "_blank");
+});
