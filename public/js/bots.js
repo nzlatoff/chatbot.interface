@@ -86,7 +86,11 @@ function createMessage(data) {
           .toLowerCase();
         $(`#${data.id}`).html(`${char}${msg}<br>`);
       } else {
-        $(`#${data.id}`).html(`${data.character}<br>${data.message.replace("\n", "<br>")}<br>`);
+        if (data.character) {
+          $(`#${data.id}`).html(`${data.character}<br>${data.message.replace("\n", "<br>")}<br>`);
+        } else {
+          $(`#${data.id}`).html(`${data.message.replace("\n", "<br>")}<br>`);
+        }
       }
     }
     res();
