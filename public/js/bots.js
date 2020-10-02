@@ -13,7 +13,7 @@ socket.on('connect', function() {
 });
 
 function createInteractiveBox(client) {
-  console.log('creating box, client:', client);
+  // console.log('creating box, client:', client);
   // check if there isn't a div already
   if (!$(`#${client.id}`).length) {
     // console.log('creating element', client.id, 'for user', client.user);
@@ -43,13 +43,11 @@ function emptyBoxes() {
   // console.log('removing boxes', data);
   $('.talkco').each((index, el) => {
     // console.log('emptying box', el.id);
-    $(el).html('(...)');
-    if (currentBot != -1) {
-      if (el.id != Object.keys(lesBots)[currentBot]) {
-        $(el).hide();
-      } else {
-        $(el).show();
-      }
+    // $(el).html('(...)');
+    if (el.id != Object.keys(lesBots)[currentBot]) {
+      $(el).hide();
+    } else {
+      $(el).show();
     }
   });
 };
@@ -128,7 +126,7 @@ socket.on("erase messages", data => {
 });
 
 socket.on("new bot", data => {
-  console.log("new bot", data);
+  // console.log("new bot", data);
   new Promise((res, rej) => {
     createInteractiveBox(data);
     res();
@@ -136,7 +134,7 @@ socket.on("new bot", data => {
 });
 
 socket.on("bots list", data => {
-  console.log('received bots', data);
+  // console.log('received bots', data);
   lesBots = data;
   // console.log('users list (before removal/adding boxes)', data);
   for (const client in data) {
@@ -186,7 +184,7 @@ document.body.onkeyup = (e) => {
 
   if (e.key === 'd') {
     direct = !direct;
-    console.log('direct:', direct);
+    // console.log('direct:', direct);
     if (direct) {
       $('#info-mode').text('direct display');
       $('#info-mode').fadeIn('slow');
@@ -207,7 +205,7 @@ document.body.onkeyup = (e) => {
     // modulo cycle shifted left by 1
     currentBot = (currentBot + 2) % (Object.keys(lesBots).length + 1) - 1;
     if (currentBot === -1) {
-      console.log('bot index:', currentBot, '| using all bots');
+      // console.log('bot index:', currentBot, '| using all bots');
       $('#info-bot').text('using all bots');
       $('#info-bot').fadeIn('slow');
       $('#info-bot').fadeOut('slow');
@@ -215,7 +213,7 @@ document.body.onkeyup = (e) => {
     } else {
       emptyBoxes();
       let leB = lesBots[Object.keys(lesBots)[currentBot]];
-      console.log('bot index:', currentBot, '| current bot:', leB.user, leB.id);
+      // console.log('bot index:', currentBot, '| current bot:', leB.user, leB.id);
       $('#info-bot').html(`bot: ${leB.user}<br>${leB.id}`);
       $('#info-bot').fadeIn('slow');
       $('#info-bot').fadeOut('slow');
