@@ -1,131 +1,88 @@
 @import "base.css";
+@import "interactive-boxes.css";
+@import "messages-boxes.css";
 
 textarea {
   resize: vertical;
   border: none;
-  min-height: 48px;
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
-/* square button */
+/* buttons */
 
-.square-button {
+.square-button, #username {
   font-size: 1.2rem;
 }
 
-.input-wrapper {
+#login-button, #save-button {
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+}
+
+#input-wrapper {
+  flex: 1;
+}
+
+#interactive-box {
+  flex: 1;
+  margin-top: 5px;
+  display: flex;
+}
+
+#chat-box {
+  flex: 1;
+  display: flex;
+  flex-basis: 80px;
   position: relative;
-  margin: 0 5px;
+  overflow: hidden;
+}
+
+#buttons-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 /* see this method for scrolling inside a flex-box element */
 /* https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336 */
 
-.messages-box {
+#messages-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  position: relative;
   overflow: hidden;
   overflow-wrap: break-word;
-}
-
-.console-box {
-  flex: 1;
-  min-height: 52px;
-  margin-top: 5px;
-}
-
-.console-inner {
-  display: flex;
-  height: 100%;
-}
-
-/* login button & username */
-
-.login-wrapper {
-  align-self: flex-end;
-  text-align: right;
-}
-
-.login-button {
-  font-size: 0.8rem;
-  text-align: center;
-}
-
-/* controls: interactive writing & input */
-
-.users-wrapper {
-  flex: 5;
-  overflow-y: auto;
-}
-
-.users .talkco {
-  padding-bottom: 5px;
-  /* https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
-  overflow: auto;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word;
+  margin: 0 5px 5px 0;
 }
 
 /* input: message */
 
 #send-form {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-basis: 52px;
 }
 
-.input-button {
-  align-self: flex-end;
+#username {
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 0 1px 10px 1px;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 52px;
 }
 
 /* character name */
 
-.char-wrapper {
-  flex: 1;
-}
-
 .character-input {
-  height: 100%;
   width: 100%;
-}
-
-#username {
-  padding: 0px 0px 10px 6px;
 }
 
 /* message content */
 
-.message-wrapper {
-  flex: 4;
-}
-
 .message-input {
-  /* border: none; */
-  height: 100%;
   width: 100%;
-}
-
-/* messages */
-
-.messages {
-  height: 100%;
-  padding: 0 6px;
-  margin: 0;
-  overflow: auto;
-}
-
-.messages .message {
-  clear: both;
-  overflow: hidden;
-  margin-bottom: 20px;
-  transition: all 0.5s linear;
-  opacity: 0;
-}
-
-.messages > div {
-  margin: 10px 5px;
-  color: #fff;
 }

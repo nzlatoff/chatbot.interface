@@ -1,0 +1,12 @@
+/* messages */
+
+#messages {
+  height: 100%;
+  overflow: auto;
+  margin: 0 5px 0 0;
+  align-self: stretch;
+}
+
+#messages .message {
+  margin: 0 0 5px 0;
+}

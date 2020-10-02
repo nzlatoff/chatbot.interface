@@ -15,32 +15,27 @@
   </head>
   <body>
     <div class="main-wrapper">
-      <div class="box-wrapper console-box">
-        <div class="console-inner">
-          <div id="users-wrapper" class="input-wrapper users-wrapper">
-            <div id="users" class="users"></div>
-          </div>
-          <div class="login-wrapper">
-            <button id="login-button" class="square-button login-button" onclick="window.location.href='./login.html'">login</button>
-          </div>
+      <div id="interactive-box" class="box-wrapper"></div>
+      <div id="chat-box" class="box-wrapper">
+        <div id="messages-wrapper">
+          <div id="messages" class="messages"></div>
+          <form id="send-form" name="send-form">
+            <div id="input-wrapper">
+              <div class="char-wrapper">
+                <textarea id="character" class="character-input" rows="1" placeholder="LE COMTE." form="send-form"></textarea>
+              </div>
+              <div class="message-wrapper">
+                <textarea id="message" class="message-input" rows="1" placeholder="Vous l'emportez, et la faveur du Roy..." form="send-form"/></textarea>
+              </div>
+            </div>
+          </form>
         </div>
-      </div>
-      <div class="box-wrapper messages-box">
-        <div id="messages" class="messages"></div>
-      </div>
-      <div class="box-wrapper input-box">
-        <div id="username"></div>
-        <form id="send-form" name="send-form">
-          <div class="input-wrapper char-wrapper">
-            <textarea id="character" class="character-input" placeholder="LE COMTE." form="send-form"></textarea>
-          </div>
-          <div class="input-wrapper message-wrapper">
-            <textarea id="message" class="message-input" placeholder="Vous l'emportez, et la faveur du Roy..." form="send-form"/></textarea>
-          </div>
-          <div class="input-button">
-            <button class="square-button">></button>
-          </div>
-        </form>
+        <div id="buttons-wrapper">
+          <div id="username"></div>
+          <button id="save-button" class="square-button">json</button>
+          <button id="login-button" class="square-button">login</button>
+          <button id="input-button" class="square-button" form="send-form">></button>
+        </div>
       </div>
     </div>
     <script src="vendor/jquery/jquery-1.11.1.min.js"></script>
