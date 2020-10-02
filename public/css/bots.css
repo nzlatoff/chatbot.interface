@@ -1,27 +1,9 @@
 @import "base.css";
+@import "interactive-boxes.css";
 
-/* controls: interactive writing & input */
-
-#users {
-  margin-top: 5px;
-  overflow: hidden;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-}
-
-#users .talkco {
-  flex: 1;
-  overflow: auto;
-  margin-right: 5px;
-  /* https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word;
+#interactive-box .talkco {
   font-size: 1.5rem;
 }
-
 
 #info-mode, #info-bot {
   position: absolute;

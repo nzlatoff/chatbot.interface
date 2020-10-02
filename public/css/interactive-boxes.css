@@ -1,0 +1,24 @@
+/* interactive boxes */
+
+#interactive-box {
+  flex: 1;
+  display: flex;
+  margin-top: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/ */
+
+#interactive-box .talkco {
+  flex: 1;
+  overflow: auto;
+  margin-right: 5px;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+#interactive-box .talkco:not(:last-child) {
+  margin-right: 10px;
+}

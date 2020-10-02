@@ -22,7 +22,7 @@ function createInteractiveBox(client) {
     div.className = 'talkco';
     // div.innerHTML = `<em>${client.user}: </em>`;
     div.innerHTML = `(...)`;
-    document.querySelector('#users').appendChild(div);
+    document.querySelector('#interactive-box').appendChild(div);
   } else {
     // console.log('found element', $(`#${client.id}`));
   }
@@ -198,7 +198,7 @@ document.body.onkeyup = (e) => {
 
   // console.log(e);
   if (e.keyCode === 32 || e.key === ' ') {
-    document.getElementById('users').classList.toggle('box-no-border');
+    document.getElementById('interactive-box').classList.toggle('box-no-border');
   }
 
   if (e.key === 'b') {
@@ -209,7 +209,7 @@ document.body.onkeyup = (e) => {
       $('#info-bot').text('using all bots');
       $('#info-bot').fadeIn('slow');
       $('#info-bot').fadeOut('slow');
-      $('#users .talkco').show();
+      $('#interactive-box .talkco').show();
     } else {
       emptyBoxes();
       let leB = lesBots[Object.keys(lesBots)[currentBot]];
