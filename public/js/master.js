@@ -1,12 +1,8 @@
+import { removeUnusedBoxes } from './interactive-boxes.js';
+
 const socket = io();
 
 let countdowns = {};
-
-socket.on("connect", function() {
-  console.log("connecting!");
-  socket.emit("new master");
-  socket.emit("get bot list");
-});
 
 async function createBotBoxes(data) {
   // console.log("bots list", data);
@@ -28,14 +24,6 @@ async function createBotBoxes(data) {
     box.appendChild(title);
     document.querySelector('.main-wrapper').appendChild(box);
   }
-}
-
-async function deleteUnusedBoxes(data) {
-  document.querySelectorAll(".bot-wrapper").forEach(el => {
-    if (!(el.id in data)) {
-      el.remove();
-    }
-  });
 }
 
 function submitConfig(form, data) {
@@ -67,9 +55,75 @@ function submitConfig(form, data) {
   }, 1000);
 }
 
+function skipMessage(id) {
+  socket.emit("");
+}
+
+function newBatch(id) {
+  socket.emit("master requests new batch");
+}
+
+function addCountdown(id, seconds) {
+  // console.log("about to create new countdown for bot:", id);
+ countdowns[id] = setInterval(() => {
+    if (seconds <= 1) {
+      // console.log("clearing interval:", countdowns[id]);
+      submitMessage(id);
+    } else {
+      // console.log("interval:", countdowns[id], "at second:", seconds);
+      seconds--;
+      document.querySelector(`#batch-btn-${id}`).innerText = seconds;
+    }
+  }, 1000);
+}
+
+async function checkRadio(id) {
+  const form = document.querySelector(`#batch-form-${id}`);
+  let choice;
+  for (let i = 0; i < form.length; i++) {
+    if (form[i].checked) {
+      choice = i;
+      break;
+    }
+  }
+  return choice;
+}
+
+function submitMessage(id) {
+  // console.log("about to enter chain");
+  let batchButton = document.querySelector(`#batch-btn-${id}`);
+  new Promise((res, rej) => {
+    clearInterval(countdowns[id]);
+    delete countdowns[id];
+    res();
+  }).then(() => {
+    batchButton.classList.add("square-button-no-hover");
+  }).then(() => {
+    return checkRadio(id);
+  }) .then((choice) => {
+    if (choice === undefined) {
+      choice = -1;
+      // console.log(`no message selected, returning control to bot.`);
+    } else {
+      console.log(`selecting message: ${choice}`);
+    }
+    socket.emit("master sends choice", { id: id, choice: choice});
+    let ic = document.createElement("i");
+    ic.className = "fas fa-check";
+    batchButton.innerHTML = "";
+    batchButton.appendChild(ic);
+  });
+}
+
+socket.on("connect", function() {
+  console.log("connecting!");
+  socket.emit("new master");
+  socket.emit("get bot list");
+});
+
 socket.on("bots list", data => {
   createBotBoxes(data)
-   .then(deleteUnusedBoxes(data))
+   .then(removeUnusedBoxes('.bot-wrapper', data))
     .then(socket.emit("get session"))
     .then(socket.emit("master wants bot config"));
 });
@@ -77,8 +131,8 @@ socket.on("bots list", data => {
 socket.on("current session", sess => {
   let masthead = document.getElementById("masthead-box");
   const currentSess = masthead.querySelector("#sess-id");
-  sessDate = (new Date(sess)).toGMTString();
-  console.log("current sess:", sessDate);
+  const sessDate = (new Date(sess)).toGMTString();
+  // console.log("current sess:", sessDate);
   if (!currentSess) {
     let sessWrapper = document.createElement("div");
     sessWrapper.id = "sess-wrapper";
@@ -207,7 +261,7 @@ socket.on("bot config from server", data => {
   form.appendChild(numbersBox);
   form.appendChild(textsBox);
 
-  setButton = document.createElement("button");
+  let setButton = document.createElement("button");
   setButton.className = "square-button set-button";
   setButton.innerHTML = "set";
   setButton.addEventListener("click", () => {
@@ -289,7 +343,7 @@ socket.on("received batch", data => {
 
   batch_controls.appendChild(batch_messages_form);
 
-  batchButton = document.createElement("button");
+  let batchButton = document.createElement("button");
   batchButton.className = "square-button batch-button";
   batchButton.id = `batch-btn-${id}`;
 
@@ -301,7 +355,11 @@ socket.on("received batch", data => {
     batchButton.innerHTML = "send";
   }
 
-  batch_controls.appendChild(batchButton);
+  let btnsDiv = document.createElement("div");
+  btnsDiv.className = "batch-btns-container";
+  btnsDiv.appendChild(batchButton);
+
+  batch_controls.appendChild(btnsDiv);
   let box = document.getElementById(id);
   box.appendChild(batch_controls);
 
@@ -312,7 +370,7 @@ socket.on("received batch", data => {
 });
 
 socket.on("server confirms bot choice", data => {
-  console.log("received choice data", data);
+  // console.log("received choice data", data);
   let chosen = document.querySelector(`#batch-input-${data.id}-${data.choice}`).parentNode;
   chosen.classList.add('flash');
   setTimeout(() => {
@@ -320,59 +378,14 @@ socket.on("server confirms bot choice", data => {
   }, 1000);
 });
 
-function addCountdown(id, seconds) {
-  // console.log("about to create new countdown for bot:", id);
- countdowns[id] = setInterval(() => {
-    if (seconds <= 1) {
-      // console.log("clearing interval:", countdowns[id]);
-      submitMessage(id);
-    } else {
-      // console.log("interval:", countdowns[id], "at second:", seconds);
-      seconds--;
-      document.querySelector(`#batch-btn-${id}`).innerText = seconds;
-    }
-  }, 1000);
-}
+document.getElementById('save-button').addEventListener('click', (e) => {
+  // console.log('saving current sess');
+  window.open('/chats', '_blank');
+});
 
-async function checkRadio(id) {
-  const form = document.querySelector(`#batch-form-${id}`);
-  let choice;
-  for (let i = 0; i < form.length; i++) {
-    if (form[i].checked) {
-      choice = i;
-      break;
-    }
-  }
-  return choice;
-}
-
-function submitMessage(id) {
-
-  // console.log("about to enter chain");
-  let batchButton = document.querySelector(`#batch-btn-${id}`);
-  new Promise((res, rej) => {
-    clearInterval(countdowns[id]);
-    delete countdowns[id];
-    res();
-  }).then(() => {
-    batchButton.classList.add("square-button-no-hover");
-  }).then(() => {
-    return checkRadio(id);
-  }) .then((choice) => {
-    if (choice === undefined) {
-      choice = -1;
-      console.log(`no message selected, returning control to bot.`);
-    } else {
-      console.log(`selecting message: ${choice}`);
-    }
-    socket.emit("master sends choice", { id: id, choice: choice});
-    ic = document.createElement("i");
-    ic.className = "fas fa-check";
-    batchButton.innerHTML = "";
-    batchButton.appendChild(ic);
-  });
-
-}
+document.querySelector("#archives-button").addEventListener("click", () => {
+  window.open('/archive', "_blank");
+});
 
 document.querySelector("#reset-button").addEventListener("click", () => {
   console.log("resetting!");
@@ -382,8 +395,4 @@ document.querySelector("#reset-button").addEventListener("click", () => {
   }
   socket.emit("reset session");
   socket.emit("get session");
-});
-
-document.querySelector("#archives-button").addEventListener("click", () => {
-  window.open('/archive', "_blank");
 });

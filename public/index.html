@@ -19,21 +19,18 @@
       <div id="interactive-box" class="box-wrapper"></div>
       <div id="chat-box" class="box-wrapper">
         <div id="messages-wrapper">
-          <div id="messages" class="messages"></div>
+          <div id="chat-messages"></div>
           <form id="send-form" name="send-form">
-            <div id="input-wrapper">
-              <div class="char-wrapper">
-                <textarea id="character" class="character-input" rows="1" placeholder="LE COMTE." form="send-form"></textarea>
-              </div>
-              <div class="message-wrapper">
-                <textarea id="message" class="message-input" rows="1" placeholder="Vous l'emportez, et la faveur du Roy..." form="send-form"/></textarea>
-              </div>
+            <div class="char-wrapper">
+              <textarea id="character" class="text-input" rows="1" placeholder="LE COMTE." form="send-form"></textarea>
+            </div>
+            <div class="message-wrapper">
+              <textarea id="message" class="text-input" rows="1" placeholder="Vous l'emportez, et la faveur du Roy..." form="send-form"/></textarea>
             </div>
           </form>
         </div>
         <div id="buttons-wrapper">
           <div id="username"></div>
-          <button id="save-button" class="square-button">json</button>
           <button id="login-button" class="square-button">login</button>
           <button id="input-button" class="square-button" form="send-form">></button>
         </div>
@@ -42,6 +39,6 @@
     <script src="vendor/jquery/jquery-1.11.1.min.js"></script>
     <script src="vendor/socketio/socket.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/rexeze/formatTimeStamp/src/index-cdn.js"></script>
-    <script src="/js/chat.js" charset="utf-8"></script>
+    <script src="/js/chat.js" type="module" charset="utf-8"></script>
   </body>
 </html>

@@ -113,6 +113,7 @@ input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 18- */
   border-radius: 5px;
   color: #fff;
   background-color: #000;
+  font-size: inherit;
   cursor: crosshair;
   transition: all 0.2s linear;
   text-align: center;
@@ -124,7 +125,9 @@ input::-moz-placeholder, textarea::-moz-placeholder { /* Firefox 18- */
   border-color: red;
 }
 
+/* message choice for master & optimizer */
 /* https://stackoverflow.com/a/11915453 */
+
 .flash {
   -moz-animation: flash 600ms ease-out;
   -moz-animation-iteration-count: 1;

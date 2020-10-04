@@ -1,12 +1,12 @@
 /* messages */
 
-#messages {
-  height: 100%;
+#chat-messages {
+  flex: 1;
   overflow: auto;
   margin: 0 5px 0 0;
   align-self: stretch;
 }
 
-#messages .message {
+#chat-messages > div {
   margin: 0 0 5px 0;
 }

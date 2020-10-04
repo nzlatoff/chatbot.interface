@@ -11,25 +11,11 @@ textarea {
   overflow: hidden;
 }
 
-/* buttons */
+/* see this method for scrolling inside a flex-box element */
+/* https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336 */
 
-.square-button, #username {
-  font-size: 1.2rem;
-}
-
-#login-button, #save-button {
-  font-size: 0.8rem;
-  margin-bottom: 5px;
-}
-
-#input-wrapper {
-  flex: 1;
-}
-
-#interactive-box {
-  flex: 1;
-  margin-top: 5px;
-  display: flex;
+.text-input {
+  width: 100%;
 }
 
 #chat-box {
@@ -40,49 +26,41 @@ textarea {
   overflow: hidden;
 }
 
+#messages-wrapper {
+  position: relative;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  margin: 0 5px 5px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* buttons & username */
+
 #buttons-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
 }
 
-/* see this method for scrolling inside a flex-box element */
-/* https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336 */
-
-#messages-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  overflow-wrap: break-word;
-  margin: 0 5px 5px 0;
-}
-
-/* input: message */
-
-#send-form {
-  display: flex;
-  flex-basis: 52px;
-}
-
 #username {
-  font-size: 0.8rem;
   text-align: center;
-  padding: 0 1px 10px 1px;
+  padding: 10px 10px 0 0;
   word-wrap: break-word;
   word-break: break-word;
+  text-align: center;
+  font-size: 1.2rem;
   max-width: 52px;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
-/* character name */
-
-.character-input {
-  width: 100%;
+#login-button {
+  margin-bottom: 5px;
 }
 
-/* message content */
-
-.message-input {
-  width: 100%;
+#input-button {
+  font-size: 1.5rem;
 }

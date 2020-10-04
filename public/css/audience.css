@@ -5,6 +5,7 @@
 #messages-box {
   position: relative;
   overflow: hidden;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
   flex: 1;
 }

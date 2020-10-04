@@ -1,3 +1,5 @@
+import { createInteractiveBox, removeUnusedBoxes } from './interactive-boxes.js';
+
 // $(() => {
 const socket = io();
 
@@ -11,33 +13,6 @@ socket.on('connect', function() {
   // console.log('connecting');
   socket.emit("get bot list");
 });
-
-function createInteractiveBox(client) {
-  // console.log('creating box, client:', client);
-  // check if there isn't a div already
-  if (!$(`#${client.id}`).length) {
-    // console.log('creating element', client.id, 'for user', client.user);
-    let div = document.createElement("div");
-    div.id = client.id;
-    div.className = 'talkco';
-    // div.innerHTML = `<em>${client.user}: </em>`;
-    div.innerHTML = `(...)`;
-    document.querySelector('#interactive-box').appendChild(div);
-  } else {
-    // console.log('found element', $(`#${client.id}`));
-  }
-};
-
-function removeUnusedBoxes(data) {
-  // console.log('removing boxes', data);
-  $('.talkco').each((index, el) => {
-    // console.log('while removing, el:', el.id);
-    if (!(el.id in data)) {
-      // console.log('removing box', el.id);
-      el.remove();
-    }
-  });
-};
 
 function emptyBoxes() {
   // console.log('removing boxes', data);
@@ -64,9 +39,9 @@ function createMessage(data) {
   new Promise((res, rej) => {
     if (!data.character && !data.message) {
       // $(`#${data.id}`).html(`<em>${data.user}:</em> `);
-      ic = document.createElement("i");
+      const ic = document.createElement("i");
       ic.className = "fas fa-spinner fa-spin";
-      leDiv = $(`#${data.id}`);
+      const leDiv = $(`#${data.id}`);
       if (leDiv.text() === "(...)") {
         // console.log('icon', data);
         $(`#${data.id}`).html(ic);
@@ -109,7 +84,7 @@ function filterBot(data) {
     // console.log('no bot filtering');
     createMessage(data);
   } else {
-    id = Object.keys(lesBots)[currentBot];
+    const id = Object.keys(lesBots)[currentBot];
     // console.log('only bot:', lesBots[id]);
     if (data.id === id) {
       createMessage(data);
@@ -128,7 +103,7 @@ socket.on("erase messages", data => {
 socket.on("new bot", data => {
   // console.log("new bot", data);
   new Promise((res, rej) => {
-    createInteractiveBox(data);
+    createInteractiveBox(data, true);
     res();
   })
 });
@@ -140,11 +115,11 @@ socket.on("bots list", data => {
   for (const client in data) {
     // console.log(' - client:', client);
     if (client in lesBots) {
-      createInteractiveBox(data[client]);
+      createInteractiveBox(data[client], true);
     }
   }
   // update interactive boxes
-  removeUnusedBoxes(data);
+  removeUnusedBoxes('.talkco', data);
 });
 
 // socket.on('users list', (data) => {
