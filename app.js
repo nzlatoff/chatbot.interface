@@ -227,7 +227,7 @@ socketio.on("connection", socket => {
 
   //Someone is typing
   socket.on("typing", data => {
-    socket.broadcast.emit("notifyTyping", {
+    socket.broadcast.emit("server sends typing", {
       id: data.id,
       user: data.user,
       message: data.message,

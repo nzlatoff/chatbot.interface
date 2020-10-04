@@ -138,7 +138,7 @@ socket.on("received direct", data => {
   }
 });
 
-socket.on("notifyTyping", data => {
+socket.on("server sends typing", data => {
   // console.log('received typing', data);
   if (!direct) {
     filterBot(data);

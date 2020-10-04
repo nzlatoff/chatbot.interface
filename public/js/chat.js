@@ -95,7 +95,7 @@ socket.on("get typing", () => {
   emitTyping(scroll=false);
 });
 
-socket.on("notifyTyping", data => {
+socket.on("server sends typing", data => {
   // console.log('received typing', data, 'autoScroll:', autoScroll);
   if (!data.character && !data.message) {
     $(`#${data.id}`).html(`<em>${data.user}:</em> `);

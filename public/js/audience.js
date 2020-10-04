@@ -70,7 +70,7 @@ socket.on('bot left', function(data) {
   autoScroll = clearUser(data, autoScroll);
 });
 
-socket.on("notifyTyping", (data) => {
+socket.on("server sends typing", (data) => {
   // console.log('received typing', data);
   // console.log('received typing', data, 'autoScroll:', autoScroll);
   if (!data.character && !data.message) {
