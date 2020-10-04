@@ -83,12 +83,6 @@ socket.on('bot left', function(data) {
   autoScroll = clearUser(data, autoScroll);
 });
 
-// isTyping events
-$("#message, #character").on("input", () => {
-  // console.log('keyup, sending id', socket.id);
-  emitTyping();
-});
-
 // get current state of input boxes at the server's request
 // (used after a new client connects or one refreshes)
 socket.on("get typing", () => {
@@ -132,8 +126,6 @@ socket.on('erase messages', () => {
   $('#interactive-box').empty();
 });
 
-window.addEventListener('load', () => $('#message').focus());
-
 // new message entered or received
 
 // sending new message
@@ -150,11 +142,19 @@ $("#send-form").submit(function(e) {
   $('#message').val('');
 });
 
+window.addEventListener('load', () => $('#message').focus());
+
 // ctrl+enter to submit
 $('textarea').keydown(function(e) {
   if (e.ctrlKey && (e.keyCode == 13 || e.keyCode == 10)) {
     $("#send-form").submit();
   }
+});
+
+// isTyping events
+$("#message, #character").on("input", () => {
+  // console.log('keyup, sending id', socket.id);
+  emitTyping();
 });
 
 // scrolling
