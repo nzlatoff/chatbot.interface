@@ -64,6 +64,9 @@ function createMessage(data) {
           .replace(/\(/g, " parenthèse ouverte ")
           .replace(/\)/g, " parenthèse fermée ")
           .toLowerCase();
+        const laRequest = `${char.replace(/<br>/g, " ")}${msg}`;
+        console.log(laRequest);
+        playTTS(laRequest, 'fr');
         $(`#${data.id}`).html(`${char}${msg}<br>`);
       } else {
         if (data.character) {
@@ -78,6 +81,18 @@ function createMessage(data) {
     adjustScroll(`#${data.id}`);
   });
 }
+
+// https://stackoverflow.com/a/61885827/9638108
+function playTTS(text, lang) {
+  // Get the audio element
+  const audioEl = document.createElement('audio');
+  const url= `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${text}`;
+  // add the sound to the audio element
+  audioEl.src = url;
+  //For auto playing the sound
+  audioEl.play();
+  audioEl.remove();
+};
 
 function filterBot(data) {
   if (currentBot === -1) {
