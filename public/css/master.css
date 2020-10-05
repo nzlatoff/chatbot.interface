@@ -37,19 +37,19 @@ textarea {
   margin-right: 5px;
 }
 
-.batch-btns-container {
+.batch-btns-wrapper {
   display: flex;
   flex-flow: column;
   justify-content: flex-end;
 }
 
-.batch-button {
-  align-self: flex-end;
-}
-
 .seconds-button {
   font-size: 1.5rem;
   color: red;
+}
+
+.again-button, .skip-button {
+  margin-bottom: 5px;
 }
 
 .square-button-no-hover {

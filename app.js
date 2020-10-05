@@ -269,7 +269,6 @@ socketio.on("connection", socket => {
 
   });
 
-
   socket.on("chat batch", function(data) {
     if (!app.locals.mastersocketnumber) {
       console.log("---------------------------");
@@ -278,6 +277,11 @@ socketio.on("connection", socket => {
     } else {
       socket.broadcast.emit("received batch", data);
     }
+  });
+
+  socket.on("new batch", function(data) {
+    console.log("master requested new batch", data);
+    socket.broadcast.emit("server requests new batch", { id: data.id });
   });
 
   socket.on("get session", function() {

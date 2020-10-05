@@ -55,14 +55,6 @@ function submitConfig(form, data) {
   }, 1000);
 }
 
-function skipMessage(id) {
-  socket.emit("");
-}
-
-function newBatch(id) {
-  socket.emit("master requests new batch");
-}
-
 function addCountdown(id, seconds) {
   // console.log("about to create new countdown for bot:", id);
  countdowns[id] = setInterval(() => {
@@ -87,6 +79,30 @@ async function checkRadio(id) {
     }
   }
   return choice;
+}
+
+function newBatch(id) {
+  console.log('requesting new batch');
+  skipMessage(id);
+  socket.emit("new batch", { "id": id });
+}
+
+function skipMessage(id) {
+  let batchButton = document.querySelector(`#batch-btn-${id}`);
+  new Promise((res, rej) => {
+    clearInterval(countdowns[id]);
+    delete countdowns[id];
+    res();
+  }).then(() => {
+    batchButton.classList.add("square-button-no-hover");
+  }) .then(() => {
+    console.log('skipping this batch...');
+    socket.emit("master sends choice", { id: id, choice: -2 });
+    let ic = document.createElement("i");
+    ic.className = "fas fa-check";
+    batchButton.innerHTML = "";
+    batchButton.appendChild(ic);
+  });
 }
 
 function submitMessage(id) {
@@ -261,13 +277,30 @@ socket.on("bot config from server", data => {
   form.appendChild(numbersBox);
   form.appendChild(textsBox);
 
+  let againButton = document.createElement("button");
+  againButton.className = "square-button again-button";
+  againButton.id = `again-btn-${data.id}`;
+  againButton.innerHTML = "gen!";
+
   let setButton = document.createElement("button");
   setButton.className = "square-button set-button";
   setButton.innerHTML = "set";
+
+  let BotBtns = document.createElement("div");
+  BotBtns.className = "batch-btns-wrapper";
+  BotBtns.appendChild(againButton);
+  BotBtns.appendChild(setButton);
+
+  botControls.appendChild(BotBtns);
+
+  againButton.addEventListener("click", (e) => {
+    // console.log("inside event listener", e);
+    newBatch(data.id);
+  });
+
   setButton.addEventListener("click", () => {
     submitConfig(form, data);
   });
-  botControls.appendChild(setButton);
 
 });
 
@@ -343,6 +376,11 @@ socket.on("received batch", data => {
 
   batch_controls.appendChild(batch_messages_form);
 
+  let skipButton = document.createElement("button");
+  skipButton.className = "square-button skip-button";
+  skipButton.id = `skip-btn-${id}`;
+  skipButton.innerHTML = "skip";
+
   let batchButton = document.createElement("button");
   batchButton.className = "square-button batch-button";
   batchButton.id = `batch-btn-${id}`;
@@ -355,11 +393,12 @@ socket.on("received batch", data => {
     batchButton.innerHTML = "send";
   }
 
-  let btnsDiv = document.createElement("div");
-  btnsDiv.className = "batch-btns-container";
-  btnsDiv.appendChild(batchButton);
+  let batchBtns = document.createElement("div");
+  batchBtns.className = "batch-btns-wrapper";
+  batchBtns.appendChild(skipButton);
+  batchBtns.appendChild(batchButton);
 
-  batch_controls.appendChild(btnsDiv);
+  batch_controls.appendChild(batchBtns);
   let box = document.getElementById(id);
   box.appendChild(batch_controls);
 
@@ -367,6 +406,12 @@ socket.on("received batch", data => {
     // console.log("inside event listener", e);
     submitMessage(id);
   }, {once: true} );
+
+  skipButton.addEventListener("click", (e) => {
+    // console.log("inside event listener", e);
+    skipMessage(id);
+  }, {once: true} );
+
 });
 
 socket.on("server confirms bot choice", data => {
