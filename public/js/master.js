@@ -28,11 +28,11 @@ async function createBotBoxes(data) {
 
 function submitConfig(form, data) {
   // console.log("class list before", setButton.classList);
-  document.getElementById(data.id).querySelector('button').classList.add('flash');
+  document.getElementById(data.id).querySelector('.set-button').classList.add('flash');
   // console.log("class list after", setButton.classList);
   let formData = new FormData(form);
   for (const pair of formData.entries()) {
-    if (["character", "hidden_before_char", "hidden_after_char"].includes(pair[0]) && !pair[1]) {
+    if (["character", "hidden_before_char", "inject_after_char"].includes(pair[0]) && !pair[1]) {
       document.querySelector(`#${pair[0]}-${data.id}`).placeholder = "";
       document.querySelector(`#${pair[0]}-${data.id}`).value = "";
       formData.set(pair[0], "");
@@ -185,7 +185,7 @@ socket.on("bot config from server", data => {
   const textareaFields = [
     "character",
     "hidden_before_char",
-    "hidden_after_char"
+    "inject_after_char"
   ];
 
   let box = document.getElementById(data.id);
@@ -375,6 +375,10 @@ socket.on("received batch", data => {
   }
 
   batch_controls.appendChild(batch_messages_form);
+
+  batch_messages_form.addEventListener('dblclick', (e) => {
+    submitMessage(id);
+  }, {once: true});
 
   let skipButton = document.createElement("button");
   skipButton.className = "square-button skip-button";
