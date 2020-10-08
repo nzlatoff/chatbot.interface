@@ -82,21 +82,32 @@ async function checkRadio(id) {
 }
 
 function newBatch(id) {
-  console.log('requesting new batch');
-  skipMessage(id);
-  socket.emit("new batch", { "id": id });
+  // console.log('requesting new batch');
+  if (countdowns[id]) {
+    // console.log('found count down, skipping current batch');
+    skipMessage(id)
+      .then(() => {
+        // console.log('about to request new batch');
+        setTimeout(() => socket.emit("new batch", { "id": id }), 1000);
+      });
+  } else {
+    // console.log('about to request new batch, nothing to reset');
+    socket.emit("new batch", { "id": id });
+  }
 }
 
 function skipMessage(id) {
-  let batchButton = document.querySelector(`#batch-btn-${id}`);
-  new Promise((res, rej) => {
+  return new Promise((res, rej) => {
+    // console.log(`skipping message for ${id}`);
     clearInterval(countdowns[id]);
     delete countdowns[id];
     res();
   }).then(() => {
+    let batchButton = document.querySelector(`#batch-btn-${id}`);
     batchButton.classList.add("square-button-no-hover");
-  }) .then(() => {
-    console.log('skipping this batch...');
+    return batchButton
+  }) .then((batchButton) => {
+    // console.log('about to send request to skip this batch...');
     socket.emit("master sends choice", { id: id, choice: -2 });
     let ic = document.createElement("i");
     ic.className = "fas fa-check";
