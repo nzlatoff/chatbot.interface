@@ -447,6 +447,10 @@ document.querySelector("#archives-button").addEventListener("click", () => {
   window.open('/archive', "_blank");
 });
 
+document.querySelector("#mecha-button").addEventListener("click", () => {
+  window.open('/mechanism', "_blank");
+});
+
 document.querySelector("#reset-button").addEventListener("click", () => {
   console.log("resetting!");
   Array.from(document.getElementsByClassName("batch-controls")).forEach((e) => e.remove());
