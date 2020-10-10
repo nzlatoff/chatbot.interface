@@ -332,7 +332,7 @@ socket.on("bot left", data => {
 
 socket.on("received batch", data => {
 
-  // console.log("received batch");
+  // console.log("received batch", data);
 
   const { id, chars, messages, perplexities } = data;
 
