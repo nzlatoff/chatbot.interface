@@ -1,4 +1,5 @@
-import { createInteractiveBox, removeUnusedBoxes } from './interactive-boxes.js';
+import { createInteractiveBox, removeUnusedBoxes, filterBot, emptyBoxes, playTTS } from './interactive-boxes.js';
+import { adjustScroll } from './utils.js';
 
 // $(() => {
 const socket = io();
@@ -13,26 +14,6 @@ socket.on('connect', function() {
   // console.log('connecting');
   socket.emit("get bot list");
 });
-
-function emptyBoxes() {
-  // console.log('removing boxes', data);
-  $('.talkco').each((index, el) => {
-    // console.log('emptying box', el.id);
-    // $(el).html('(...)');
-    if (el.id != Object.keys(lesBots)[currentBot]) {
-      $(el).hide();
-    } else {
-      $(el).show();
-    }
-  });
-};
-
-// leaner scrolling
-// https://stackoverflow.com/a/11551414
-function adjustScroll(el) {
-  // console.log(`adjusting scroll for: #${el}`);
-  $(el).scrollTop($(el).prop("scrollHeight"));
-}
 
 function createMessage(data) {
   // console.log("creating message", data);
@@ -82,31 +63,6 @@ function createMessage(data) {
   });
 }
 
-// https://stackoverflow.com/a/61885827/9638108
-function playTTS(text, lang) {
-  // Get the audio element
-  const audioEl = document.createElement('audio');
-  const url= `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${text}`;
-  // add the sound to the audio element
-  audioEl.src = url;
-  //For auto playing the sound
-  audioEl.play();
-  audioEl.remove();
-};
-
-function filterBot(data) {
-  if (currentBot === -1) {
-    // console.log('no bot filtering');
-    createMessage(data);
-  } else {
-    const id = Object.keys(lesBots)[currentBot];
-    // console.log('only bot:', lesBots[id]);
-    if (data.id === id) {
-      createMessage(data);
-    }
-  }
-}
-
 socket.on("erase messages", data => {
   // console.log("resetting");
   $('.talkco').each((index, el) => {
@@ -118,7 +74,7 @@ socket.on("erase messages", data => {
 socket.on("new bot", data => {
   // console.log("new bot", data);
   new Promise((res, rej) => {
-    createInteractiveBox(data, true);
+    createInteractiveBox(data, false, true);
     res();
   })
 });
@@ -130,7 +86,7 @@ socket.on("bots list", data => {
   for (const client in data) {
     // console.log(' - client:', client);
     if (client in lesBots) {
-      createInteractiveBox(data[client], true);
+      createInteractiveBox(data[client], false, true);
     }
   }
   // update interactive boxes
@@ -149,14 +105,14 @@ socket.on('bot left', function(data) {
 socket.on("received direct", data => {
   // console.log("received direct", data);
   if (direct) {
-    filterBot(data);
+    filterBot(createMessage, data, lesBots, currentBot);
   }
 });
 
 socket.on("server sends typing", data => {
   // console.log('received typing', data);
   if (!direct) {
-    filterBot(data);
+    filterBot(createMessage, data, lesBots, currentBot);
   }
 });
 
@@ -201,7 +157,7 @@ document.body.onkeyup = (e) => {
       $('#info-bot').fadeOut('slow');
       $('#interactive-box .talkco').show();
     } else {
-      emptyBoxes();
+      emptyBoxes(lesBots, currentBot);
       let leB = lesBots[Object.keys(lesBots)[currentBot]];
       // console.log('bot index:', currentBot, '| current bot:', leB.user, leB.id);
       $('#info-bot').html(`bot: ${leB.user}<br>${leB.id}`);

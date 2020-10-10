@@ -1,96 +1,108 @@
+import { createInteractiveBox, removeUnusedBoxes, emptyBoxes } from './interactive-boxes.js';
+import { adjustScroll } from './utils.js';
+
 // $(() => {
 const socket = io();
 
 let lesBots;
+let currentBot = -1;
+let currentChar = "";
 
 socket.on('connect', function() {
   // send the username to the server
   // console.log('connecting');
   socket.emit("get bot list");
-  socket.emit("get list");
 });
 
-var messages = document.getElementById("messages");
-
-
-function createInteractiveBox(client) {
-  // console.log('creating box, client:', client);
-  // check if there isn't a div already
-  if (!$(`#${client.id}`).length) {
-    // console.log('creating element', client.id, 'for user', client.user);
-    let div = document.createElement("div");
-    div.id = client.id;
-    div.className = 'talkco';
-    div.innerHTML = `<em>${client.user}: </em>`;
-    document.querySelector('#users').appendChild(div);
-  } else {
-    // console.log('found element', $(`#${client.id}`));
-  }
-};
-
-function removeUnusedBoxes(data) {
-  // console.log('removing boxes', data);
-  $('.talkco').each((index, el) => {
-    // console.log('while removing, el:', el.id);
-    if (!(el.id in data)) {
-      // console.log('removing box', el.id);
-      el.remove();
+function createMessage(data) {
+  console.log("creating message", data);
+  new Promise((res, rej) => {
+    if (!data.entrails) {
+      console.log("breaking line");
+      $(`#${data.id}`).append('<br>');
+    } else {
+      const container = document.getElementById(data.id);
+      if (data.sep) {
+        let d = document.createElement("span");
+        container.appendChild(d);
+        // console.log('received:', data.entrails)
+        // https://stackoverflow.com/a/28240034
+        let i = 0;
+        do {
+          i += 1;
+          d.innerHTML += data.entrails;
+          d.normalize();
+          // console.log(i, d.getClientRects(), d.getClientRects()[0].width, container.clientWidth);
+        } while (i < 2000 && d.getClientRects()[0].width < container.clientWidth - 5);
+        d.innerHTML = d.innerHTML.substring(0, d.innerHTML.length) + "\n";
+      } else {
+        // console.log('message:', data.entrails)
+        let d;
+        if (data.pre) {
+          d = document.createElement("pre");
+          // console.log(data.entrails);
+          d.innerHTML = data.entrails;
+          if (data.und) {
+            for (let i = 0; i < data.entrails.length - 1; i++) {
+              d.innerHTML += "-";
+            }
+          }
+        } else if (data.no_cr) {
+          d = container.lastElementChild;
+          d.innerHTML += data.entrails;
+        } else if (data.wipe) {
+          d = container.lastElementChild;
+          d.innerHTML = data.entrails;
+        } else {
+          d = document.createElement("div");
+          d.innerHTML = data.entrails;
+        }
+        container.appendChild(d);
+      }
     }
+    res();
+  }).then(() => {
+    adjustScroll(`#${data.id}`, 0);
   });
-};
-
-
-// scrolling
-
-let autoScroll = { 'messages': true, 'users-wrapper': true };
-
-// if scroll at bottom of output container, enable autoscroll
-$('#users-wrapper').scroll((e) => {
-  // console.log(`disabling autoscroll for: ${e.currentTarget.id} | scrollTop: ${$(e.currentTarget).prop('scrollTop')} | innerHeight ${$(e.currentTarget).innerHeight()} | sum ${$(e.currentTarget).prop('scrollTop') + $(e.currentTarget).innerHeight()} | scrollHeight ${$(e.currentTarget).prop('scrollHeight')}`)
-  autoScroll[e.currentTarget.id] = false;
-  // console.log(autoScroll);
-  if($(e.currentTarget).prop('scrollTop') + $(e.currentTarget).innerHeight() >= $(e.currentTarget).prop('scrollHeight')) {
-    // console.log('back to the bottom: reenabling autoscroll');
-    autoScroll[e.currentTarget.id] = true;
-  }
-});
-
-function adjustScroll(el) {
-  let outTop = $(el).prop('scrollTop');
-  const outMax = $(el).prop('scrollHeight');
-  // console.log(`adjusting scroll: ${el} | scrollTop: ${outTop}, scrollHeight: ${outMax}`);
-  if (outTop < outMax) {
-    $(el).animate({ scrollTop: $(el).prop("scrollHeight")}, 1000);
-  }
 }
 
+socket.on("erase messages", data => {
+  // console.log("resetting");
+  $('.talkco').each((index, el) => {
+    // console.log('emptying box', el.id);
+    $(el).empty();
+  });
+});
+
 socket.on("new bot", data => {
-  console.log("new bot", data);
-  createInteractiveBox(data);
+  // console.log("new bot", data);
+  new Promise((res, rej) => {
+    createInteractiveBox(data, false, false);
+    res();
+  })
 });
 
 socket.on("bots list", data => {
   // console.log('received bots', data);
   lesBots = data;
+  // console.log('users list (before removal/adding boxes)', data);
+  for (const client in data) {
+    // console.log(' - client:', client);
+    if (client in lesBots) {
+      createInteractiveBox(data[client], false, false);
+    }
+  }
+  // update interactive boxes
+  removeUnusedBoxes('.talkco', data);
 });
+
+// socket.on('users list', (data) => {
+// });
 
 socket.on('bot left', function(data) {
   // send the username to the server
   // console.log('user left', data);
   $(`#${data.id}`).remove();
-});
-
-socket.on("entrails typing", data => {
-  // console.log('received entrails', data);
-  if (data.entrails.length == 0) {
-    $(`#${data.id}`).html(`<em>${data.user}:</em> `);
-    ic = document.createElement("i");
-    ic.className = "fas fa-spinner fa-spin";
-    $(`#${data.id}`).append(ic);
-  } else {
-    $(`#${data.id}`).html(`<em>${data.user}:</em><br>${data.entrails.replace(/\n/g, '<br>')}`);
-  }
-  // if (data.scroll && autoScroll['users-wrapper']) adjustScroll('#users-wrapper');
 });
 
 socket.on('disconnect', () => {
@@ -101,21 +113,29 @@ socket.on('reconnect', () => {
   // console.log('you have been reconnected');
 });
 
-socket.on('users list', (data) => {
-  // console.log('users list (before removal/adding boxes)', data);
-    for (const client in data) {
-      // console.log(' - client:', client);
-      if (client in lesBots) {
-        createInteractiveBox(data[client]);
-      }
-    }
-    // update interactive boxes
-    removeUnusedBoxes(data);
-});
-
 document.body.onkeyup = (e) => {
-  // console.log(e);
-  if (e.keyCode === 32 || e.key === ' ') {
-    document.getElementById('la-box').classList.toggle('box-no-border');
+
+  if (e.key === 'b') {
+    // modulo cycle shifted left by 1
+    currentBot = (currentBot + 2) % (Object.keys(lesBots).length + 1) - 1;
+    if (currentBot === -1) {
+      // console.log('bot index:', currentBot, '| using all bots');
+      $('#info-bot').text('using all bots');
+      $('#info-bot').fadeIn('slow');
+      $('#info-bot').fadeOut('slow');
+      $('#interactive-box .talkco').show();
+    } else {
+      emptyBoxes(lesBots, currentBot);
+      let leB = lesBots[Object.keys(lesBots)[currentBot]];
+      // console.log('bot index:', currentBot, '| current bot:', leB.user, leB.id);
+      $('#info-bot').html(`bot: ${leB.user}<br>${leB.id}`);
+      $('#info-bot').fadeIn('slow');
+      $('#info-bot').fadeOut('slow');
+    }
   }
 };
+
+socket.on("entrails typing", data => {
+  // console.log('received entrails', data);
+  createMessage(data);
+});

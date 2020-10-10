@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Bots</title>
+    <title>Mechanism</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- https://favicon.io/favicon-converter/ -->
@@ -10,32 +10,20 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="manifest" href="/favicon/site.webmanifest">
     <!-- favicon end -->
+    <!-- required for automatic audio rendering: https://stackoverflow.com/a/61885827/9638108 -->
+    <meta name="referrer" content="no-referrer">
     <link href="/css/entrails.css" type="text/css" rel="stylesheet"/>
-    <link href="/vendor/fa/css/fontawesome.min.css" type="text/css" rel="stylesheet"/>
-    <link href="/vendor/fa/css/fa-solid.min.css" type="text/css" rel="stylesheet"/>
+    <link href="vendor/fa/css/fontawesome.min.css" type="text/css" rel="stylesheet"/>
+    <link href="vendor/fa/css/fa-solid.min.css" type="text/css" rel="stylesheet"/>
   </head>
   <body>
-
-    <div class="chat-window">
-
-      <div class="box-wrapper console-box" id="la-box">
-
-        <div class="console-inner">
-
-          <div id="users-wrapper" class="input-wrapper users-wrapper">
-            <div id="users" class="users"></div>
-          </div>
-
-        </div>
-
-      </div>
-
+    <div class="main-wrapper">
+      <div id="interactive-box" class="box-wrapper"></div>
+      <div id="info-bot"></div>
     </div>
-
     <script src="vendor/jquery/jquery-1.11.1.min.js"></script>
     <script src="vendor/socketio/socket.js"></script>
-    <script src="/js/entrails.js" charset="utf-8"></script>
-
+    <script src="/js/entrails.js" type="module" charset="utf-8"></script>
   </body>
 </html>
 
