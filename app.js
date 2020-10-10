@@ -238,11 +238,8 @@ socketio.on("connection", socket => {
 
   //Someone is sending raw data
   socket.on("entrails", data => {
-    socket.broadcast.emit("entrails typing", {
-      id: data.id,
-      entrails: data.entrails,
-      user: data.user,
-    });
+    // console.log("entrails:", data);
+    socket.broadcast.emit("entrails typing", data);
   });
 
   socket.on("direct chat message", function(data) {
