@@ -1,24 +1,7 @@
 import { createInteractiveBox, removeUnusedBoxes, clearUser } from './interactive-boxes.js';
 import { deleteAllCookies, cookie2obj, adjustScroll } from './utils.js';
 
-function appendMessage(data, scroll=true) {
-  new Promise((res, rej) => {
-    let div = document.createElement('div');
-    let messages = document.getElementById('chat-messages');
-    // console.log('received', data);
-    const msg = data.message.replace(/\n/g, '<br>');
-    if (data.character) {
-      const char = data.character.replace(/\n/g, '<br>');
-      div.innerHTML = `${char}<br>${msg}`;
-    } else {
-      div.innerHTML = msg;
-    }
-    messages.appendChild(div);
-    res();
-  }).then(() => {
-    if (scroll && autoScroll['messages']) adjustScroll('#chat-messages');
-  });
-};
+// $(() => {
 
 function emitTyping(scroll=true) {
   socket.emit("typing", {
@@ -30,11 +13,9 @@ function emitTyping(scroll=true) {
   });
 }
 
-// $(() => {
-
 const socket = io();
 
-let autoScroll = { 'messages': true };
+let autoScroll = {};
 
 socket.on('connect', function() {
   // send the username to the server
@@ -45,21 +26,9 @@ socket.on('connect', function() {
   $('#username').html(`${cookie2obj(document.cookie).userData}`);
 });
 
-// new message received
-socket.on("received", data => {
-  appendMessage(data);
-});
-
-// new message received, only for web clients
-socket.on("current session message", data => {
-  // console.log("current session message", data);
-  appendMessage(data, scroll=false);
-});
-
 // finish session load
 socket.on("scroll down", ()  => {
   // console.log("scrolling down");
-  adjustScroll('#chat-messages');
   adjustScroll('#interactive-box .talko');
 });
 
@@ -122,7 +91,6 @@ socket.on('users list', (data) => {
 });
 
 socket.on('erase messages', () => {
-  $('#chat-messages').empty();
   $('#interactive-box').empty();
 });
 
@@ -138,7 +106,6 @@ $("#send-form").submit(function(e) {
     user: cookie2obj(document.cookie).userData
   }
   socket.emit("chat message", msg);
-  appendMessage(msg);
   $('#message').val('');
 });
 
@@ -160,7 +127,7 @@ $("#message, #character").on("input", () => {
 // scrolling
 
 // if scroll at bottom of output container, enable autoscroll
-$('#chat-messages, #interactive-box .talkco').each((i, el) => {
+$('#interactive-box .talkco').each((i, el) => {
   $(el).scroll((e) => {
     // console.log(`disabling autoscroll for: ${e.currentTarget.id}`);
     // console.log(`disabling autoscroll for: ${e.currentTarget.id} | scrollTop: ${$(e.currentTarget).prop('scrollTop')} | innerHeight ${$(e.currentTarget).innerHeight()} | sum ${$(e.currentTarget).prop('scrollTop') + $(e.currentTarget).innerHeight()} | scrollHeight ${$(e.currentTarget).prop('scrollHeight')}`);

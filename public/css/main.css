@@ -1,6 +1,9 @@
 @import "base.css";
 @import "interactive-boxes.css";
-@import "messages-boxes.css";
+
+#interactive-box {
+  margin-top: 0;
+}
 
 textarea {
   resize: vertical;
@@ -11,19 +14,20 @@ textarea {
   overflow: hidden;
 }
 
-/* see this method for scrolling inside a flex-box element */
-/* https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336 */
-
 .text-input {
   width: 100%;
 }
 
+/* see this method for scrolling inside a flex-box element */
+/* https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336 */
+
 #chat-box {
   flex: 1;
   display: flex;
+  margin-top: 5px;
+  overflow: hidden;
   flex-basis: 80px;
   position: relative;
-  overflow: hidden;
 }
 
 #messages-wrapper {
