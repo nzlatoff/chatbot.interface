@@ -10,7 +10,7 @@ function createInteractiveBox(client, username=true, dots=true) {
       div.innerHTML += `<em>${client.user}:</em>`;
     }
     if (dots) {
-      div.innerHTML += `(...)`;
+      div.innerHTML += ` (...)`;
     }
     div.innerHTML += '<br>';
     document.querySelector('#interactive-box').appendChild(div);
