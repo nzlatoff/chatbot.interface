@@ -33,19 +33,32 @@ app.use(bodyParser.json());
 app.use("/login", loginRouter);
 
 // cookie check to prevent anonymous users
-app.get("/", (req, res, next) => {
+app.get(["/", "/dual"], (req, res, next) => {
+
   // cookie doesn't exist redirect to login
   // console.log(str_obj(req.headers.cookie));
+
+  // hack to track the origin page
+  app.locals.loginFrom = req.url;
+
   if(typeof(req.headers.cookie) === 'undefined'){ // no cookies at all
-    res.sendFile(__dirname + "/public/login.html");
+    res.redirect("/login");
   } else if (typeof(str_obj(req.headers.cookie).userData) === 'undefined') { // our cookie is missing
-    res.sendFile(__dirname + "/public/login.html");
+    res.redirect("/login");
   } else if (str_obj(req.headers.cookie).userData.length == 0) { // our cookie is too small
-    res.sendFile(__dirname + "/public/login.html");
+    res.redirect("/login");
   } else{
     next();
   }
 })
+
+app.get("/login", (req, res, next) => {
+    res.sendFile(__dirname + "/public/login.html");
+});
+
+app.get("/dual", (req, res, next) => {
+    res.sendFile(__dirname + "/public/dual.html");
+});
 
 app.get("/master", (req, res, next) => {
   if (app.locals.mastersocketnumber > 0) {

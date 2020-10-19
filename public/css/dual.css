@@ -1,0 +1,66 @@
+@import "base.css";
+@import "interactive-boxes.css";
+@import "messages-boxes.css";
+
+textarea {
+  resize: vertical;
+  border: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* see this method for scrolling inside a flex-box element */
+/* https://medium.com/@stephenbunch/how-to-make-a-scrollable-container-with-dynamic-height-using-flexbox-5914a26ae336 */
+
+.text-input {
+  width: 100%;
+}
+
+#chat-box {
+  flex: 1;
+  display: flex;
+  flex-basis: 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+#messages-wrapper {
+  position: relative;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  margin: 0 5px 5px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* buttons & username */
+
+#buttons-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+#username {
+  text-align: center;
+  padding: 10px 10px 0 0;
+  word-wrap: break-word;
+  word-break: break-word;
+  text-align: center;
+  font-size: 1.2rem;
+  max-width: 52px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#login-button {
+  margin-bottom: 5px;
+}
+
+#input-button {
+  font-size: 1.5rem;
+}

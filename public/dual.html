@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Chat</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- https://favicon.io/favicon-converter/ -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+    <!-- favicon end -->
+    <link href="/css/dual.css" type="text/css" rel="stylesheet"/>
+    <link href="/vendor/fa/css/fontawesome.min.css" type="text/css" rel="stylesheet"/>
+    <link href="/vendor/fa/css/fa-solid.min.css" type="text/css" rel="stylesheet"/>
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <div id="interactive-box" class="box-wrapper"></div>
+      <div id="chat-box" class="box-wrapper">
+        <div id="messages-wrapper">
+          <div id="chat-messages"></div>
+          <form id="send-form" name="send-form">
+            <div class="char-wrapper">
+              <textarea id="character" class="text-input" rows="1" placeholder="LE COMTE." form="send-form"></textarea>
+            </div>
+            <div class="message-wrapper">
+              <textarea id="message" class="text-input" rows="1" placeholder="Vous l'emportez, et la faveur du Roy..." form="send-form"/></textarea>
+            </div>
+          </form>
+        </div>
+        <div id="buttons-wrapper">
+          <div id="username"></div>
+          <button id="login-button" class="square-button">login</button>
+          <button id="input-button" class="square-button" form="send-form">></button>
+        </div>
+      </div>
+    </div>
+    <script src="vendor/jquery/jquery-1.11.1.min.js"></script>
+    <script src="vendor/socketio/socket.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/rexeze/formatTimeStamp/src/index-cdn.js"></script>
+    <script src="/js/dual.js" type="module" charset="utf-8"></script>
+  </body>
+</html>
