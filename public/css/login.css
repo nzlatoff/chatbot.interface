@@ -55,6 +55,10 @@ html, body {
   width: 400px;
 }
 
+.login.page .form .username-input:invalid {
+  border: 1px solid red;
+}
+
 .login.page .title {
   font-size: 200%;
   padding: 0 15px;
