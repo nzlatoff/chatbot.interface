@@ -57,6 +57,7 @@ html, body {
 
 .login.page .form .username-input:invalid {
   border: 1px solid red;
+  border-radius: 5px;
 }
 
 .login.page .title {
