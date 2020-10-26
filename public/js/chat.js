@@ -118,6 +118,14 @@ $('textarea').keydown(function(e) {
   }
 });
 
+// https://stackoverflow.com/a/25621277
+$('textarea').each(function () {
+  this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+}).on('input', function () {
+  this.style.height = 'auto';
+  this.style.height = (this.scrollHeight) + 'px';
+});
+
 // isTyping events
 $("#message, #character").on("input", () => {
   // console.log('keyup, sending id', socket.id);
