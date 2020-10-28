@@ -32,7 +32,7 @@ function createMessage(data) {
           i += 1;
           d.innerHTML += data.entrails;
           d.normalize();
-          // console.log(i, d.getClientRects(), d.getClientRects()[0].width, container.clientWidth);
+          console.log(i, d.getClientRects(), d.getClientRects()[0].width, container.clientWidth);
         } while (i < 2000 && d.getClientRects()[0].width < container.clientWidth - 5);
         d.innerHTML = d.innerHTML.substring(0, d.innerHTML.length) + "\n";
       } else {
