@@ -115,6 +115,7 @@ socketio.on("connection", socket => {
   });
 
   socket.on("new master", function() {
+    socket.type = "master";
     app.locals.mastersocketnumber++;
     app.locals.mastersocketlist.push(socket.id);
     console.log('new master logged on server.');
@@ -127,6 +128,7 @@ socketio.on("connection", socket => {
   socket.on("new bot", function(user) {
     // adding user to the app.local shared variable
     socket.user = user;
+    socket.type = "bot";
     const clientInfo = {
       id: socket.id,
       user: user,
@@ -155,6 +157,7 @@ socketio.on("connection", socket => {
   socket.on("new user", function(user) {
     // adding user to the app.local shared variable
     socket.user = user;
+    socket.type = "user";
     const clientInfo = {
       id: socket.id,
       user: user,
@@ -204,7 +207,7 @@ socketio.on("connection", socket => {
 
     // console.log('disconnecting', socket.user, socket.id);
 
-    if (socket.id in app.locals.botsocketlist) {
+    if (socket.type === "bot") {
       delete app.locals.botsocketlist[socket.id];
       app.locals.botsocketnumber--;
       socket.broadcast.emit("bot left", {
@@ -213,9 +216,7 @@ socketio.on("connection", socket => {
       });
         console.log("---------------------------");
         console.log('bot left server:', socket.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
-    }
-
-    if (socket.id in app.locals.clientsocketlist) {
+    } else if (socket.type === "user") {
       delete app.locals.clientsocketlist[socket.id];
       app.locals.clientsocketnumber--;
       socket.broadcast.emit("user left", {
@@ -224,9 +225,7 @@ socketio.on("connection", socket => {
       });
       console.log("---------------------------");
       console.log('user left server:', socket.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
-    }
-
-    if (app.locals.mastersocketlist.includes(socket.id)) {
+    } else if (socket.type === "master") {
       console.log("master left");
       console.log("---------------------------");
       app.locals.mastersocketnumber--;
