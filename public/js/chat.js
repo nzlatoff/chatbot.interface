@@ -115,6 +115,7 @@ socket.on('users list', (data) => {
 
 socket.on('erase messages', () => {
   $('#interactive-box').empty();
+  createInteractiveBox({ "id": socket.id, "user": cookie2obj(document.cookie).userData })
 });
 
 // new message entered or received
