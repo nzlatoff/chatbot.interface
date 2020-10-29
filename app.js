@@ -205,7 +205,7 @@ socketio.on("connection", socket => {
 
   socket.on("disconnect", function() {
 
-    // console.log('disconnecting', socket.user, socket.id);
+    // console.log('disconnected:', socket.user, socket.id, socket.type);
 
     if (socket.type === "bot") {
       delete app.locals.botsocketlist[socket.id];
