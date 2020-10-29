@@ -143,10 +143,12 @@ socketio.on("connection", socket => {
   socket.on("config from bot", function(data) {
     console.log("---------------------------");
     console.log(data.user);
-    console.log("-----------");
-    for (el in data) {
-      console.log(`${el}: ${data[el]}`);
+    console.log("-".repeat(data.user.length));
+    let conf = [];
+    for (el in (({user, ...rest}) => rest)(data)) {
+      conf.push(`${el}: ${data[el]}`);
     }
+    console.log(conf.join(', '));
     socket.broadcast.emit("bot config from server", data);
   });
 
