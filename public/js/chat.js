@@ -4,13 +4,30 @@ import { deleteAllCookies, cookie2obj, adjustScroll } from './utils.js';
 // $(() => {
 
 function emitTyping(scroll=true) {
+  const leUser = cookie2obj(document.cookie).userData;
+  const leChar = $("#character").val();
+  const msg = $("#message").val();
   socket.emit("typing", {
     id: socket.id,
-    user: cookie2obj(document.cookie).userData,
-    message: $("#message").val(),
-    character: $("#character").val(),
+    user: leUser,
+    message: msg,
+    character: leChar,
     scroll: scroll
   });
+
+  // self-box
+  if (!leChar && !msg) {
+    console.log('nothing to type:', leUser, leChar, msg);
+    $(`#${socket.id}`).html(`<em>${leUser}:</em> `);
+    let ic = document.createElement("i");
+    ic.className = "fas fa-spinner fa-spin";
+    $(`#${socket.id}`).append(ic);
+  } else {
+    console.log('sth to type:', leUser, leChar, msg);
+    $(`#${socket.id}`).html(`<em>${leUser}:</em> ${leChar} ${msg}`);
+  }
+  if (scroll && autoScroll[socket.id]) adjustScroll(`#${socket.id}`, 10);
+
 }
 
 const socket = io();
@@ -21,9 +38,11 @@ socket.on('connect', function() {
   // send the username to the server
   // console.log('connecting');
   socket.emit('get list');
-  socket.emit("new user", cookie2obj(document.cookie).userData);
+  const leUser = cookie2obj(document.cookie).userData;
+  socket.emit("new user", leUser);
+  createInteractiveBox({ "id": socket.id, "user": leUser })
   emitTyping(scroll=false);
-  $('#username').html(`${cookie2obj(document.cookie).userData}`);
+  $('#username').html(`${leUser}`);
 });
 
 // finish session load
@@ -34,10 +53,8 @@ socket.on("scroll down", ()  => {
 
 socket.on("new user", data => {
   // console.log('new user (will create box):', data);
-  if (data.id != socket.id) {
-    createInteractiveBox(data);
-    autoScroll[data.id] = true;
-  }
+  createInteractiveBox(data);
+  autoScroll[data.id] = true;
 });
 
 socket.on('user left', function(data) {
@@ -80,6 +97,12 @@ socket.on('reconnect', () => {
 });
 
 socket.on('users list', (data) => {
+  // update to include self
+  data[socket.id] = {
+      id: socket.id,
+      user: cookie2obj(document.cookie).userData,
+  }
+  autoScroll[socket.id] = true;
   // console.log('users list (before removal/adding boxes)', data);
   for (const id in data) {
     // console.log(' - client:', id);
