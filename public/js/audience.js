@@ -1,6 +1,8 @@
 import { createInteractiveBox, removeUnusedBoxes, clearUser } from './interactive-boxes.js';
 import { adjustScroll } from './utils.js';
 
+let displayState = 0;
+
 // $(() => {
 
 function appendMessage(data, scroll=true) {
@@ -21,6 +23,22 @@ function appendMessage(data, scroll=true) {
     if (scroll && autoScroll['messages']) adjustScroll('#chat-messages');
   });
 };
+
+function adjustState(currentSate) {
+  console.log('display state:', displayState);
+  if (currentSate === 0) {
+    $('#interactive-box').show();
+    $('#messages-box').css('margin-top', 0);
+    $('#messages-box').show();
+  } else if (currentSate === 1) {
+    $('#interactive-box').hide();
+    $('#messages-box').css('margin-top', 5);
+    $('#messages-box').show();
+  } else {
+    $('#interactive-box').show();
+    $('#messages-box').hide();
+  }
+}
 
 const socket = io();
 
@@ -124,3 +142,9 @@ $('#chat-messages, #interactive-box .talkco').each((i, el) => {
   });
 });
 
+document.body.onkeyup = (e) => {
+  if (e.key === ' ') {
+    displayState = (displayState + 1) % 3;
+    adjustState(displayState);
+  }
+}
