@@ -18,6 +18,7 @@ pre {
 
 #interactive-box {
   border: none;
+  flex-direction: row;
 }
 
 #interactive-box .talkco {
