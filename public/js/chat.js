@@ -17,13 +17,13 @@ function emitTyping(scroll=true) {
 
   // self-box
   if (!leChar && !msg) {
-    console.log('nothing to type:', leUser, leChar, msg);
+    // console.log('nothing to type:', leUser, leChar, msg);
     $(`#${socket.id}`).html(`<em>${leUser}:</em> `);
     let ic = document.createElement("i");
     ic.className = "fas fa-spinner fa-spin";
     $(`#${socket.id}`).append(ic);
   } else {
-    console.log('sth to type:', leUser, leChar, msg);
+    // console.log('sth to type:', leUser, leChar, msg);
     $(`#${socket.id}`).html(`<em>${leUser}:</em> ${leChar} ${msg}`);
   }
   if (scroll && autoScroll[socket.id]) adjustScroll(`#${socket.id}`, 10);
@@ -53,8 +53,10 @@ socket.on("scroll down", ()  => {
 
 socket.on("new user", data => {
   // console.log('new user (will create box):', data);
-  createInteractiveBox(data);
-  autoScroll[data.id] = true;
+  if (data.id != socket.id) {
+    createInteractiveBox(data);
+    autoScroll[data.id] = true;
+  }
 });
 
 socket.on('user left', function(data) {
