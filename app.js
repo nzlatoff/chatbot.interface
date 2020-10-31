@@ -125,21 +125,18 @@ socketio.on("connection", socket => {
     socket.broadcast.emit("get bot config");
   });
 
-  socket.on("new bot", function(user) {
+  socket.on("new bot", function(data) {
     // adding user to the app.local shared variable
-    socket.user = user;
+    socket.user = data.user;
+    socket.botId = data.id
     socket.type = "bot";
-    const clientInfo = {
-      id: socket.id,
-      user: user,
-    };
-    socket.broadcast.emit("new user", clientInfo);
-    socket.broadcast.emit("new bot", clientInfo);
+    socket.broadcast.emit("new user", data);
+    socket.broadcast.emit("new bot", data);
     // save user in object
-    app.locals.botsocketlist[socket.id] = clientInfo;
+    app.locals.botsocketlist[data.id] = data;
     app.locals.botsocketnumber++;
     console.log("---------------------------");
-    console.log('new bot logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
+    console.log('new bot logged on server:', data.user, '| now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
   });
 
   socket.on("config from bot", function(data) {
@@ -208,10 +205,10 @@ socketio.on("connection", socket => {
     // console.log('disconnected:', socket.user, socket.id, socket.type);
 
     if (socket.type === "bot") {
-      delete app.locals.botsocketlist[socket.id];
+      delete app.locals.botsocketlist[socket.botId];
       app.locals.botsocketnumber--;
       socket.broadcast.emit("bot left", {
-        id: socket.id,
+        id: socket.botId,
         user: socket.user
       });
         console.log("---------------------------");
