@@ -162,7 +162,7 @@ socket.on('reconnect', () => {
 
 document.body.onkeyup = (e) => {
 
-  console.log(e);
+  // console.log(e);
 
   if (e.key === 'd') {
     switchInteractiveMode();
