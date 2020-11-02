@@ -65,12 +65,13 @@ function emptyBoxes(lesBots, currentBot) {
 };
 
 // https://stackoverflow.com/a/61885827/9638108
-function playTTS(text, lang) {
+function playTTS(text, lang, speed=0.9) {
   // Get the audio element
   const audioEl = document.createElement('audio');
   const url= `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${text}`;
   // add the sound to the audio element
   audioEl.src = url;
+  audioEl.playbackRate = speed;
   //For auto playing the sound
   audioEl.play();
   audioEl.remove();
