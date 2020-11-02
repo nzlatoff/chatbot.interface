@@ -139,7 +139,8 @@ $("#send-form").submit(function(e) {
   }
   socket.emit("chat message", msg);
   appendMessage(msg);
-  $('#message').val('');
+  // https://stackoverflow.com/a/29328541
+  $('#message').val('').trigger('input');
 });
 
 window.addEventListener('load', () => $('#message').focus());

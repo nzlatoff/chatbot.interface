@@ -133,7 +133,8 @@ $("#send-form").submit(function(e) {
     user: cookie2obj(document.cookie).userData
   }
   socket.emit("chat message", msg);
-  $('#message').val('');
+  // https://stackoverflow.com/a/29328541
+  $('#message').val('').trigger('input');
 });
 
 window.addEventListener('load', () => $('#message').focus());
