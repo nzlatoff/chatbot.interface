@@ -9,12 +9,6 @@ let currentBot = -1;
 let direct = false;
 let currentChar = "";
 
-socket.on('connect', function() {
-  // send the username to the server
-  // console.log('connecting');
-  socket.emit("get bot list");
-});
-
 function createMessage(data) {
   // console.log("creating message", data);
   new Promise((res, rej) => {
@@ -62,6 +56,45 @@ function createMessage(data) {
     adjustScroll(`#${data.id}`);
   });
 }
+
+function switchInteractiveMode() {
+  direct = !direct;
+  // console.log('direct:', direct);
+  if (direct) {
+    $('#info-mode').text('direct display');
+    $('#info-mode').fadeIn('slow');
+    $('#info-mode').fadeOut('slow');
+  } else {
+    $('#info-mode').text('gradual display');
+    $('#info-mode').fadeIn('slow');
+    $('#info-mode').fadeOut('slow');
+  }
+}
+
+function switchBot() {
+  // modulo cycle shifted left by 1
+  currentBot = (currentBot + 2) % (Object.keys(lesBots).length + 1) - 1;
+  if (currentBot === -1) {
+    // console.log('bot index:', currentBot, '| using all bots');
+    $('#info-bot').text('using all bots');
+    $('#info-bot').fadeIn('slow');
+    $('#info-bot').fadeOut('slow');
+    $('#interactive-box .talkco').show();
+  } else {
+    emptyBoxes(lesBots, currentBot);
+    let leB = lesBots[Object.keys(lesBots)[currentBot]];
+    // console.log('bot index:', currentBot, '| current bot:', leB.user, leB.id);
+    $('#info-bot').html(`bot: ${leB.user}<br>${leB.id}`);
+    $('#info-bot').fadeIn('slow');
+    $('#info-bot').fadeOut('slow');
+  }
+}
+
+socket.on('connect', function() {
+  // send the username to the server
+  // console.log('connecting');
+  socket.emit("get bot list");
+});
 
 socket.on("erase messages", data => {
   // console.log("resetting");
@@ -129,17 +162,7 @@ document.body.onkeyup = (e) => {
   // console.log(e);
 
   if (e.key === 'd') {
-    direct = !direct;
-    // console.log('direct:', direct);
-    if (direct) {
-      $('#info-mode').text('direct display');
-      $('#info-mode').fadeIn('slow');
-      $('#info-mode').fadeOut('slow');
-    } else {
-      $('#info-mode').text('gradual display');
-      $('#info-mode').fadeIn('slow');
-      $('#info-mode').fadeOut('slow');
-    }
+    switchInteractiveMode();
   }
 
   // console.log(e);
@@ -148,21 +171,14 @@ document.body.onkeyup = (e) => {
   }
 
   if (e.key === 'b') {
-    // modulo cycle shifted left by 1
-    currentBot = (currentBot + 2) % (Object.keys(lesBots).length + 1) - 1;
-    if (currentBot === -1) {
-      // console.log('bot index:', currentBot, '| using all bots');
-      $('#info-bot').text('using all bots');
-      $('#info-bot').fadeIn('slow');
-      $('#info-bot').fadeOut('slow');
-      $('#interactive-box .talkco').show();
-    } else {
-      emptyBoxes(lesBots, currentBot);
-      let leB = lesBots[Object.keys(lesBots)[currentBot]];
-      // console.log('bot index:', currentBot, '| current bot:', leB.user, leB.id);
-      $('#info-bot').html(`bot: ${leB.user}<br>${leB.id}`);
-      $('#info-bot').fadeIn('slow');
-      $('#info-bot').fadeOut('slow');
-    }
+    switchBot();
+  }
+};
+
+document.body.ontouchstart = (e) => {
+  if (e.touches.length === 2) {
+    switchInteractiveMode();
+  } else if (e.touches.length === 3) {
+    switchBot();
   }
 };
