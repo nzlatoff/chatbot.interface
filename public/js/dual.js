@@ -37,12 +37,16 @@ const socket = io();
 let autoScroll = { 'messages': true };
 
 socket.on('connect', function() {
+  const leUser = cookie2obj(document.cookie).userData;
+  if (!leUser) {
+      window.open('/login.html', '_self');
+  }
   // send the username to the server
   // console.log('connecting');
   socket.emit('get list');
-  socket.emit("new user", cookie2obj(document.cookie).userData);
+  socket.emit("new user", leUser);
   emitTyping(scroll=false);
-  $('#username').html(`${cookie2obj(document.cookie).userData}`);
+  $('#username').html(`${leUser}`);
 });
 
 // new message received

@@ -35,10 +35,13 @@ const socket = io();
 let autoScroll = {};
 
 socket.on('connect', function() {
+  const leUser = cookie2obj(document.cookie).userData;
+  if (!leUser) {
+      window.open('/login.html', '_self');
+  }
   // send the username to the server
   // console.log('connecting');
   socket.emit('get list');
-  const leUser = cookie2obj(document.cookie).userData;
   socket.emit("new user", leUser);
   createInteractiveBox({ "id": socket.id, "user": leUser })
   emitTyping(scroll=false);
