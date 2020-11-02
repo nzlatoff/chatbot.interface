@@ -1,4 +1,4 @@
-import { createInteractiveBox, removeUnusedBoxes, filterBot, emptyBoxes, playTTS } from './interactive-boxes.js';
+import { createInteractiveBox, removeUnusedBoxes, filterBot, emptyBoxes, spaceChunks, playTTS, playTTSChunks } from './interactive-boxes.js';
 import { adjustScroll } from './utils.js';
 
 // $(() => {
@@ -41,7 +41,10 @@ function createMessage(data) {
           .toLowerCase();
         const laRequest = `${char.replace(/<br>/g, " ")}${msg}`;
         console.log(laRequest);
-        playTTS(laRequest, 'fr');
+        const chunks = spaceChunks(laRequest, 200);
+        console.log(chunks);
+        playTTSChunks(chunks, 'fr');
+        // playTTS(laRequest, 'fr');
         $(`#${data.id}`).html(`${char}${msg}<br>`);
       } else {
         if (data.character) {
@@ -159,7 +162,7 @@ socket.on('reconnect', () => {
 
 document.body.onkeyup = (e) => {
 
-  // console.log(e);
+  console.log(e);
 
   if (e.key === 'd') {
     switchInteractiveMode();
