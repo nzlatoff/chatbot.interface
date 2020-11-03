@@ -36,8 +36,8 @@ function createMessage(data) {
         }
         const msg = data.message
           .replace(/\n/g, " ")
-          .replace(/\(/g, " parenthèse ouverte ")
-          .replace(/\)/g, " parenthèse fermée ")
+          .replace(/(\(| _)/g, " parenthèse ouverte ")
+          .replace(/(\)|_[ ,.?;:!])/g, " parenthèse fermée ")
           .toLowerCase();
         const laRequest = `${char.replace(/<br>/g, " ")}${msg}`;
         console.log(laRequest);
