@@ -32,7 +32,7 @@ function submitConfig(form, data) {
   // console.log("class list after", setButton.classList);
   let formData = new FormData(form);
   for (const pair of formData.entries()) {
-    if (["character", "hidden_before_char", "inject_after_char"].includes(pair[0]) && !pair[1]) {
+    if (["character", "subtext", "first_words"].includes(pair[0]) && !pair[1]) {
       document.querySelector(`#${pair[0]}-${data.id}`).placeholder = "";
       document.querySelector(`#${pair[0]}-${data.id}`).value = "";
       formData.set(pair[0], "");
@@ -195,8 +195,8 @@ socket.on("bot config from server", data => {
 
   const textareaFields = [
     "character",
-    "hidden_before_char",
-    "inject_after_char"
+    "subtext",
+    "first_words"
   ];
 
   let box = document.getElementById(data.id);
