@@ -152,18 +152,6 @@ socketio.on("connection", socket => {
   });
 
   socket.on("new user", function(user) {
-    // adding user to the app.local shared variable
-    socket.user = user;
-    socket.type = "user";
-    const clientInfo = {
-      id: socket.id,
-      user: user,
-    };
-    socket.broadcast.emit("new user", clientInfo);
-    // save user in object
-    app.locals.clientsocketlist[socket.id] = clientInfo;
-    app.locals.clientsocketnumber++;
-    console.log('new user logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
 
     if (app.locals.clientsocketnumber == 1) {
       // creating a new session
@@ -176,6 +164,20 @@ socketio.on("connection", socket => {
     } else if (app.locals.clientsocketnumber > 1) {
         broadcastCurrentSession(socket);
     }
+
+    // adding user to the app.local shared variable
+    socket.user = user;
+    socket.type = "user";
+    const clientInfo = {
+      id: socket.id,
+      user: user,
+    };
+
+    socket.broadcast.emit("new user", clientInfo);
+    // save user in object
+    app.locals.clientsocketlist[socket.id] = clientInfo;
+    app.locals.clientsocketnumber++;
+    console.log('new user logged on server:', clientInfo.user, ' | now', app.locals.clientsocketnumber, 'client(s) and ', app.locals.botsocketnumber, 'bot(s).');
 
   });
 
