@@ -158,8 +158,13 @@ socket.on("bots list", data => {
 socket.on("current session", sess => {
   let masthead = document.getElementById("masthead-box");
   const currentSess = masthead.querySelector("#sess-id");
-  const sessDate = (new Date(sess)).toGMTString();
-  // console.log("current sess:", sessDate);
+  let sessDate;
+  if (sess) {
+    sessDate = (new Date(sess)).toGMTString();
+  } else {
+    sessDate = "(no session)";
+  }
+  // console.log("current sess:", sessDate, sess);
   if (!currentSess) {
     let sessWrapper = document.createElement("div");
     sessWrapper.id = "sess-wrapper";
