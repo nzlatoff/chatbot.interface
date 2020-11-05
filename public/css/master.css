@@ -11,6 +11,11 @@ textarea {
   border-width: 1px;
 }
 
+.main-wrapper {
+  overflow-y: scroll;
+  max-width: unset;
+}
+
 /* session & reset */
 
 #masthead-box {
