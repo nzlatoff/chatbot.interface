@@ -122,6 +122,7 @@ socket.on('users list', (data) => {
 });
 
 socket.on('erase messages', () => {
+  // console.log('erasing');
   $('#chat-messages').empty();
   $('#interactive-box').empty();
 });
