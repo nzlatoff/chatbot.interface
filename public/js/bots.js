@@ -1,4 +1,14 @@
-import { createInteractiveBox, removeUnusedBoxes, filterBot, emptyBoxes, spaceChunks, playTTS, playTTSChunks } from './interactive-boxes.js';
+import {
+  createInteractiveBox,
+  removeUnusedBoxes,
+  filterBot,
+  emptyBoxes,
+  cleanTTS,
+  spaceChunks,
+  playTTS,
+  playTTSChunks,
+  beep
+} from './interactive-boxes.js';
 import { adjustScroll } from './utils.js';
 
 // $(() => {
@@ -28,22 +38,21 @@ function createMessage(data) {
       if (direct) {
         let char;
         // console.log('char:', data.character, '| current:', currentChar);
+        let charChunks = []
         if (data.character != currentChar) {
           char = data.character.toLowerCase() + '<br>';
           currentChar = data.character;
+          const chnks = spaceChunks(cleanTTS(currentChar));
+          console.log('char chunks:', chnks);
+          charChunks = ['$$BEEP$$', ...chnks, '$$BEEP$$'];
         } else {
           char = "";
         }
-        const msg = data.message
-          .replace(/\n/g, " ")
-          .replace(/(\(| _)/g, " parenthèse ouverte ")
-          .replace(/(\)|_[ ,.?;:!])/g, " parenthèse fermée ")
-          .toLowerCase();
-        const laRequest = `${char.replace(/<br>/g, " ")}${msg}`;
-        console.log(laRequest);
-        const chunks = spaceChunks(laRequest, 200);
-        console.log(chunks);
-        playTTSChunks(chunks, 'fr');
+        const msg = cleanTTS(data.message);
+        // console.log(msg);
+        const msgChunks = spaceChunks(msg, 200);
+        console.log('msg chunks:', msgChunks);
+        playTTSChunks([...charChunks, ...msgChunks], 'fr');
         // playTTS(laRequest, 'fr');
         $(`#${data.id}`).html(`${char}${msg}<br>`);
       } else {

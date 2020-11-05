@@ -64,6 +64,16 @@ function emptyBoxes(lesBots, currentBot) {
   });
 };
 
+// TTS ----------------------------------------
+
+function cleanTTS(msg) {
+  return msg
+    .replace(/\n/g, " ")
+    .replace(/(\(| _)/g, " parenthèse ouverte ")
+    .replace(/(\)|_[ ,.?;:!])/g, " parenthèse fermée ")
+    .toLowerCase();
+}
+
 function spaceChunks(msg, maxLen=50) {
   let chunks = [];
   let total = msg.length;
@@ -85,14 +95,20 @@ function spaceChunks(msg, maxLen=50) {
 function playTTSChunks(chunks, lang='fr', speed=0.9) {
   let playEls = [];
   for (const text of chunks) {
-    // Get the audio element
-    // const audioEl = document.createElement('audio');
-    // const url= `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${text}`;
-    const audioEl = new Audio(`https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${text}`);
-    // add the sound to the audio element
-    audioEl.playbackRate = speed;
-    //For auto playing the sound
-    playEls.push(audioEl);
+    if (text === '$$BEEP$$') {
+      const a = new Audio(`../assets/beep.mp3`);
+      a.volume = 0.1;
+      playEls.push(a);
+    } else {
+      // Get the audio element
+      // const audioEl = document.createElement('audio');
+      // const url= `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${text}`;
+      const audioEl = new Audio(`https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${text}`);
+      // add the sound to the audio element
+      audioEl.playbackRate = speed;
+      //For auto playing the sound
+      playEls.push(audioEl);
+    }
   }
   for (let i = 0; i < playEls.length - 1; i++) {
     playEls[i].addEventListener('ended', () => {
@@ -100,7 +116,9 @@ function playTTSChunks(chunks, lang='fr', speed=0.9) {
       playEls[i + 1].play();
     });
   }
-  playEls[0].play()
+  return new Promise((err, res) => {
+    playEls[0].play()
+  });
 };
 
 // https://stackoverflow.com/a/61885827/9638108
@@ -119,4 +137,25 @@ function playTTS(text, lang='fr', speed=0.9) {
   });
 };
 
-export { createInteractiveBox, removeUnusedBoxes, clearUser, filterBot, emptyBoxes, spaceChunks, playTTS, playTTSChunks };
+function beep() {
+  const audioEl = new Audio(`../assets/beep.mp3`);
+  // add the sound to the audio element
+  //For auto playing the sound
+  return new Promise((err, res) => {
+    audioEl.play();
+    audioEl.remove();
+  });
+}
+
+export {
+  createInteractiveBox,
+  removeUnusedBoxes,
+  clearUser,
+  filterBot,
+  emptyBoxes,
+  cleanTTS,
+  spaceChunks,
+  playTTS,
+  playTTSChunks,
+  beep
+};
