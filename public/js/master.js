@@ -113,6 +113,10 @@ function skipMessage(id) {
     ic.className = "fas fa-check";
     batchButton.innerHTML = "";
     batchButton.appendChild(ic);
+  }).then(() => {
+    setTimeout(() => {
+      $(`#${id} .batch-controls`).children().fadeOut(500);
+    }, 500);
   });
 }
 
@@ -127,7 +131,7 @@ function submitMessage(id) {
     batchButton.classList.add("square-button-no-hover");
   }).then(() => {
     return checkRadio(id);
-  }) .then((choice) => {
+  }).then((choice) => {
     if (choice === undefined) {
       choice = -1;
       // console.log(`no message selected, returning control to bot.`);
