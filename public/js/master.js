@@ -193,12 +193,12 @@ socket.on("bot config from server", data => {
     "temperature",
     "top_k",
     "top_p",
-    "print_speed",
+    "tempo",
     "length_desired",
-    "random_threshold",
+    "silence",
     "rank_threshold",
-    "wait_for_master",
-    "sleepy_time",
+    "wait",
+    "pause",
     "patience",
   ];
 
