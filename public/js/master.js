@@ -441,6 +441,9 @@ socket.on("server confirms bot choice", data => {
   setTimeout(() => {
     chosen.classList.remove('flash');
   }, 1000);
+  setTimeout(() => {
+    $(`#${data.id} .batch-controls`).children().fadeOut(500);
+  }, 500);
 });
 
 document.getElementById('save-button').addEventListener('click', (e) => {
