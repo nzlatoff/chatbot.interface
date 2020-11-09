@@ -110,12 +110,21 @@ function playTTSChunks(chunks, lang='fr', speed=0.9) {
       playEls.push(audioEl);
     }
   }
+
+  // https://stackoverflow.com/a/36720740
   for (let i = 0; i < playEls.length - 1; i++) {
-    playEls[i].addEventListener('ended', () => {
-      playEls[i].remove();
-      playEls[i + 1].play();
+    playEls[i].addEventListener('timeupdate', function() {
+      // console.log(`at time ${this.currentTime} of element ${i} (total duration: ${this.duration}`);
+      let buffer = ((this.duration > 2) ? .75 : .3);
+      if (this.currentTime > this.duration - buffer) {
+        // console.log('at ', this.currentTime, ' | total: ', this.duration);
+        playEls[i].pause();
+        playEls[i + 1].play();
+        playEls[i].remove();
+      }
     });
   }
+
   return new Promise((err, res) => {
     playEls[0].play()
   });
