@@ -7,8 +7,18 @@ input, textarea {
 textarea {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
-  border-radius: 3px;
-  border-width: 1px;
+  border-radius: 5px;
+  border-width: 2px;
+  border-color: #404040;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + label {
+  border: 2px solid #404040;
+  border-radius: 5px;
 }
 
 .main-wrapper {
@@ -32,20 +42,41 @@ textarea {
   margin-right: 5px;
 }
 
+/* bots */
+
+#bots-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.bot-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* overflow-y: scroll; */
+}
+
 /* buttons */
 
 .square-button {
   font-size: 0.8rem;
 }
 
-#archives-button, #save-button {
+#masthead-box > .square-button:not(:last-child) {
   margin-right: 5px;
 }
 
-.batch-btns-wrapper {
+.btns-wrapper {
   display: flex;
   flex-flow: column;
+}
+
+#bot-btns-wrapper {
   justify-content: flex-end;
+}
+
+#batch-btns-wrapper {
+  justify-content: flex-start;
 }
 
 .seconds-button {
@@ -69,8 +100,15 @@ textarea {
 
 /* bot controls */
 
-.bot-title {
-  margin-bottom: 3px;
+.bot-title-wrapper {
+  width: 100%;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #404040;
+}
+
+.bot-title b {
+  padding-right: 5px;
 }
 
 .bot-subtitle {
@@ -80,14 +118,12 @@ textarea {
 
 .bot-controls {
   display: flex;
-  justify-content: space-between;
 }
 
 .bot-form {
   flex: 1;
   margin: 0 5px 0 0;
   display: flex;
-  justify-content: stretch;
   flex-wrap: wrap;
   font-size: 14px;
 }
@@ -100,25 +136,30 @@ textarea {
 
 .input-wrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  padding-right: 2px;
+}
+
+.input-wrapper:not(:last-child) {
+  margin-bottom: 3px;
 }
 
 .input-wrapper input {
-  width: 50%;
+  width: 60px;
 }
 
 .input-wrapper textarea {
-  width: 75%;
+  margin-bottom: 0;
+  height: 48px;
+  flex: 5;
 }
 
-.numbers-inputs-wrapper {
-  flex-grow: 1;
-  margin: 3px;
+.character-wrapper {
+  flex: 1;
 }
 
 .texts-inputs-wrapper {
   flex-grow: 3;
-  margin: 3px;
 }
 
 input.id, input.model, input.run {
@@ -126,17 +167,15 @@ input.id, input.model, input.run {
 }
 
 .numbers-label-wrapper {
-  width: 45%;
+  margin-right: 5px;
+  text-align: right;
+  flex: 1;
 }
 
 .texts-label-wrapper {
-  width: 30%;
-}
-
-/* set buttons */
-
-.set-button {
-  align-self: flex-end;
+  text-align: right;
+  margin-right: 5px;
+  flex: 1.2;
 }
 
 /* batch controls */
@@ -148,9 +187,9 @@ input.id, input.model, input.run {
 
 .bot-batch-messages-form {
   display: flex;
-  flex-flow: column wrap;
-  flex-grow: 1;
-  margin-bottom: 0px;
+  flex-flow: column;
+  flex: 1;
+  margin: 0 5px 0 0;
 }
 
 .batch-message-container {
@@ -162,6 +201,8 @@ input.id, input.model, input.run {
 }
 
 .batch-label {
-  display: flex;
+  border-radius: 3px;
   align-content: space-between;
+  display: flex;
+  flex: 1;
 }

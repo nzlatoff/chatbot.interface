@@ -17,12 +17,19 @@ async function createBotBoxes(data) {
     let box = document.createElement("div");
     box.id = botId;
     box.className = "box-wrapper bot-wrapper";
+    let titleW = document.createElement("div");
+    titleW.id = `title-wrapper-${botId}`;
+    titleW.className = "bot-title-wrapper";
     let title = document.createElement("div");
     title.className = "bot-title";
     title.id = `title-${botId}`;
     title.innerHTML = `<b>${data[botId].user}</b>`;
-    box.appendChild(title);
-    document.querySelector('.main-wrapper').appendChild(box);
+    let titleId = document.createElement("small");
+    titleId.innerHTML = `(${botId})`;
+    title.append(titleId)
+    titleW.append(title);
+    box.appendChild(titleW);
+    document.querySelector('#bots-wrapper').appendChild(box);
   }
 }
 
@@ -32,11 +39,17 @@ function submitConfig(form, data) {
   // console.log("class list after", setButton.classList);
   let formData = new FormData(form);
   for (const pair of formData.entries()) {
-    if (["character", "subtext", "first_words"].includes(pair[0]) && !pair[1]) {
+    // console.log(pair);
+    // character is empty (reset)
+    if (["character"].includes(pair[0]) && !pair[1]) {
       document.querySelector(`#${pair[0]}-${data.id}`).placeholder = "";
       document.querySelector(`#${pair[0]}-${data.id}`).value = "";
       formData.set(pair[0], "");
-    } else if (!pair[1]) {
+    // for subtext and first words, don't store anything
+    } else if (["subtext", "first_words"].includes(pair[0])){
+      document.querySelector(`#${pair[0]}-${data.id}`).value = "";
+      document.querySelector(`#${pair[0]}-${data.id}`).placeholder = "";
+    } else if (!["subtext", "first_words"].includes(pair[0]) && !pair[1]) {
       const pl = document.querySelector(`#${pair[0]}-${data.id}`).placeholder;
       document.querySelector(`#${pair[0]}-${data.id}`).value = pl;
       formData.set(pair[0], pl);
@@ -106,7 +119,7 @@ function skipMessage(id) {
     let batchButton = document.querySelector(`#batch-btn-${id}`);
     batchButton.classList.add("square-button-no-hover");
     return batchButton
-  }) .then((batchButton) => {
+  }).then((batchButton) => {
     // console.log('about to send request to skip this batch...');
     socket.emit("master sends choice", { id: id, choice: -2 });
     let ic = document.createElement("i");
@@ -235,9 +248,10 @@ socket.on("bot config from server", data => {
   // https://stackoverflow.com/a/39333479
   // https://stackoverflow.com/a/51401453
   const subData = Object.entries(
-    (({id, model, run}) => ({id, model, run}))(data)
+    (({model, run}) => ({model, run}))(data)
   ).join(" | ").replace(/,/g, ": ");
-  subT.innerHTML = `${subData} | (<small>ctrl+enter pour envoyer</small>)`;
+  document.querySelector(`#title-wrapper-${data.id}`).innerHTML +=  `<small>${subData}</small>`
+  // subT.innerHTML = `${subData}`;
 
   for (const el in data) {
 
@@ -292,7 +306,6 @@ socket.on("bot config from server", data => {
   }
 
   const title = document.querySelector(`#title-${data.id}`);
-  title.parentNode.insertBefore(subT, title.nextSibling);
 
   form.appendChild(numbersBox);
   form.appendChild(textsBox);
@@ -307,7 +320,8 @@ socket.on("bot config from server", data => {
   setButton.innerHTML = "set";
 
   let BotBtns = document.createElement("div");
-  BotBtns.className = "batch-btns-wrapper";
+  BotBtns.className = "btns-wrapper";
+  BotBtns.id = "bot-btns-wrapper";
   BotBtns.appendChild(againButton);
   BotBtns.appendChild(setButton);
 
@@ -371,8 +385,6 @@ socket.on("received batch", data => {
     inp.name = `batch-input`;
     inp.setAttribute("value", i);
 
-    let labDiv = document.createElement("div");
-
     let label = document.createElement("label");
     label.className = "batch-label";
     label.id = `batch-label-${id}-${i}`;
@@ -386,11 +398,21 @@ socket.on("received batch", data => {
     label.appendChild(l);
     label.appendChild(m);
 
-    labDiv.appendChild(label);
-
     inputDiv.appendChild(inp);
-    inputDiv.appendChild(labDiv);
+    inputDiv.appendChild(label);
     batch_messages_form.appendChild(inputDiv);
+
+    // https://stackoverflow.com/q/19895073/9638108
+    inp.addEventListener("click", (e) => {
+      console.log('checked?', e.target.checked, e.target);
+      if (e.target.wasChecked) {
+        e.target.wasChecked = false;
+        e.target.checked = false;
+      } else {
+        e.target.wasChecked = true;
+        e.target.checked = true;
+      }
+    });
 
   }
 
@@ -418,7 +440,8 @@ socket.on("received batch", data => {
   }
 
   let batchBtns = document.createElement("div");
-  batchBtns.className = "batch-btns-wrapper";
+  batchBtns.className = "btns-wrapper";
+  batchBtns.id = "batch-btns-wrapper";
   batchBtns.appendChild(skipButton);
   batchBtns.appendChild(batchButton);
 
