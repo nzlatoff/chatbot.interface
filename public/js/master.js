@@ -362,8 +362,8 @@ socket.on("bot left", data => {
       el.remove();
     }
   });
-  del countdowns[data.id];
-  del batch_size[data.id];
+  delete countdowns[data.id];
+  delete batch_sizes[data.id];
 });
 
 socket.on("received batch", data => {
