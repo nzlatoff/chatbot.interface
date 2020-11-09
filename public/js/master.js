@@ -213,6 +213,7 @@ socket.on("bot config from server", data => {
     "wait",
     "pause",
     "patience",
+    "batch_size",
   ];
 
   const textareaFields = [
