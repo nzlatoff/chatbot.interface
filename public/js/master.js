@@ -77,7 +77,7 @@ function submitConfig(form, data) {
 
 function addCountdown(id, seconds) {
   // console.log("about to create new countdown for bot:", id);
- countdowns[id] = setInterval(() => {
+  countdowns[id] = setInterval(() => {
     if (seconds <= 1) {
       // console.log("clearing interval:", countdowns[id]);
       submitMessage(id);
@@ -174,7 +174,7 @@ socket.on("connect", function() {
 
 socket.on("bots list", data => {
   createBotBoxes(data)
-   .then(removeUnusedBoxes('.bot-wrapper', data))
+    .then(removeUnusedBoxes('.bot-wrapper', data))
     .then(socket.emit("get session"))
     .then(socket.emit("master wants bot config"));
 });
