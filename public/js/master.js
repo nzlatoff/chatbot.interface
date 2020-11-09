@@ -3,6 +3,7 @@ import { removeUnusedBoxes } from './interactive-boxes.js';
 const socket = io();
 
 let countdowns = {};
+let batch_sizes = {};
 
 async function createBotBoxes(data) {
   // console.log("bots list", data);
@@ -49,10 +50,16 @@ function submitConfig(form, data) {
     } else if (["subtext", "first_words"].includes(pair[0])){
       document.querySelector(`#${pair[0]}-${data.id}`).value = "";
       document.querySelector(`#${pair[0]}-${data.id}`).placeholder = "";
-    } else if (!["subtext", "first_words"].includes(pair[0]) && !pair[1]) {
-      const pl = document.querySelector(`#${pair[0]}-${data.id}`).placeholder;
-      document.querySelector(`#${pair[0]}-${data.id}`).value = pl;
-      formData.set(pair[0], pl);
+    // case for batch size (which resets text fields)
+    } else if ("batch_size" === pair[0]) {
+      console.log(`former batch size ${batch_sizes[data.id]}, current: ${pair[1]}`);
+      if (pair[1] != batch_sizes[data.id]) {
+        // in case there's a countdown in progress
+        if (data.id in countdowns) {
+          skipMessage(data.id);
+        }
+      }
+      batch_sizes[data.id] = pair[1];
     } else {
       document.querySelector(`#${pair[0]}-${data.id}`).value = pair[1];
       document.querySelector(`#${pair[0]}-${data.id}`).placeholder = pair[1];
@@ -254,6 +261,9 @@ socket.on("bot config from server", data => {
   document.querySelector(`#title-wrapper-${data.id}`).innerHTML +=  `<small>${subData}</small>`
   // subT.innerHTML = `${subData}`;
 
+  // special case for batch size
+  batch_sizes[data.id] = data["batch_size"];
+
   for (const el in data) {
 
     let wrapper = document.createElement("wrapper");
@@ -352,6 +362,8 @@ socket.on("bot left", data => {
       el.remove();
     }
   });
+  del countdowns[data.id];
+  del batch_size[data.id];
 });
 
 socket.on("received batch", data => {
