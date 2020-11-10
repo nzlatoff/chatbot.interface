@@ -7,10 +7,10 @@ function createInteractiveBox(client, username=true, dots=true) {
     div.id = client.id;
     div.className = 'talkco';
     if (username) {
-      div.innerHTML += `<em>${client.user}:</em>`;
+      div.innerHTML += `<em>${client.user}:</em> `;
     }
     if (dots) {
-      div.innerHTML += ` (...)`;
+      div.innerHTML += `(...)`;
     }
     div.innerHTML += '<br>';
     document.querySelector('#interactive-box').appendChild(div);
