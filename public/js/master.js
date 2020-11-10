@@ -330,13 +330,13 @@ socket.on("bot config from server", data => {
   setButton.className = "square-button set-button";
   setButton.innerHTML = "set";
 
-  let BotBtns = document.createElement("div");
-  BotBtns.className = "btns-wrapper";
-  BotBtns.id = "bot-btns-wrapper";
-  BotBtns.appendChild(againButton);
-  BotBtns.appendChild(setButton);
+  let botBtns = document.createElement("div");
+  botBtns.className = "btns-wrapper";
+  botBtns.id = "bot-btns-wrapper";
+  botBtns.appendChild(againButton);
+  botBtns.appendChild(setButton);
 
-  botControls.appendChild(BotBtns);
+  botControls.appendChild(botBtns);
 
   againButton.addEventListener("click", (e) => {
     // console.log("inside event listener", e);
