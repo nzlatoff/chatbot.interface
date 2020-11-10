@@ -74,6 +74,46 @@ function cleanTTS(msg) {
     .toLowerCase();
 }
 
+// https://stackoverflow.com/a/274094
+String.prototype.regexLastIndexOf = function(regex, startpos) {
+  regex = (regex.global) ? regex : new RegExp(regex.source, "g" + (regex.ignoreCase ? "i" : "") + (regex.multiLine ? "m" : ""));
+  if(typeof(startpos) === "undefined") {
+    startpos = this.length;
+  } else if (startpos < 0) {
+    startpos = 0;
+  }
+  const stringToWorkWith = this.substring(0, startpos + 1);
+  let lastIndexOf = -1;
+  let nextStop = 0;
+  let result = regex.exec(stringToWorkWith);
+  while(result != null) {
+    lastIndexOf = result.index;
+    regex.lastIndex = ++nextStop;
+    result = regex.exec(stringToWorkWith)
+  }
+  return lastIndexOf;
+}
+
+function punctChunks(msg, maxLen=50) {
+  let chunks = [];
+  let total = msg.length;
+  while (total > maxLen) {
+    let tmp = msg.slice(0, maxLen);
+    let lastSpaceInd = tmp.regexLastIndexOf(/[,.;:?!]/);
+    if (lastSpaceInd < 1) {
+      lastSpaceInd = tmp.lastIndexOf(" ");
+    }
+    tmp = tmp.slice(0, lastSpaceInd + 1);
+    chunks.push(tmp);
+    msg = msg.slice(lastSpaceInd + 1);
+    total = msg.length;
+    console.log('tmp: ', tmp, ' | msg now:', msg);
+  }
+  chunks.push(msg);
+  // console.log(chunks);
+  return chunks;
+}
+
 function spaceChunks(msg, maxLen=50) {
   let chunks = [];
   let total = msg.length;
@@ -163,8 +203,9 @@ export {
   filterBot,
   emptyBoxes,
   cleanTTS,
+  punctChunks,
   spaceChunks,
-  playTTS,
   playTTSChunks,
+  playTTS,
   beep
 };

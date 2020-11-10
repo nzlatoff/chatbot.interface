@@ -4,8 +4,7 @@ import {
   filterBot,
   emptyBoxes,
   cleanTTS,
-  spaceChunks,
-  playTTS,
+  punctChunks,
   playTTSChunks,
   beep
 } from './interactive-boxes.js';
@@ -42,7 +41,7 @@ function createMessage(data) {
         if (data.character != currentChar) {
           char = data.character.toLowerCase() + '<br>';
           currentChar = data.character;
-          const chnks = spaceChunks(cleanTTS(currentChar));
+          const chnks = punctChunks(cleanTTS(currentChar));
           console.log('char chunks:', chnks);
           charChunks = ['$$BEEP$$', ...chnks, '$$BEEP$$'];
         } else {
@@ -50,10 +49,9 @@ function createMessage(data) {
         }
         const msg = cleanTTS(data.message);
         // console.log(msg);
-        const msgChunks = spaceChunks(msg, 200);
+        const msgChunks = punctChunks(msg, 200);
         console.log('msg chunks:', msgChunks);
         playTTSChunks([...charChunks, ...msgChunks], 'fr');
-        // playTTS(laRequest, 'fr');
         $(`#${data.id}`).html(`${char}${msg}<br>`);
       } else {
         if (data.character) {
