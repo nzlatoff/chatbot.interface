@@ -417,13 +417,16 @@ socket.on("received batch", data => {
 
     // https://stackoverflow.com/q/19895073/9638108
     inp.addEventListener("click", (e) => {
-      console.log('checked?', e.target.checked, e.target);
-      if (e.target.wasChecked) {
-        e.target.wasChecked = false;
-        e.target.checked = false;
-      } else {
-        e.target.wasChecked = true;
-        e.target.checked = true;
+      // https://stackoverflow.com/a/53939059/9638108
+      if (e.detail === 1) {
+        console.log('checked?', e.target.checked, e.target);
+        if (e.target.wasChecked) {
+          e.target.wasChecked = false;
+          e.target.checked = false;
+        } else {
+          e.target.wasChecked = true;
+          e.target.checked = true;
+        }
       }
     });
 
