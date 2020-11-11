@@ -107,7 +107,7 @@ function punctChunks(msg, maxLen=50) {
     chunks.push(tmp);
     msg = msg.slice(lastSpaceInd + 1);
     total = msg.length;
-    console.log('tmp: ', tmp, ' | msg now:', msg);
+    // console.log('tmp: ', tmp, ' | msg now:', msg);
   }
   chunks.push(msg);
   // console.log(chunks);
@@ -124,7 +124,7 @@ function spaceChunks(msg, maxLen=50) {
     chunks.push(tmp);
     msg = msg.slice(lastSpaceInd);
     total = msg.length;
-    console.log('tmp: ', tmp, ' | msg now:', msg);
+    // console.log('tmp: ', tmp, ' | msg now:', msg);
   }
   chunks.push(msg);
   // console.log(chunks);
