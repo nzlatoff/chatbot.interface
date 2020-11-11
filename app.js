@@ -153,7 +153,7 @@ socketio.on("connection", socket => {
 
   socket.on("new user", function(user) {
 
-    if (app.locals.clientsocketnumber == 1) {
+    if (app.locals.clientsocketnumber == 0) {
       // creating a new session
       app.locals.currentSession = new Date().toISOString();
       console.log('=====================================');
