@@ -125,6 +125,8 @@ socket.on('erase messages', () => {
   // console.log('erasing');
   $('#chat-messages').empty();
   $('#interactive-box').empty();
+  socket.emit('get list');
+  socket.emit('get bot list');
 });
 
 // scrolling
