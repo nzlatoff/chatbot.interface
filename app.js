@@ -61,11 +61,11 @@ app.get("/dual", (req, res, next) => {
 });
 
 app.get("/master", (req, res, next) => {
-  if (app.locals.mastersocketnumber > 0) {
-    res.redirect("/audience");
-  } else {
-    res.sendFile(__dirname + "/public/master.html");
-  }
+  // if (app.locals.mastersocketnumber > 0) {
+  //   res.redirect("/audience");
+  // } else {
+  res.sendFile(__dirname + "/public/master.html");
+  // }
 });
 
 app.get("/bots", (req, res, next) => {
