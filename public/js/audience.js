@@ -151,3 +151,12 @@ document.body.onkeyup = (e) => {
     adjustState(displayState);
   }
 }
+
+document.body.ontouchstart = (e) => {
+  if (e.touches.length === 2) {
+    displayState = (displayState + 1) % 3;
+    adjustState(displayState);
+  // } else if (e.touches.length === 3) {
+  }
+};
+
