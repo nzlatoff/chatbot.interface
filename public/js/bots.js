@@ -63,7 +63,7 @@ function createMessage(data) {
     }
     res();
   }).then(() => {
-    adjustScroll(`#${data.id}`);
+    adjustScroll(`#${data.id}`, 0);
   });
 }
 

@@ -16,7 +16,7 @@ function appendMessage(data, scroll=true) {
     messages.appendChild(div);
     res();
   }).then(() => {
-    if (scroll && autoScroll['messages']) adjustScroll('#chat-messages');
+    if (scroll && autoScroll['messages']) adjustScroll('#chat-messages', 10);
   });
 };
 
