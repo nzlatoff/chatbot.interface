@@ -20,10 +20,12 @@ function cookie2obj(str) {
 }
 
 function adjustScroll(el, speed=500) {
-  // console.log(`adjusting scroll for: ${el}`);
+  // console.log(`adjusting scroll for: ${el} | scrollTop: ${$(el).prop("scrollTop")}, scrollHeight: ${$(el).prop("scrollHeight")}`);
   $(el).each((i, e) => {
+    // $(e).prop( "scrollTop", $(e).prop("scrollHeight"));
     $(e).animate({ scrollTop: $(e).prop("scrollHeight")}, speed);
   });
+  // console.log(`(after adjustment | scrollTop: ${$(el).prop("scrollTop")}, scrollHeight: ${$(el).prop("scrollHeight")})`);
 }
 
 export { deleteAllCookies, cookie2obj, adjustScroll };
