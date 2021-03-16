@@ -84,7 +84,7 @@ input[type="radio"]:checked + label {
   color: red;
 }
 
-.again-button, .skip-button {
+.gen-button, .skip-button {
   margin-bottom: 5px;
 }
 

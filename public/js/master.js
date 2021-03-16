@@ -5,6 +5,16 @@ const socket = io();
 let countdowns = {};
 let batch_sizes = {};
 
+function flashBtn(btn, id) {
+  btn.classList.add('flash');
+  setTimeout(() => {
+    btn.classList.remove('flash');
+  }, 1000);
+  setTimeout(() => {
+    $(`#${id} .batch-controls`).children().fadeOut(500);
+  }, 500);
+}
+
 async function createBotBoxes(data) {
   // console.log("bots list", data);
   for (const botId in data) {
@@ -52,7 +62,7 @@ function submitConfig(form, data) {
       document.querySelector(`#${pair[0]}-${data.id}`).placeholder = "";
     // case for batch size (which resets text fields)
     } else if ("batch_size" === pair[0]) {
-      console.log(`former batch size ${batch_sizes[data.id]}, current: ${pair[1]}`);
+      // console.log(`former batch size ${batch_sizes[data.id]}, current: ${pair[1]}`);
       if (pair[1] != batch_sizes[data.id]) {
         // in case there's a countdown in progress
         if (data.id in countdowns) {
@@ -67,7 +77,7 @@ function submitConfig(form, data) {
     // console.log(`${pair[0]}-${data.id}: ${pair[1]}`);
   }
   formData = { id: data.id, ... Object.fromEntries(formData)};
-  console.log("submitting config!");
+  // console.log("submitting config!");
   // console.log(formData);
   socket.emit("master sets bot config", formData);
   setTimeout(() => {
@@ -156,7 +166,7 @@ function submitMessage(id) {
       choice = -1;
       // console.log(`no message selected, returning control to bot.`);
     } else {
-      console.log(`selecting message: ${choice}`);
+      // console.log(`selecting message: ${choice}`);
     }
     socket.emit("master sends choice", { id: id, choice: choice});
     let ic = document.createElement("i");
@@ -292,7 +302,13 @@ socket.on("bot config from server", data => {
 
     input.addEventListener("keydown", (e) => {
       if (e.ctrlKey && (e.key === "Enter" || e.keyCode === 13)) {
+        flashBtn(document.querySelector(`#set-btn-${data.id}`), data.id);
         submitConfig(form, data);
+      }
+      if (e.altKey && (e.key === "Alt" || e.keyCode === 13)) {
+        flashBtn(document.querySelector(`#gen-btn-${data.id}`), data.id);
+        // submitConfig(form, data);
+        newBatch(data.id);
       }
     });
 
@@ -321,25 +337,27 @@ socket.on("bot config from server", data => {
   form.appendChild(numbersBox);
   form.appendChild(textsBox);
 
-  let againButton = document.createElement("button");
-  againButton.className = "square-button again-button";
-  againButton.id = `again-btn-${data.id}`;
-  againButton.innerHTML = "gen!";
+  let genButton = document.createElement("button");
+  genButton.className = "square-button gen-button";
+  genButton.id = `gen-btn-${data.id}`;
+  genButton.innerHTML = "gen!";
 
   let setButton = document.createElement("button");
   setButton.className = "square-button set-button";
+  setButton.id =  `set-btn-${data.id}`;
   setButton.innerHTML = "set";
 
   let botBtns = document.createElement("div");
   botBtns.className = "btns-wrapper";
   botBtns.id = "bot-btns-wrapper";
-  botBtns.appendChild(againButton);
+  botBtns.appendChild(genButton);
   botBtns.appendChild(setButton);
 
   botControls.appendChild(botBtns);
 
-  againButton.addEventListener("click", (e) => {
+  genButton.addEventListener("click", (e) => {
     // console.log("inside event listener", e);
+    // submitConfig(form, data);
     newBatch(data.id);
   });
 
@@ -419,7 +437,7 @@ socket.on("received batch", data => {
     inp.addEventListener("click", (e) => {
       // https://stackoverflow.com/a/53939059/9638108
       if (e.detail === 1) {
-        console.log('checked?', e.target.checked, e.target);
+        // console.log('checked?', e.target.checked, e.target);
         if (e.target.wasChecked) {
           e.target.wasChecked = false;
           e.target.checked = false;
@@ -479,14 +497,7 @@ socket.on("received batch", data => {
 
 socket.on("server confirms bot choice", data => {
   // console.log("received choice data", data);
-  let chosen = document.querySelector(`#batch-input-${data.id}-${data.choice}`).parentNode;
-  chosen.classList.add('flash');
-  setTimeout(() => {
-    chosen.classList.remove('flash');
-  }, 1000);
-  setTimeout(() => {
-    $(`#${data.id} .batch-controls`).children().fadeOut(500);
-  }, 500);
+  flashBtn(document.querySelector(`#batch-input-${data.id}-${data.choice}`).parentNode, data.id);
 });
 
 document.getElementById('save-button').addEventListener('click', (e) => {
