@@ -42,7 +42,7 @@ function createMessage(data) {
           char = data.character.toLowerCase() + '<br>';
           currentChar = data.character;
           const chnks = punctChunks(cleanTTS(currentChar));
-          console.log('char chunks:', chnks);
+          // console.log('char chunks:', chnks);
           charChunks = ['$$BEEP$$', ...chnks, '$$BEEP$$'];
         } else {
           char = "";
@@ -50,15 +50,13 @@ function createMessage(data) {
         const msg = cleanTTS(data.message);
         // console.log(msg);
         const msgChunks = punctChunks(msg, 200);
-        console.log('msg chunks:', msgChunks);
+        // console.log('msg chunks:', msgChunks);
         playTTSChunks([...charChunks, ...msgChunks], 'fr');
-        $(`#${data.id}`).html(`${char}${msg}<br>`);
+      }
+      if (data.character) {
+        $(`#${data.id}`).html(`${data.character}<br>${data.message.replace("\n", "<br>")}<br>`);
       } else {
-        if (data.character) {
-          $(`#${data.id}`).html(`${data.character}<br>${data.message.replace("\n", "<br>")}<br>`);
-        } else {
-          $(`#${data.id}`).html(`${data.message.replace("\n", "<br>")}<br>`);
-        }
+        $(`#${data.id}`).html(`${data.message.replace("\n", "<br>")}<br>`);
       }
     }
     res();
