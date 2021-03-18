@@ -21,6 +21,12 @@ input[type="radio"]:checked + label {
   border-radius: 5px;
 }
 
+select {
+  background: inherit;
+  color: inherit;
+  border: none;
+}
+
 .main-wrapper {
   overflow-y: scroll;
   max-width: unset;
@@ -84,7 +90,7 @@ input[type="radio"]:checked + label {
   color: red;
 }
 
-.gen-button, .skip-button {
+.mode-button, .gen-button, .skip-button {
   margin-bottom: 5px;
 }
 
@@ -150,7 +156,6 @@ input[type="radio"]:checked + label {
 
 .input-wrapper textarea {
   margin-bottom: 0;
-  height: 48px;
   flex: 5;
 }
 
@@ -169,7 +174,7 @@ input.id, input.model, input.run {
 .numbers-label-wrapper {
   margin-right: 5px;
   text-align: right;
-  flex: 1;
+  width: 100px;
 }
 
 .texts-label-wrapper {

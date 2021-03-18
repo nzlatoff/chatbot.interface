@@ -239,6 +239,10 @@ socket.on("bot config from server", data => {
     "first_words"
   ];
 
+  const optionsFields = [
+    "mode",
+  ];
+
   let box = document.getElementById(data.id);
 
   if (!box || box.getElementsByClassName("bot-controls").length != 0) {
@@ -284,7 +288,19 @@ socket.on("bot config from server", data => {
       input = document.createElement("input");
     } else if (textareaFields.includes(el)) {
       input = document.createElement("textarea");
-      if (el === "character") input.rows = 1;
+      if (["character", "first_words"].includes(el)) input.rows = 1;
+      if (el === "subtext") input.rows = 6;
+    } else if (optionsFields.includes(el)) {
+      input = document.createElement("select");
+      const opt1 = document.createElement("option");
+      opt1.innerHTML = "reactive";
+      opt1.value = "reactive";
+      const opt2 = document.createElement("option");
+      opt2.innerHTML = "autonomous";
+      opt2.value = "autonomous";
+      input.appendChild(opt1);
+      input.appendChild(opt2);
+      input.selectedIndex = data.mode === "reactive" ? 0 : 1;
     } else {
       continue;
     }
@@ -322,7 +338,7 @@ socket.on("bot config from server", data => {
     wrapper.appendChild(labelDiv);
     wrapper.appendChild(input);
 
-    if (numbersFields.includes(el)) {
+    if ([...numbersFields, ...optionsFields].includes(el)) {
       labelDiv.className = "numbers-label-wrapper";
       numbersBox.appendChild(wrapper);
     } else {
