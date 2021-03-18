@@ -276,7 +276,7 @@ socket.on("bot config from server", data => {
   // subT.innerHTML = `${subData}`;
 
   // special case for batch size
-  batch_sizes[data.id] = data["batch_size"];
+  batch_sizes[data.id] = data.batch_size;
 
   for (const el in data) {
 
@@ -316,6 +316,7 @@ socket.on("bot config from server", data => {
       input.placeholder = data[el];
     }
 
+    // ctrl+enter for set, alt+enter for gen!
     input.addEventListener("keydown", (e) => {
       if (e.ctrlKey && (e.key === "Enter" || e.keyCode === 13)) {
         flashBtn(document.querySelector(`#set-btn-${data.id}`), data.id);
