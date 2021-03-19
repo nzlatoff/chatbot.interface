@@ -97,7 +97,9 @@ socket.on("server sends typing", (data) => {
     ic.className = "fas fa-spinner fa-spin";
     $(`#${data.id}`).append(ic);
   } else {
-    $(`#${data.id}`).html(`<em>${data.user}:</em> ${data.character} ${data.message}`);
+    const char = data.character.replace(/\n/g, '<br>');
+    const msg = data.message.replace(/\n/g, '<br>');
+    $(`#${data.id}`).html(`<em>${data.user}:</em><br>${char}<br>${msg}`);
   }
   if (data.scroll && autoScroll[data.id]) adjustScroll(`#${data.id}`, 10);
 });
