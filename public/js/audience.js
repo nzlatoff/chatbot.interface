@@ -99,7 +99,7 @@ socket.on("server sends typing", (data) => {
   } else {
     const char = data.character.replace(/\n/g, '<br>');
     const msg = data.message.replace(/\n/g, '<br>');
-    $(`#${data.id}`).html(`<em>${data.user}:</em> ${char}<br>${msg}`);
+    $(`#${data.id}`).html(`<em>${data.user}:</em> ${char} ${msg}`);
   }
   if (data.scroll && autoScroll[data.id]) adjustScroll(`#${data.id}`, 10);
 });
