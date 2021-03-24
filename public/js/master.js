@@ -282,7 +282,7 @@ socket.on("bot config from server", data => {
 
   for (const el in data) {
 
-    let wrapper = document.createElement("wrapper");
+    let wrapper = document.createElement("div");
     wrapper.className = `input-wrapper ${el}-wrapper`;
 
     let input;
