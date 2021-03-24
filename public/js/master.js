@@ -503,12 +503,12 @@ socket.on("received batch", data => {
   box.appendChild(batch_controls);
 
   batchButton.addEventListener("click", (e) => {
-    // console.log("inside event listener", e);
+    // console.log("batch btn | inside event listener", e);
     submitMessage(id);
   }, {once: true} );
 
   skipButton.addEventListener("click", (e) => {
-    // console.log("inside event listener", e);
+    // console.log("skip btn | inside event listener", e);
     skipMessage(id);
   }, {once: true} );
 
@@ -534,6 +534,9 @@ document.querySelector("#mecha-button").addEventListener("click", () => {
 
 document.querySelector("#reset-button").addEventListener("click", () => {
   console.log("resetting!");
+  Array.from(document.querySelectorAll(".character-wrapper textarea")).forEach((e) => { 
+    e.placeholder = "";
+  });
   Array.from(document.getElementsByClassName("batch-controls")).forEach((e) => e.remove());
   for (const id in countdowns) {
     clearInterval(countdowns[id]);
