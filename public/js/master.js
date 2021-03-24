@@ -5,14 +5,16 @@ const socket = io();
 let countdowns = {};
 let batch_sizes = {};
 
-function flashBtn(btn, id) {
+function flashBtn(btn, id, fade=true) {
   btn.classList.add('flash');
   setTimeout(() => {
     btn.classList.remove('flash');
   }, 1000);
-  setTimeout(() => {
-    $(`#${id} .batch-controls`).children().fadeOut(500);
-  }, 500);
+  if (fade) {
+    setTimeout(() => {
+      $(`#${id} .batch-controls`).children().fadeOut(500);
+    }, 500);
+  }
 }
 
 async function createBotBoxes(data) {
@@ -319,7 +321,7 @@ socket.on("bot config from server", data => {
     // ctrl+enter for set, alt+enter for gen!
     input.addEventListener("keydown", (e) => {
       if (e.ctrlKey && (e.key === "Enter" || e.keyCode === 13)) {
-        flashBtn(document.querySelector(`#set-btn-${data.id}`), data.id);
+        flashBtn(document.querySelector(`#set-btn-${data.id}`), data.id, false);
         submitConfig(form, data);
       }
       if (e.altKey && (e.key === "Alt" || e.keyCode === 13)) {
