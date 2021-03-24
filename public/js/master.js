@@ -222,17 +222,17 @@ socket.on("bot config from server", data => {
   // console.log("bot config from server:", data);
 
   const numbersFields = [
-    "temperature",
-    "top_k",
-    "top_p",
-    "tempo",
-    "length_desired",
-    "silence",
     "rank_threshold",
-    "wait",
-    "pause",
-    "patience",
+    "length_desired",
     "batch_size",
+    "temperature",
+    "patience",
+    "silence",
+    "pause",
+    "wait",
+    "tempo",
+    "top_p",
+    "top_k",
   ];
 
   const textareaFields = [
