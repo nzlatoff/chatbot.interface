@@ -185,9 +185,7 @@ socketio.on("connection", socket => {
 
   socket.on("new audience user", function() {
     console.log(`new audience member on server... currently with ${app.locals.clientsocketnumber} client(s) and ${app.locals.botsocketnumber} bot(s).`);
-    if (app.locals.clientsocketnumber > 1) {
-      broadcastCurrentSession(socket);
-    }
+    broadcastCurrentSession(socket);
   });
 
   socket.on("master sets bot config", function(data) {
