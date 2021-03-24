@@ -129,7 +129,6 @@ select {
 .bot-form {
   flex: 1;
   margin: 0 5px 0 0;
-  display: flex;
   flex-wrap: wrap;
   font-size: 14px;
 }
@@ -141,46 +140,54 @@ select {
 }
 
 .input-wrapper {
-  display: flex;
-  justify-content: flex-start;
   padding-right: 2px;
 }
 
-.input-wrapper:not(:last-child) {
-  margin-bottom: 3px;
-}
-
 .input-wrapper input {
-  width: 60px;
+  width: 35px;
+  border-bottom: .5px dotted white;
 }
 
 .input-wrapper textarea {
   margin-bottom: 0;
-  flex: 5;
-}
-
-.character-wrapper {
-  flex: 1;
-}
-
-.texts-inputs-wrapper {
-  flex-grow: 3;
+  width: 100%;
 }
 
 input.id, input.model, input.run {
   border: none;
 }
 
+.numbers-inputs-wrapper {
+  margin: 0 5px 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.numbers-inputs-wrapper .input-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 159px;
+}
+
 .numbers-label-wrapper {
   margin-right: 5px;
-  text-align: right;
-  width: 104px;
+}
+
+.texts-inputs-wrapper .input-wrapper {
+  display: flex;
 }
 
 .texts-label-wrapper {
+  white-space: nowrap;
+  width: 135px;
+}
+
+.character-wrapper, .first_words-wrapper {
   text-align: right;
-  margin-right: 5px;
-  flex: 1.2;
+}
+
+.subtext-wrapper {
+  flex-wrap: wrap;
 }
 
 /* batch controls */
