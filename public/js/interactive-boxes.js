@@ -132,7 +132,7 @@ function spaceChunks(msg, maxLen=50) {
 }
 
 // https://stackoverflow.com/a/61885827/9638108
-function playTTSChunks(chunks, lang='fr', speed=0.7) {
+function playTTSChunks(chunks, lang='fr', speed=0.8) {
   let playEls = [];
   for (const text of chunks) {
     if (text === '$$BEEP$$') {
