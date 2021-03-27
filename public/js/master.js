@@ -89,6 +89,7 @@ function submitConfig(form, data) {
 
 function addCountdown(id, seconds) {
   // console.log("about to create new countdown for bot:", id);
+  if (countdowns[id]) clearInterval(countdowns[id]);
   countdowns[id] = setInterval(() => {
     if (seconds <= 1) {
       // console.log("clearing interval:", countdowns[id]);
@@ -534,7 +535,7 @@ document.querySelector("#mecha-button").addEventListener("click", () => {
 
 document.querySelector("#reset-button").addEventListener("click", () => {
   console.log("resetting!");
-  Array.from(document.querySelectorAll(".character-wrapper textarea")).forEach((e) => { 
+  Array.from(document.querySelectorAll(".character-wrapper textarea")).forEach((e) => {
     e.placeholder = "";
   });
   Array.from(document.getElementsByClassName("batch-controls")).forEach((e) => e.remove());
