@@ -40,7 +40,7 @@ npm start 2>&1 > ../server.log &
   - Audience (`/audience`): a copy of `/dual`, allowing for audience members to follow the progress without being logged in or counted as participants.
     - Actions:
       - Keyboard: **press the spacebar**, mobile: **tap with two fingers** to switch between the various views (chat history, direct typing, or both).
-  - Bots (`/bots`): the page displays only the texts produced by artificial entities. The direct mode will display the entire message that a bot sends, while the gradual mode displays the same message one chunk at a time, at a speed that can be controlled on the master page.
+  - Bots (`/bots`): the page displays only the texts produced by artificial entities. The direct mode will display the entire message that a bot sends, while the gradual mode displays the same message one chunk at a time, at a speed that can be controlled on the master page. **For the purpose of the performance, a Text To Speech system (the unofficial Google Translate API) has been implemented on the direct bot mode: when open, the page will automatically read out loud any incoming bot message.**
     - Actions:
       - Keyboard: press **d**, mobile: **tap with two fingers**, to switch between direct and gradual modes. The direct mode includes an audio rendition using the Google translate API.
       - Keyboard: press **b**, mobile: **tap with three fingers**, to switch between the bots, the default option being to display them all in a split screen.
