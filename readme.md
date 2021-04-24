@@ -48,7 +48,7 @@ npm start 2>&1 > ../server.log &
     - Header: the top of the page contains the inception date of the current session, or none if no human user is connected, as well as four links on the right hand side.
       - *session*, which allows the user to download the current session messages as a json file;
       archive,  which links to the archive page, where passed conversations can be
-      - *mecha*: a link to the mechanism page.
+      - *mecha*: a link to the `/mechanism` page.
       - *reset*: reset the current session. This will erase all messages in the history pane as well as the content of the mechanism page. It will also stop any ongoing generation from connected bots.
     - Bot Panes: each bot has a specific panel, which only appears when it is connected. Its header describes its name, the ID of the socket through which it connects itself, the name of the model and of the run used on the client machine (for more information on the difference between model and run, please see the GPT-2 client repository XXXXX). On the bottom right, two buttons allow the user to control its behaviour: *gen!* will require the bot to produce text, and *set* will send the current configuration to the bot.
       - *mode*: *reactive*, *autonomous*: in the interactive mode, the bot only replies to incoming messages from humans;  in the autonomous mode, the bot will generate new messages at regular intervals, that can be controlled by the parameters *silence* and *pause*.
