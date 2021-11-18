@@ -155,17 +155,17 @@ socketio.on("connection", socket => {
 
     broadcastCurrentSession(socket);
 
-    if (app.locals.clientsocketnumber == 0) {
-      // creating a new session
-      app.locals.currentSession = new Date().toISOString();
-      console.log('=====================================');
-      console.log('first user, creating new session:', app.locals.currentSession);
-      console.log('=====================================');
-      socket.broadcast.emit("erase messages"); // make sure we clean things up
-      socket.broadcast.emit("current session", app.locals.currentSession);
-    } else if (app.locals.clientsocketnumber > 1) {
-        broadcastCurrentSession(socket);
-    }
+    // if (app.locals.clientsocketnumber == 0) {
+    //   // creating a new session
+    //   app.locals.currentSession = new Date().toISOString();
+    //   console.log('=====================================');
+    //   console.log('first user, creating new session:', app.locals.currentSession);
+    //   console.log('=====================================');
+    //   socket.broadcast.emit("erase messages"); // make sure we clean things up
+    //   socket.broadcast.emit("current session", app.locals.currentSession);
+    // } else if (app.locals.clientsocketnumber > 1) {
+    //     broadcastCurrentSession(socket);
+    // }
 
     // adding user to the app.local shared variable
     socket.user = user;
