@@ -545,3 +545,19 @@ document.querySelector("#reset-button").addEventListener("click", () => {
   socket.emit("reset session");
   socket.emit("get session");
 });
+
+
+document.body.onkeyup = (e) => {
+
+  // toggle borders with space (not when typing)
+  // console.log(e);
+  if ((e.keyCode === 32 || e.key === ' ') && !['textarea', 'input'].includes(document.activeElement.localName)) {
+    // console.log(document.activeElement.localName, !(['textarea', 'input'].includes(document.activeElement.localName)));
+    for (const box of document.getElementsByClassName('box-wrapper')) {
+      // console.log(box);
+      box.classList.toggle("box-no-border");
+    }
+  }
+
+};
+
