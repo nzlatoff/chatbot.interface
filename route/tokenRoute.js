@@ -26,9 +26,9 @@ router.route("/").get(requireAdmin, async (req, res, next) => {
 				(entry) =>
 					`<li>${entry.token} <form method="post" style="display: inline-block" action="/tokens/delete?token=${entry.token}"><button class="button">Delete</button></form>
 						<ul>
-							<li>created: ${entry.createdAt || "never"}</li>
-							<li>started: ${entry.startedAt || "never"}</li>
-							<li>duration: ${entry.lifetimeMin || "?"} min.</li>
+							<li>Création: ${entry.createdAt}</li>
+							<li>Début: ${entry.startedAt || "pas commencé"}</li>
+							<li>Durée: ${entry.lifetimeMin || "?"} min.</li>
 							<li>Lien à partager: <a href="https://chatbot.manufacture-recherche.ch/auth?token=${entry.token}">https://chatbot.manufacture-recherche.ch/auth?token=${entry.token}</a>
 						</ul>
 					</li>`,
@@ -47,7 +47,7 @@ router.route("/new").post(requireAdmin, async (req, res, next) => {
 	await Token.create({
 		createdAt: new Date(),
 		startedAt: null,
-		lifetimeMin: lifetime,
+		lifetimeMin: lifetime || 30,
 		token: new_token,
 		name: "guest"
 	});

@@ -16,6 +16,7 @@ const hash = require("./utils/hash");
 const { isTokenValid } = require("./utils/tokens");
 //database connection
 const Chat = require("./models/Chat");
+const Token = require("./models/Token");
 const connect = require("./dbconnect");
 require("dotenv").config();
 const MongoStore = require("connect-mongo");
@@ -81,17 +82,26 @@ app.get("/auth", async (req, res) => {
 		res.redirect("/");
 		return;
 	}
-
 	const token = req.query.token;
 	if (token) {
 		await connect;
 		const entry = await Token.findOne({ token: token });
-		if (entry && isTokenValid(entry)) {
-			req.session.cookie.maxAge = entry.lifetimeMin * 60 * 1000;
-			req.session.user = entry.name;
-			res.redirect("/authok");
+		if (entry){
+			if (!entry.startedAt) {
+				await Token.updateOne(
+					{ token: token }, // filter
+					{ $set: { startedAt: new Date() } }, // update
+				);
+				entry.startedAt = new Date();
+			}
+			if (isTokenValid(entry)){
+				req.session.cookie.maxAge = entry.lifetimeMin * 60 * 1000;
+				req.session.user = entry.name;
+				res.redirect("/authok");
+			}
 		}
 	}
+	res.redirect("/authko");
 });
 
 app.get("/authok", (req, res) => {
@@ -102,7 +112,7 @@ app.get("/authko", (req, res) => {
 	res.sendFile(__dirname + "/public/authko.html");
 });
 
-app.post("/signout", (req, res) => {
+app.get("/signout", (req, res) => {
 	req.session.destroy((err) => {
 		if (err) {
 			console.error("Session destruction error:", err);
