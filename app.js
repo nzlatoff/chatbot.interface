@@ -41,10 +41,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const store = MongoStore.create({
-    mongoUrl: "mongodb://localhost:27017/chat",
-    collectionName: "sessions",
-    ttl: 60 * 60,
-  });
+	mongoUrl: "mongodb://localhost:27017/chat",
+	collectionName: "sessions",
+	ttl: 60 * 60,
+});
 
 app.use(
 	session({
@@ -86,7 +86,7 @@ app.get("/auth", async (req, res) => {
 	if (token) {
 		await connect;
 		const entry = await Token.findOne({ token: token });
-		if (entry){
+		if (entry) {
 			if (!entry.startedAt) {
 				await Token.updateOne(
 					{ token: token }, // filter
@@ -94,7 +94,7 @@ app.get("/auth", async (req, res) => {
 				);
 				entry.startedAt = new Date();
 			}
-			if (isTokenValid(entry)){
+			if (isTokenValid(entry)) {
 				req.session.cookie.maxAge = entry.lifetimeMin * 60 * 1000;
 				req.session.user = entry.name;
 				res.redirect("/authok");

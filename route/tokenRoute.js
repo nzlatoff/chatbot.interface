@@ -22,7 +22,8 @@ router.route("/").get(requireAdmin, async (req, res, next) => {
 		"{{main}}",
 		`
     <h1>Tokens</h1>
-    <ul>${tokens.map(
+    <ul>${tokens
+			.map(
 				(entry) =>
 					`<li>${entry.token} <form method="post" style="display: inline-block" action="/tokens/delete?token=${entry.token}"><button class="button">Delete</button></form>
 						<ul>
@@ -49,7 +50,7 @@ router.route("/new").post(requireAdmin, async (req, res, next) => {
 		startedAt: null,
 		lifetimeMin: lifetime || 30,
 		token: new_token,
-		name: "guest"
+		name: "guest",
 	});
 	res.redirect("/tokens");
 });
