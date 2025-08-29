@@ -1,34 +1,35 @@
 const express = require("express");
 const tokenUtils = require("../utils/tokens");
-const RequireAuth = require("../middleware/auth");
 const { v4: uuid4 } = require("uuid");
 const fs = require("node:fs");
 const path = require("node:path");
 const { requireAdmin } = require("../middleware/auth");
+const Token = require("../models/Token");
+const connect = require("../dbconnect");
 
 const router = express.Router();
 
 // return the list of connected users from the app shared variable
-router.route("/").get(requireAdmin, (req, res, next) => {
-	const tokens = tokenUtils.loadTokens();
+router.route("/").get(requireAdmin, async (req, res, next) => {
+	await connect;
+	const tokens = await Token.find();
 	let html = fs.readFileSync(
 		path.join(__dirname, "views", "tokens.html"),
 		"utf-8",
 	);
-
 	// Replace placeholders
 	html = html.replace(
 		"{{main}}",
 		`
     <h1>Tokens</h1>
-    <ul>${Object.entries(tokens)
-			.map(
-				([t, info]) =>
-					`<li>${t}
+    <ul>${tokens.map(
+				(entry) =>
+					`<li>${entry.token} <form method="post" style="display: inline-block" action="/tokens/delete?token=${entry.token}"><button class="button">Delete</button></form>
 						<ul>
-							<li>created: ${info.createdAt || "never"}, started: ${info.startedAt || "never"}, duration: ${info.lifetime_min || "?"} min.</li>
-							<li>Lien à partager: <a href="https://chatbot.manufacture-recherche.ch/auth?token=${t}">https://chatbot.manufacture-recherche.ch/auth?token=${t}</a>
-							<li><form method="post" action="/tokens/delete?token=${t}"><button class="button">Delete</button></form></li>		
+							<li>created: ${entry.createdAt || "never"}</li>
+							<li>started: ${entry.startedAt || "never"}</li>
+							<li>duration: ${entry.lifetimeMin || "?"} min.</li>
+							<li>Lien à partager: <a href="https://chatbot.manufacture-recherche.ch/auth?token=${entry.token}">https://chatbot.manufacture-recherche.ch/auth?token=${entry.token}</a>
 						</ul>
 					</li>`,
 			)
@@ -37,28 +38,27 @@ router.route("/").get(requireAdmin, (req, res, next) => {
 	);
 
 	res.send(html);
-	res.send();
 });
 
-router.route("/new").post(requireAdmin, (req, res, next) => {
-	const tokens = tokenUtils.loadTokens();
+router.route("/new").post(requireAdmin, async (req, res, next) => {
 	const new_token = uuid4();
-	tokens[new_token] = {
+	const { lifetime } = req.body;
+	await connect;
+	await Token.create({
 		createdAt: new Date(),
 		startedAt: null,
-		lifetime_min: 30,
-	};
-	tokenUtils.saveTokens(tokens);
+		lifetimeMin: lifetime,
+		token: new_token,
+		name: "guest"
+	});
 	res.redirect("/tokens");
 });
 
-router.route("/delete").post(requireAdmin, (req, res, next) => {
-	const tokens = tokenUtils.loadTokens();
+router.route("/delete").post(requireAdmin, async (req, res, next) => {
 	const token = req.query.token;
-	if (token && tokens.hasOwnProperty(token)) {
-		delete tokens[token];
+	if (token) {
+		await Token.deleteOne({ token: token });
 	}
-	tokenUtils.saveTokens(tokens);
 	res.redirect("/tokens");
 });
 

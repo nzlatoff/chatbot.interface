@@ -1,15 +1,26 @@
 // --- Middleware d’auth ---
-const { loadTokens, isTokenValid } = require("../utils/tokens");
+const { isTokenValid } = require("../utils/tokens");
+const connectdb = require("../dbconnect");
+const Token = require("../models/Token");
 
-function requireAuth(req, res, next) {
+async function requireAuth(req, res, next) {
 	if (req.session.user) return next();
 
 	const token = req.query.token || req.headers["x-access-token"];
 	if (token) {
-		const tokens = loadTokens();
-		const entry = tokens[token];
-		if (entry && isTokenValid(tokens, token, entry)) {
-			return next();
+		await connectdb;
+		const entry = await Token.findOne({ token: token });
+		if (entry) {
+			if (!entry.startedAt) {
+				await Token.updateOne(
+					{ token: token }, // filter
+					{ $set: { startedAt: new Date() } }, // update
+				);
+				entry.startedAt = new Date();
+			}
+			if (isTokenValid(entry)) {
+				return next();
+			}
 		}
 	}
 	res.redirect("/signin");

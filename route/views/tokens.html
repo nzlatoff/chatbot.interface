@@ -9,12 +9,23 @@
     <!-- favicon end -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/css/login.css" type="text/css" rel="stylesheet"/>
+    <style>
+        .minute-input{
+            border: 2px white solid;
+            padding: 12px;
+        }
+    </style>
 </head>
 <body class="page">
 {{main}}
+<hr>
+
 <form method="post" action="/tokens/new">
+    <label for="lifetime">Durée (minutes)</label>
+    <input class="minute-input" name="lifetime" id="lifetime" type="number" min="1"/>
     <button class="enter">Create Token</button>
 </form>
+<hr>
 <form method="post" action="/signout">
     <button class="enter">Sign out</button>
 </form></body>

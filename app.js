@@ -11,9 +11,14 @@ const userRouter = require("./route/userRoute");
 const archiveRouter = require("./route/archiveRoute");
 const tokenRouter = require("./route/tokenRoute");
 const str_obj = require("./cookie2obj.js");
-require("dotenv").config();
 const { requireAuth, requireAdmin } = require("./middleware/auth");
-
+const hash = require("./utils/hash");
+const { isTokenValid } = require("./utils/tokens");
+//database connection
+const Chat = require("./models/Chat");
+const connect = require("./dbconnect");
+require("dotenv").config();
+const MongoStore = require("connect-mongo");
 //require the http module
 const http = require("http").Server(app);
 
@@ -34,10 +39,15 @@ app.locals.mastersocketnumber = 0;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const SQLiteStore = require("connect-sqlite3")(session);
+const store = MongoStore.create({
+    mongoUrl: "mongodb://localhost:27017/chat",
+    collectionName: "sessions",
+    ttl: 60 * 60,
+  });
+
 app.use(
 	session({
-		store: new SQLiteStore({ db: "sessions.sqlite", dir: "./" }),
+		store: store,
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: true,
@@ -66,26 +76,29 @@ app.post("/signin", (req, res) => {
 	}
 });
 
-app.get("/auth", (req, res) => {
-	if (req.session.user) return next();
+app.get("/auth", async (req, res) => {
+	if (req.session.user) {
+		res.redirect("/");
+		return;
+	}
 
 	const token = req.query.token;
 	if (token) {
-		const tokens = loadTokens();
-		const entry = tokens[token];
-		if (entry && isTokenValid(tokens, token, entry)) {
-			req.session.user = "guest";
+		await connect;
+		const entry = await Token.findOne({ token: token });
+		if (entry && isTokenValid(entry)) {
+			req.session.cookie.maxAge = entry.lifetimeMin * 60 * 1000;
+			req.session.user = entry.name;
 			res.redirect("/authok");
 		}
 	}
-	res.redirect("/authko");
 });
 
 app.get("/authok", (req, res) => {
 	res.sendFile(__dirname + "/public/authok.html");
 });
 
-app.get("/authok", (req, res) => {
+app.get("/authko", (req, res) => {
 	res.sendFile(__dirname + "/public/authko.html");
 });
 
@@ -171,12 +184,6 @@ app.use(express.static(__dirname + "/public"));
 //integrating socketio
 socketio = io(http, { cookie: false });
 
-//database connection
-const Chat = require("./models/Chat");
-const connect = require("./dbconnect");
-const hash = require("./utils/hash");
-const { loadTokens, isTokenValid } = require("./utils/tokens");
-
 //setup event listener
 socketio.on("connection", (socket) => {
 	socket.on("get list", function () {
@@ -203,9 +210,14 @@ socketio.on("connection", (socket) => {
 	});
 
 	socket.on("new bot", function (data) {
+		if (!data || !data.token || isTokenValid(data.token)) {
+			console.log("Bot is not allowed to connect");
+			return;
+		}
 		// adding user to the app.local shared variable
 		socket.user = data.user;
 		socket.botId = data.id;
+		socket.token = data.token;
 		socket.type = "bot";
 		socket.broadcast.emit("new user", data);
 		socket.broadcast.emit("new bot", data);
