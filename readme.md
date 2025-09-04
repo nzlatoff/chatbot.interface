@@ -8,12 +8,12 @@ The app is written in [node](https://nodejs.org/en/), using [socket.io](https://
 
 ## Installation
 
-Before running this app, install [nvm](https://github.com/nvm-sh/nvm)  and use nodejs 16
+Before running this app, install [nvm](https://github.com/nvm-sh/nvm)  and use nodejs 22
 
 ```bash
-nvm install 16
-nvm use 16
-nvm alias default 16
+nvm install 22
+nvm use 22
+nvm alias default 22
 ```
 
 Clone this repository and run

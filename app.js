@@ -220,8 +220,9 @@ socketio.on("connection", (socket) => {
 	});
 
 	socket.on("new bot", function (data) {
-		if (!data || !data.token || isTokenValid(data.token)) {
+		if (!data || !data.token || data.token !== process.env.BOT_TOKEN) {
 			console.log("Bot is not allowed to connect");
+			console.log(data);
 			return;
 		}
 		// adding user to the app.local shared variable
@@ -259,6 +260,7 @@ socketio.on("connection", (socket) => {
 	});
 
 	socket.on("new user", function (user) {
+		console.log("NEW USER");
 		broadcastCurrentSession(socket);
 
 		// if (app.locals.clientsocketnumber == 0) {
@@ -393,7 +395,7 @@ socketio.on("connection", (socket) => {
 	});
 
 	socket.on("chat message", function (data) {
-		// console.log("message:", data.message, 'by', data.user);
+		console.log("message:", data.message, "by", data.user);
 
 		//broadcast message to everyone in port:5000 except yourself.
 		socket.broadcast.emit("received", data);
@@ -482,16 +484,7 @@ socketio.on("connection", (socket) => {
 
 function broadcastCurrentSession(socket) {
 	// finding all messages in session & broadcasting them before the rest
-	Chat.find({ session: app.locals.currentSession }, (err, results) => {
-		if (err) console.log("nothing found");
-		if (results) {
-			// console.log('found:');
-			// console.log(JSON.stringify(results, null, 2));
-			return results;
-		} else {
-			// console.log('nothing found');
-		}
-	})
+	Chat.find({ session: app.locals.currentSession })
 		.then((results) => {
 			// console.log(results);
 			if (results) {

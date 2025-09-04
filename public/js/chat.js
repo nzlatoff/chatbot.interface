@@ -43,7 +43,7 @@ socket.on("connect", function () {
 		window.open("/login.html", "_self");
 	}
 	// send the username to the server
-	// console.log('connecting');
+	console.log("connecting");
 	socket.emit("get list");
 	socket.emit("new user", leUser);
 	createInteractiveBox({ id: socket.id, user: leUser });
@@ -143,6 +143,7 @@ $("#send-form").submit(function (e) {
 		message: $("#message").val(),
 		user: cookie2obj(document.cookie).userData,
 	};
+	console.log("send chat message");
 	socket.emit("chat message", msg);
 	// https://stackoverflow.com/a/29328541
 	$("#message").val("").trigger("input");
