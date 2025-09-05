@@ -8,9 +8,10 @@ const Token = require("../models/Token");
 const connect = require("../dbconnect");
 
 const router = express.Router();
-const BASE_URL = process.env.SERVER_HOST;
+
 // return the list of connected users from the app shared variable
 router.route("/").get(requireAdmin, async (req, res, next) => {
+	const BASE_URL = process.env.SERVER_HOST;
 	await connect;
 	const tokens = await Token.find();
 	let html = fs.readFileSync(
