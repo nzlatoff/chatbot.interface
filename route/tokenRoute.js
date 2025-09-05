@@ -8,7 +8,7 @@ const Token = require("../models/Token");
 const connect = require("../dbconnect");
 
 const router = express.Router();
-const BASE_URL = process.env.SERVER_HOST
+const BASE_URL = process.env.SERVER_HOST;
 // return the list of connected users from the app shared variable
 router.route("/").get(requireAdmin, async (req, res, next) => {
 	await connect;
@@ -30,7 +30,7 @@ router.route("/").get(requireAdmin, async (req, res, next) => {
 							<li>Création: ${entry.createdAt}</li>
 							<li>Début: ${entry.startedAt || "pas commencé"}</li>
 							<li>Durée: ${entry.lifetimeMin || "?"} min.</li>
-							<li>Lien à partager: <a href="${BASE_URL}/auth?token=${entry.token}">https://chatbot.manufacture-recherche.ch/auth?token=${entry.token}</a>
+							<li>Lien à partager: <a href="${BASE_URL}/auth?token=${entry.token}">${BASE_URL}/auth?token=${entry.token}</a>
 						</ul>
 					</li>`,
 			)
