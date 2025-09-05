@@ -19,7 +19,6 @@ const Chat = require("./models/Chat");
 const Token = require("./models/Token");
 const connect = require("./dbconnect");
 require("dotenv").config();
-const MongoStore = require("connect-mongo");
 //require the http module
 const http = require("http").Server(app);
 
@@ -40,9 +39,11 @@ app.locals.mastersocketnumber = 0;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const store = MongoStore.create({
-	mongoUrl: "mongodb://localhost:27017/chat",
-	collectionName: "sessions",
+const MongoDBStore = require('connect-mongodb-session')(session);
+
+const store = new MongoDBStore({
+  uri: 'mongodb://localhost:27017/chat',
+  collection: 'sessions',
 	ttl: 60 * 60,
 });
 
