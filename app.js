@@ -26,7 +26,7 @@ const http = require("http").Server(app);
 // require the socket.io module
 const io = require("socket.io");
 
-const port = 5100;
+const port = process.env.SERVER_PORT ?? 5100;
 
 app.locals.currentSession = "";
 app.locals.clientsocketlist = {};
