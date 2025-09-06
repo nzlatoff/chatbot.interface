@@ -94,3 +94,5 @@ typings/
 
 # vim tmp files
 *.sw*
+
+mongo_data

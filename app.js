@@ -26,7 +26,7 @@ const http = require("http").Server(app);
 // require the socket.io module
 const io = require("socket.io");
 
-const port = process.env.SERVER_PORT ?? 5100;
+const port = 5100;
 
 app.locals.currentSession = "";
 app.locals.clientsocketlist = {};
@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const store = MongoStore.create({
-	mongoUrl: "mongodb://localhost:27017/chat",
+	mongoUrl: process.env.MONGO_URI,
 	collectionName: "sessions",
 	ttl: 60 * 60,
 });

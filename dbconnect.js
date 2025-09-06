@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 mongoose.Promise = require("bluebird");
 
-const url = "mongodb://localhost:27017/chat";
+const url = process.env.MONGO_URI;
 
 const connect = mongoose.connect(url, {
 	useUnifiedTopology: true,
