@@ -12,4 +12,4 @@ COPY ./src/ .
 EXPOSE 3000
 
 # Start the app
-CMD ["node", "src/app"]
+CMD ["node", "app"]
