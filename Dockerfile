@@ -10,7 +10,10 @@ COPY .env .
 RUN npm install --production
 
 # Copy application source
-COPY . .
+COPY ./src/ .
+COPY ./package.json .
+COPY ./package-lock.json .
+COPY ./biome.json .
 
 # Expose the port your Express app runs on
 EXPOSE 3000
