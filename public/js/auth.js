@@ -2,7 +2,7 @@ async function checkTokenValidity() {
 	try {
 		const response = await fetch("/check-token", {
 			method: "GET",
-			credentials: "include"
+			credentials: "include",
 		});
 
 		if (!response.ok) {
