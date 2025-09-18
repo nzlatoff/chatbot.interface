@@ -1,5 +1,6 @@
 //require the express module
 const express = require("express");
+require("dotenv").config();
 
 const session = require("express-session");
 const app = express();
@@ -14,11 +15,11 @@ const str_obj = require("./cookie2obj.js");
 const { requireAuth, requireAdmin } = require("./middleware/auth");
 const hash = require("./utils/hash");
 const { isTokenValid } = require("./utils/tokens");
+
 //database connection
 const Chat = require("./models/Chat");
 const Token = require("./models/Token");
 const connect = require("./dbconnect");
-require("dotenv").config();
 const MongoStore = require("connect-mongo");
 //require the http module
 const http = require("http").Server(app);
@@ -39,7 +40,6 @@ app.locals.mastersocketnumber = 0;
 //bodyparser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 const store = MongoStore.create({
 	mongoUrl: process.env.MONGO_URI,
 	collectionName: "sessions",
@@ -123,6 +123,12 @@ app.get("/signout", (req, res) => {
 		res.clearCookie("connect.sid");
 		res.redirect("/");
 	});
+});
+
+// Endpoint pour vérifier le token
+app.get("/check-token", requireAuth, (req, res) => {
+	console.log("Check auth");
+	res.sendStatus(200); // Token valide
 });
 
 // cookie check to prevent anonymous users
