@@ -73,7 +73,7 @@ app.post("/signin", (req, res) => {
 		req.session.user = username;
 		res.redirect("/tokens");
 	} else {
-		res.send("Bad credentials");
+		res.sendFile(__dirname + "/public/badcredentials.html");
 	}
 });
 
@@ -121,13 +121,12 @@ app.get("/signout", (req, res) => {
 
 		// Clear the session cookie manually
 		res.clearCookie("connect.sid");
+		return res.sendFile(__dirname + "/public/deconnecte.html");
 	});
-	res.sendFile(__dirname + "/public/deconnecte.html");
 });
 
 // Endpoint pour vérifier le token
 app.get("/check-token", requireAuth, (req, res) => {
-	console.log("Check auth");
 	res.sendStatus(200); // Token valide
 });
 
