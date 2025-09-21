@@ -5,7 +5,7 @@ async function checkTokenValidity() {
 			credentials: "include",
 		});
 
-		if (!response.ok) {
+		if (response.status === 403) {
 			console.log("Token is expired, signing out");
 			window.location.href = "/signout";
 		}
