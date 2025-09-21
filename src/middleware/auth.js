@@ -23,12 +23,12 @@ async function requireAuth(req, res, next) {
 			}
 		}
 	}
-	console.log(req.originalUrl)
-	if (req.originalUrl === '/check-token') {
-      return res.status(403).send('Auth KO');
-    } else {
-      return res.status(302).redirect('/signin');
-    }
+	console.log(req.originalUrl);
+	if (req.originalUrl === "/check-token") {
+		return res.status(403).send("Auth KO");
+	} else {
+		return res.status(302).redirect("/signin");
+	}
 }
 
 function requireAdmin(req, res, next) {

@@ -18,23 +18,39 @@ router.route("/").get(requireAdmin, async (req, res, next) => {
 		path.join(__dirname, "views", "tokens.html"),
 		"utf-8",
 	);
+	const options = {
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+		hour12: false,
+		timeZone: "Europe/Paris", // specify the timezone you want
+	};
+
+	const formatter = new Intl.DateTimeFormat("fr-FR", options);
 	// Replace placeholders
 	html = html.replace(
 		"{{main}}",
 		`
     <h1>Tokens</h1>
     <ul>${tokens
-			.map(
-				(entry) =>
-					`<li>${entry.token} <form method="post" style="display: inline-block" action="/tokens/delete?token=${entry.token}"><button class="button">Delete</button></form>
+			.map((entry) => {
+				const diffMs = entry.startedAt ? new Date() - entry.startedAt : null; // difference in milliseconds
+				const diffMinutes = diffMs ? Math.floor(diffMs / (1000 * 60)) : null;
+				const minAgo =
+					diffMinutes !== null
+						? `Depuis <strong>${diffMinutes}</strong> minute${diffMinutes > 1 ? "s" : ""}.`
+						: "";
+				return `<li>${entry.token} <form method="post" style="display: inline-block" action="/tokens/delete?token=${entry.token}"><button class="button">Delete</button></form>
 						<ul>
-							<li>Création: ${entry.createdAt}</li>
-							<li>Début: ${entry.startedAt || "pas commencé"}</li>
-							<li>Durée: ${entry.lifetimeMin || "?"} min.</li>
-							<li>Lien à partager: <a href="${BASE_URL}/auth?token=${entry.token}">${BASE_URL}/auth?token=${entry.token}</a>
+							<li>Crée : ${formatter.format(entry.createdAt)} pour une durée de <strong>${entry.lifetimeMin || "?"}</strong> min.</li>
+							<li>Début: ${entry.startedAt ? formatter.format(entry.startedAt) : "pas commencé"}. ${minAgo}</li>
+							<li>Lien : <a href="${BASE_URL}/auth?token=${entry.token}">${BASE_URL}/auth?token=${entry.token}</a>
 						</ul>
-					</li>`,
-			)
+					</li>`;
+			})
 			.join("")}</ul>
   `,
 	);
