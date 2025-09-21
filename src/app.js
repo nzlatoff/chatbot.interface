@@ -121,8 +121,8 @@ app.get("/signout", (req, res) => {
 
 		// Clear the session cookie manually
 		res.clearCookie("connect.sid");
-		res.redirect("/");
 	});
+	res.sendFile(__dirname + "/public/deconnecte.html");
 });
 
 // Endpoint pour vérifier le token

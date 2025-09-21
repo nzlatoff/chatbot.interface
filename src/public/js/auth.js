@@ -6,11 +6,12 @@ async function checkTokenValidity() {
 		});
 
 		if (!response.ok) {
-			window.location.href = "/authko";
+			console.log("Token is expired, signing out");
+			window.location.href = "/signout";
 		}
 	} catch (error) {
 		console.error("Erreur lors de la vérification du token :", error);
-		window.location.href = "/authko";
+		window.location.href = "/signout";
 	}
 }
 
