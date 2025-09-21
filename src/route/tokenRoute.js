@@ -39,14 +39,26 @@ router.route("/").get(requireAdmin, async (req, res, next) => {
 			.map((entry) => {
 				const diffMs = entry.startedAt ? new Date() - entry.startedAt : null; // difference in milliseconds
 				const diffMinutes = diffMs ? Math.floor(diffMs / (1000 * 60)) : null;
+				const status =
+					diffMinutes !== null && diffMinutes < entry.lifetimeMin
+						? "en cours"
+						: diffMinutes === null
+							? "pas commencé"
+							: "expiré";
+				const statusColor =
+					diffMinutes !== null && diffMinutes < entry.lifetimeMin
+						? "green"
+						: diffMinutes === null
+							? "white"
+							: "red";
 				const minAgo =
 					diffMinutes !== null
-						? `Depuis <strong>${diffMinutes}</strong> minute${diffMinutes > 1 ? "s" : ""}.`
+						? `(il y a <strong>${diffMinutes}</strong> minute${diffMinutes > 1 ? "s" : ""})`
 						: "";
-				return `<li>${entry.token} <form method="post" style="display: inline-block" action="/tokens/delete?token=${entry.token}"><button class="button">Delete</button></form>
-						<ul>
-							<li>Crée : ${formatter.format(entry.createdAt)} pour une durée de <strong>${entry.lifetimeMin || "?"}</strong> min.</li>
-							<li>Début: ${entry.startedAt ? formatter.format(entry.startedAt) : "pas commencé"}. ${minAgo}</li>
+				return `<li style="margin-bottom: 20px">${entry.token} &nbsp;&nbsp;<span style="color: ${statusColor}; text-decoration: underline">${status}</span> &nbsp;&nbsp;<form method="post" style="display: inline-block; margin-bottom: 0px" action="/tokens/delete?token=${entry.token}"><button class="button">Delete</button></form>
+						<ul style="margin-bottom: 20px">
+							<li>Crée : ${formatter.format(entry.createdAt)} pour une durée de <strong>${entry.lifetimeMin || "?"}</strong> min. </li>
+							<li>Début: ${entry.startedAt ? formatter.format(entry.startedAt) : "pas commencé"} ${minAgo}</li>
 							<li>Lien : <a href="${BASE_URL}/auth?token=${entry.token}">${BASE_URL}/auth?token=${entry.token}</a>
 						</ul>
 					</li>`;
