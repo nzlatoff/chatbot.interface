@@ -98,6 +98,7 @@ app.get("/auth", async (req, res) => {
 				req.session.cookie.maxAge = entry.lifetimeMin * 60 * 1000;
 				req.session.user = entry.name;
 				res.redirect("/authok");
+				return;
 			}
 		}
 	}
