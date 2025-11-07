@@ -23,7 +23,18 @@
         <button id="reset-button" class="square-button reset-button">reset</button>
       </div>
       <div id="bots-wrapper"></div>
+      <div id="tokens">
+        <iframe src="/tokens" id="tokensIframe"
+  title="Tokens"
+  width="99%"
+  height="500"></iframe>
+
+      </div>
+           <a href="/signout">
+    <button class="enter">Sign out</button>
+</a>
     </div>
+
     <script src="vendor/jquery/jquery-1.11.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/master.js" type="module" charset="utf-8" crossorigin="anonymous"></script>

@@ -71,7 +71,7 @@ app.post("/signin", (req, res) => {
 		hash(password) === process.env.ADMIN_PASSWORD_HASH
 	) {
 		req.session.user = username;
-		res.redirect("/tokens");
+		res.redirect("/login.html");
 	} else {
 		res.sendFile(__dirname + "/public/badcredentials.html");
 	}

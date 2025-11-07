@@ -12,7 +12,7 @@ router.route(["/", "/dual"]).post(requireAuth, (req, res, next) => {
 		// can't take null username
 		res.cookie("userData", req.body.username, { sameSite: "strict" });
 	}
-	res.redirect(req.app.locals.loginFrom);
+	res.redirect("/");
 });
 
 module.exports = router;
