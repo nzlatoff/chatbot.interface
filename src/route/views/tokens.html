@@ -1,0 +1,30 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!-- https://favicon.io/favicon-converter/ -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+    <!-- favicon end -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/login.css" type="text/css" rel="stylesheet"/>
+    <style>
+        .minute-input{
+            border: 2px white solid;
+            padding: 12px;
+        }
+    </style>
+</head>
+<body class="page">
+{{main}}
+<hr>
+
+<form method="post" action="/tokens/new">
+    <label for="lifetime">Durée (minutes)</label>
+    <input class="minute-input" name="lifetime" id="lifetime" type="number" min="1" value="30" placeholder="30"/>
+    <button class="enter">Create Token</button>
+</form>
+<hr>
+</body>
+</html>

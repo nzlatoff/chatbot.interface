@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Archive</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- https://favicon.io/favicon-converter/ -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+    <!-- favicon end -->
+    <link href="/css/archive.css" type="text/css" rel="stylesheet"/>
+    <link href="vendor/fa/css/fontawesome.min.css" type="text/css" rel="stylesheet"/>
+    <link href="vendor/fa/css/fa-solid.min.css" type="text/css" rel="stylesheet"/>
+  </head>
+  <body>
+    <div  class="main-wrapper">
+      <div class="box-wrapper" id="masthead-box">
+        <div id="title-wrapper">
+          <div id="archive-title"><b>Archive</b></div>
+        </div>
+        <button class="square-button" id="all-button">all</button>
+      </div>
+      <div class="box-wrapper" id="sessions-box">
+        <div id="sessions-wrapper"></div>
+        <div id="current-session-wrapper">
+          <div id="current-session"></div>
+          <div id="current-session-controls">
+            <button class="square-button" id="info-button">info</button>
+            <button class="square-button" id="dl-button">json</button>
+            <button class="square-button" id="back-button">back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="vendor/jquery/jquery-1.11.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/archive.js" charset="utf-8"></script>
+  </body>
+</html>

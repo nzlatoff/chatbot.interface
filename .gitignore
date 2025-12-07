@@ -2,6 +2,12 @@
 # Created by https://www.gitignore.io/api/node
 # Edit at https://www.gitignore.io/?templates=node
 
+### Jetbrains ###
+.idea
+tokens.json
+sessions.sqlite
+.env
+
 ### Node ###
 # Logs
 logs
@@ -88,3 +94,6 @@ typings/
 
 # vim tmp files
 *.sw*
+
+mongo_data
+.DS_Store

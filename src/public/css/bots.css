@@ -1,0 +1,19 @@
+@import "base.css";
+@import "interactive-boxes.css";
+
+#interactive-box .talkco {
+	font-size: 1.5rem;
+}
+
+#info-mode,
+#info-bot {
+	position: absolute;
+	display: none;
+	top: 0;
+	right: 0;
+	border: 1px solid #fff;
+	border-radius: 5px;
+	background: #000;
+	margin: 20px;
+	padding: 3px 5px;
+}

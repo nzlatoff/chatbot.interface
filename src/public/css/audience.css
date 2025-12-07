@@ -1,0 +1,26 @@
+@import "base.css";
+@import "interactive-boxes.css";
+@import "messages-boxes.css";
+
+#messages-box {
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+#messages-box {
+	overflow-x: hidden;
+	/* padding-right: 5px; */
+	/*FireFox*/
+	scrollbar-width: none;
+	/*IE10+*/
+	-ms-overflow-style: -ms-autohiding-scrollbar;
+	/* margin-right: 5px; */
+}
+
+#messages-box::-webkit-scrollbar {
+	/*Chrome, Safari, Edge*/
+	display: none;
+}

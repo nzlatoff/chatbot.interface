@@ -1,0 +1,37 @@
+@import "base.css";
+@import "interactive-boxes.css";
+
+html,
+body,
+pre {
+	font-family: "Inconsolata", monospace;
+	font-size: 16px;
+}
+
+pre {
+	margin: 0;
+}
+
+.main-wrapper {
+	max-width: 100%;
+}
+
+#interactive-box {
+	border: none;
+	flex-direction: row;
+}
+
+#interactive-box .talkco {
+	overflow-x: hidden;
+	/* padding-right: 5px; */
+	/*FireFox*/
+	scrollbar-width: none;
+	/*IE10+*/
+	-ms-overflow-style: -ms-autohiding-scrollbar;
+	/* margin-right: 5px; */
+}
+
+#interactive-box .talkco::-webkit-scrollbar {
+	/*Chrome, Safari, Edge*/
+	display: none;
+}

@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chatbot.interface
+    ports:
+      - "${SERVER_PORT}:5100"
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongo:27017/chat
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:8
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo_data:/data/db
+    restart: unless-stopped

@@ -1,0 +1,199 @@
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+html,
+body,
+input,
+textarea {
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 16px;
+	color: #fff;
+	background: #000;
+}
+
+/* textarea, input */
+
+input {
+	border-width: 0px;
+}
+
+textarea {
+	resize: vertical;
+	background: #000;
+	color: #fff;
+}
+
+input:focus,
+textarea:focus {
+	outline: none;
+}
+
+input::-moz-focus-inner,
+textarea::-moz-focus-inner {
+	border: 0;
+}
+
+/* https://css-tricks.com/almanac/selectors/p/placeholder/ */
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+	/* Chrome/Opera/Safari */
+	color: white;
+	opacity: 0.7;
+	font-style: italic;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+	/* Firefox 19+ */
+	color: white;
+	opacity: 0.7;
+	font-style: italic;
+}
+
+input::-ms-input-placeholder,
+textarea::-ms-input-placeholder {
+	/* IE 10+ */
+	color: white;
+	opacity: 0.7;
+	font-style: italic;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+	/* Firefox 18- */
+	color: white;
+	opacity: 0.7;
+	font-style: italic;
+}
+
+/* common main wrappers */
+
+/* flex-boxing */
+/* https://css-tricks.com/boxes-fill-height-dont-squish/ */
+/* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
+
+.main-wrapper {
+	width: 100%;
+	margin: 0 auto;
+	height: 100%;
+	max-width: 1000px;
+	overflow: hidden;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+
+@media only screen and (max-width: 1000px) {
+	.main-wrapper {
+		width: 100%;
+	}
+}
+
+.box-wrapper {
+	align-self: stretch;
+	border: 2px solid #fff;
+	border-radius: 10px;
+	padding: 10px;
+	margin: 0 5px 5px 5px;
+}
+
+.box-no-border {
+	border: none;
+}
+
+#masthead-box {
+	margin-top: 5px;
+	align-self: stretch;
+	display: flex;
+	justify-content: space-between;
+}
+
+/* square button */
+
+.square-button {
+	width: 52px;
+	height: 52px;
+	min-width: 52px;
+	min-height: 52px;
+	border: 2px solid #fff;
+	border-radius: 5px;
+	color: #fff;
+	background-color: #000;
+	font-size: inherit;
+	cursor: crosshair;
+	transition: all 0.2s linear;
+	text-align: center;
+	padding: 1px;
+}
+
+.square-button:hover {
+	color: red;
+	border-color: red;
+}
+
+/* message choice for master & optimizer */
+/* https://stackoverflow.com/a/11915453 */
+
+.flash {
+	-moz-animation: flash 600ms ease-out;
+	-moz-animation-iteration-count: 1;
+
+	-webkit-animation: flash 600ms ease-out;
+	-webkit-animation-iteration-count: 1;
+
+	-ms-animation: flash 600ms ease-out;
+	-ms-animation-iteration-count: 1;
+}
+
+@keyframes flash {
+	0% {
+		background-color: transparent;
+	}
+	50% {
+		background-color: #ffff;
+	}
+	100% {
+		background-color: transparent;
+	}
+}
+
+@-webkit-keyframes flash {
+	0% {
+		background-color: transparent;
+	}
+	50% {
+		background-color: #ffff;
+	}
+	100% {
+		background-color: transparent;
+	}
+}
+
+@-moz-keyframes flash {
+	0% {
+		background-color: transparent;
+	}
+	50% {
+		background-color: #ffff;
+	}
+	100% {
+		background-color: transparent;
+	}
+}
+
+@-ms-keyframes flash {
+	0% {
+		background-color: transparent;
+	}
+	50% {
+		background-color: #ffff;
+	}
+	100% {
+		background-color: transparent;
+	}
+}
