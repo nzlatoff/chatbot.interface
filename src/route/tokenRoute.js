@@ -59,7 +59,7 @@ router.route("/").get(requireAdmin, async (req, res, next) => {
 						<ul style="margin-bottom: 20px">
 							<li>Crée : ${formatter.format(entry.createdAt)} pour une durée de <strong>${entry.lifetimeMin || "?"}</strong> min. </li>
 							<li>Début: ${entry.startedAt ? formatter.format(entry.startedAt) : "pas commencé"} ${minAgo}</li>
-							<li>Lien : <a href="${BASE_URL}/auth?token=${entry.token}">${BASE_URL}/auth?token=${entry.token}</a>
+							<li>Lien : <a target="_blank" rel="noopener noreferrer" href="${BASE_URL}/auth?token=${entry.token}">${BASE_URL}/auth?token=${entry.token}</a>
 						</ul>
 					</li>`;
 			})
